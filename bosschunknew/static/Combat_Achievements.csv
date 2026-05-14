@@ -1,0 +1,636 @@
+﻿Monster;Reference_to_boss_images;Tier;Type;HasSlayerRequirement;RequiresGroup;Combat_achievement_name;Description
+Aberrant Spectre;Aberrant_spectre; Easy;Kill Count;Yes;No;Noxious Foe;Kill an Aberrant Spectre.
+Abyssal Sire;Abyssal_Sire; Hard;Mechanical;Yes;No;Don't Whip Me;Kill the Abyssal Sire without being hit by any external tentacles.
+Abyssal Sire;Abyssal_Sire; Hard;Mechanical;Yes;No;They Grow Up Too Fast;Kill the Abyssal Sire without letting any Scion mature.
+Abyssal Sire;Abyssal_Sire; Hard;Perfection;Yes;No;Don't Stop Moving;Kill the Abyssal Sire without taking damage from any miasma pools.
+Abyssal Sire;Abyssal_Sire; Hard;Kill Count;Yes;No;Abyssal Adept;Kill the Abyssal Sire 20 times.
+Abyssal Sire;Abyssal_Sire; Elite;Mechanical;Yes;No;Demonic Rebound;Use the Vengeance spell to reflect the damage from the Abyssal Sire's explosion back to him.
+Abyssal Sire;Abyssal_Sire; Elite;Mechanical;Yes;No;Respiratory Runner;Kill the Abyssal Sire after only stunning him once.
+Abyssal Sire;Abyssal_Sire; Elite;Kill Count;Yes;No;Abyssal Veteran;Kill the Abyssal Sire 50 times.
+Abyssal Sire;Abyssal_Sire; Elite;Perfection;Yes;No;Perfect Sire;Kill the Abyssal Sire without taking damage from the external tentacles, miasma pools, explosion or damage from the Abyssal Sire without praying the appropriate protection prayer.
+Alchemical Hydra;Alchemical_Hydra; Elite;Kill Count;Yes;No;Alchemical Veteran;Kill the Alchemical Hydra 75 times.
+Alchemical Hydra;Alchemical_Hydra; Master;Speed;Yes;No;Alchemical Speed-Chaser;Kill the Alchemical Hydra in less than 1 minute 45 seconds.
+Alchemical Hydra;Alchemical_Hydra; Master;Mechanical;Yes;No;Lightning Lure;Kill the Alchemical Hydra without being hit by the lightning attack.
+Alchemical Hydra;Alchemical_Hydra; Master;Perfection;Yes;No;Alcleanical Hydra;Kill the Alchemical Hydra without taking any damage.
+Alchemical Hydra;Alchemical_Hydra; Master;Mechanical;Yes;No;Mixing Correctly;Kill the Alchemical Hydra without empowering it.
+Alchemical Hydra;Alchemical_Hydra; Master;Kill Count;Yes;No;Alchemical Master;Kill the Alchemical Hydra 150 times.
+Alchemical Hydra;Alchemical_Hydra; Master;Stamina;Yes;No;Working Overtime;Kill the Alchemical Hydra 15 times without leaving the room.
+Alchemical Hydra;Alchemical_Hydra; Master;Mechanical;Yes;No;Don't Flame Me;Kill the Alchemical Hydra without being hit by the flame wall attack.
+Alchemical Hydra;Alchemical_Hydra; Master;Mechanical;Yes;No;The Flame Skipper;Kill the Alchemical Hydra without letting it spawn a flame wall attack.
+Alchemical Hydra;Alchemical_Hydra; Master;Mechanical;Yes;No;Unrequired Antipoisons;Kill the Alchemical Hydra without being hit by the acid pool attack.
+Alchemical Hydra;Alchemical_Hydra; Grandmaster;Speed;Yes;No;Alchemical Speed-Runner;Kill the Alchemical Hydra in less than 1 minute 20 seconds.
+Alchemical Hydra;Alchemical_Hydra; Grandmaster;Restriction;Yes;No;No Pressure;Kill the Alchemical Hydra using only Dharok's Greataxe as a weapon whilst having no more than 10 Hitpoints throughout the entire fight.
+Amoxliatl;Amoxliatl; Medium;Restriction;No;No;Temotli Triumph;Kill Amoxliatl using only glacial temotli as a weapon.
+Amoxliatl;Amoxliatl; Medium;Kill Count;No;No;Amoxliatl Champion;Kill Amoxliatl once.
+Amoxliatl;Amoxliatl; Hard;Speed;No;No;Amoxliatl Speed-Trialist;Kill Amoxliatl in less than 1 minute.
+Amoxliatl;Amoxliatl; Hard;Stamina;No;No;Kemo Makti;Kill Amoxliatl 10 times without leaving her chamber.
+Amoxliatl;Amoxliatl; Hard;Mechanical;No;No;Totally Shattered;Kill Amoxliatl without any of her unstable ice shattering.
+Amoxliatl;Amoxliatl; Hard;Perfection;No;No;Nagua Negation;Kill Amoxliatl without taking any damage.
+Amoxliatl;Amoxliatl; Hard;Kill Count;No;No;Amoxliatl Adept;Kill Amoxliatl 20 times.
+Amoxliatl;Amoxliatl; Elite;Restriction;No;No;Without Ralos' Light;Kill Amoxliatl without losing any prayer points.
+Amoxliatl;Amoxliatl; Elite;Speed;No;No;Amoxliatl Speed-Chaser;Kill Amoxliatl in less than 30 seconds.
+Araxxor;Araxxor; Elite;Kill Count;Yes;No;Araxxor Veteran;Kill Araxxor 25 times.
+Araxxor;Araxxor; Elite;Speed;Yes;No;Araxxor Speed-Trialist;Kill Araxxor 4 times in 10:00.
+Araxxor;Araxxor; Elite;Restriction;Yes;No;Relaxxor;Kill Araxxor after destroying six eggs.
+Araxxor;Araxxor; Master;Speed;Yes;No;Araxxor Speed-Chaser;Kill Araxxor 5 times in 10:00.
+Araxxor;Araxxor; Master;Restriction;Yes;No;Let it seep in;Kill Araxxor without ever having venom or poison immunity.
+Araxxor;Araxxor; Master;Mechanical;Yes;No;Araxyte Betrayal;Have an Araxyte kill three other Araxytes.
+Araxxor;Araxxor; Master;Stamina;Yes;No;Arachnid Lover;Kill Araxxor 10 times without leaving.
+Araxxor;Araxxor; Master;Perfection;Yes;No;Perfect Araxxor;Kill Araxxor perfectly, without taking damage from Araxxor's Mage & Range attacks, melee attack off prayer, araxyte minions damage, or damage from acid pools.
+Araxxor;Araxxor; Master;Kill Count;Yes;No;Araxxor Master;Kill Araxxor 75 times.
+Araxxor;Araxxor; Grandmaster;Perfection;Yes;No;Perfect Araxxor 2;Kill Araxxor perfectly, without hitting it during the enrage phase.
+Araxxor;Araxxor; Grandmaster;Speed;Yes;No;Araxxor Speed-Runner;Kill Araxxor 6 times in 10:00.
+Araxxor;Araxxor; Grandmaster;Restriction;Yes;No;Swimming in Venom;Kill Araxxor without the boss ever moving.
+Barrows;Barrows; Easy;Kill Count;No;No;Barrows Novice;Open the Barrows chest 10 times.
+Barrows;Barrows; Easy;Restriction;No;No;Defence? What Defence?;Kill any Barrows Brother using only magical damage.
+Barrows;Barrows; Medium;Perfection;No;No;Pray for Success;Kill all six Barrows Brothers and loot the Barrows chest without taking any damage from any of the brothers.
+Barrows;Barrows; Medium;Kill Count;No;No;Barrows Champion;Open the Barrows chest 25 times.
+Barrows;Barrows; Medium;Mechanical;No;No;Can't Touch Me;Kill Dharok, Verac, Torag and Guthan without letting them attack you with melee.
+Barrows;Barrows; Hard;Restriction;No;No;Faithless Crypt Run;Kill all six Barrows Brothers and loot the Barrows chest without ever having more than 0 prayer points.
+Barrows;Barrows; Hard;Restriction;No;No;Just Like That;Kill Karil using only damage dealt by special attacks.
+Basilisk Knight;Basilisk_Knight; Elite;Kill Count;Yes;No;Reflecting on This Encounter;Kill a Basilisk Knight.
+Black Dragon;Black_dragon; Easy;Kill Count;No;No;Big, Black and Fiery;Kill a Black Dragon.
+Bloodveld;Bloodveld; Easy;Kill Count;Yes;No;The Demonic Punching Bag;Kill a Bloodveld.
+Brutal Black Dragon;Brutal_black_dragon; Medium;Kill Count;Yes;No;Brutal, Big, Black and Firey;Kill a Brutal Black Dragon.
+Brutus;Brutus;Easy;Kill Count;No;No;Brutus Novice;Kill Brutus.
+Brutus;Brutus;Medium;Kill Count;No;No;Brutus Champion;Kill Brutus 10 times.
+Brutus;Brutus;Medium;Perfection;No;No;Beef vs Beef;Kill Brutus whilst neither equipping nor consuming anything.
+Brutus;Brutus;Hard;Mechanical;No;No;Smarter than a Cow;Kill Brutus without being attacked.
+Brutus;Brutus;Elite;Speed;No;No;Brutus Speed-Trialist;Kill Brutus in less than 2 seconds.
+Bryophyta;Bryophyta; Easy;Perfection;No;No;Preparation Is Key;Kill Bryophyta without suffering any poison damage.
+Bryophyta;Bryophyta; Easy;Kill Count;No;No;Bryophyta Novice;Open Bryophyta's chest once.
+Bryophyta;Bryophyta; Easy;Restriction;No;No;A Slow Death;Kill Bryophyta with either poison or venom being the final source of damage.
+Bryophyta;Bryophyta; Easy;Mechanical;No;No;Protection from Moss;Kill Bryophyta with the Protect from Magic prayer active.
+Bryophyta;Bryophyta; Easy;Restriction;No;No;Fighting as Intended II;Kill Bryophyta on a free to play world.
+Bryophyta;Bryophyta; Medium;Kill Count;No;No;Bryophyta Champion;Open Bryophyta's chest 5 times.
+Bryophyta;Bryophyta; Medium;Mechanical;No;No;Quick Cutter;Kill all 3 of Bryophyta's growthlings within 3 seconds of the first one dying.
+Callisto;Callisto; Hard;Kill Count;No;No;Callisto Adept;Kill Callisto 10 times.
+Callisto;Callisto; Elite;Kill Count;No;No;Callisto Veteran;Kill Callisto 20 times.
+Cerberus;Cerberus; Elite;Mechanical;Yes;No;Ghost Buster;Kill Cerberus after successfully negating 6 or more attacks from Summoned Souls.
+Cerberus;Cerberus; Elite;Perfection;Yes;No;Unrequired Antifire;Kill Cerberus without taking damage from any lava pools.
+Cerberus;Cerberus; Elite;Kill Count;Yes;No;Cerberus Veteran;Kill Cerberus 75 times.
+Cerberus;Cerberus; Elite;Perfection;Yes;No;Anti-Bite Mechanics;Kill Cerberus without taking any melee damage.
+Cerberus;Cerberus; Master;Mechanical;Yes;No;Arooo No More;Kill Cerberus without any of the Summoned Souls being spawned.
+Cerberus;Cerberus; Master;Kill Count;Yes;No;Cerberus Master;Kill Cerberus 150 times.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Perfection;No;No;Dancing with Statues;Receive kill-credit for a Stone Guardian without taking damage from falling rocks.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Mechanical;No;No;Together We'll Fall;Kill the Vanguards within 10 seconds of the first one dying.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Perfection;No;No;Undying Raid Team;Complete a Chambers of Xeric raid without anyone dying.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Perfection;No;No;Cryo No More;Receive kill-credit for the Ice Demon without taking any damage.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Mechanical;No;No;Perfectly Balanced;Kill the Vanguards without them resetting their health.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Restriction;No;No;Kill It with Fire;Finish off the Ice Demon with a fire spell.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Kill Count;No;No;Chambers of Xeric Veteran;Complete the Chambers of Xeric 25 times.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Restriction;No;No;Blizzard Dodger;Receive kill-credit for the Ice Demon without activating the Protect from Range prayer.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Perfection;No;No;Shayzien Specialist;Receive kill-credit for a Lizardman Shaman without taking damage from any shamans in the room.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Mechanical;No;No;Redemption Enthusiast;Kill the Abyssal Portal without forcing Vespula to land.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Mechanical;No;No;Mutta-diet;Kill the Muttadile without letting her or her baby recover hitpoints from the meat tree.
+Chambers of Xeric;Chambers_of_Xeric; Master;Speed;No;Yes;Chambers of Xeric (5-Scale) Speed-Chaser;Complete a Chambers of Xeric (5-scale) in less than 15 minutes.
+Chambers of Xeric;Chambers_of_Xeric; Master;Speed;No;No;Chambers of Xeric (Solo) Speed-Chaser;Complete a Chambers of Xeric (Solo) in less than 21 minutes.
+Chambers of Xeric;Chambers_of_Xeric; Master;Mechanical;No;No;No Time for Death;Clear the Tightrope room without Killing any Deathly Mages or Deathly Rangers.
+Chambers of Xeric;Chambers_of_Xeric; Master;Kill Count;No;No;Chambers of Xeric Master;Complete the Chambers of Xeric 75 times.
+Chambers of Xeric;Chambers_of_Xeric; Master;Mechanical;No;No;Anvil No More;Kill Tekton before he returns to his anvil for a second time after the fight begins.
+Chambers of Xeric;Chambers_of_Xeric; Master;Perfection;No;No;Playing with Lasers;Clear the Crystal Crabs room without wasting an orb after the first crystal has been activated.
+Chambers of Xeric;Chambers_of_Xeric; Master;Perfection;No;No;Blind Spot;Kill Tekton without taking any damage.
+Chambers of Xeric;Chambers_of_Xeric; Master;Perfection;No;No;Undying Raider;Complete a Chambers of Xeric solo raid without dying.
+Chambers of Xeric;Chambers_of_Xeric; Master;Perfection;No;No;Perfect Olm (Solo);Kill the Great Olm in a solo raid without taking damage from any of the following: Teleport portals, Fire Walls, Healing pools, Crystal Bombs, Crystal Burst or Prayer Orbs. You also cannot let his claws regenerate or take damage from the same acid pool back to back.
+Chambers of Xeric;Chambers_of_Xeric; Master;Mechanical;No;No;A Not So Special Lizard;Kill the Great Olm in a solo raid without letting him use any of the following special attacks in his second to last phase: Crystal Burst, Lightning Walls, Teleportation Portals or left-hand autohealing.
+Chambers of Xeric;Chambers_of_Xeric; Master;Mechanical;No;No;Putting It Olm on the Line;Complete a Chambers of Xeric solo raid with more than 40,000 points.
+Chambers of Xeric;Chambers_of_Xeric; Master;Mechanical;No;No;Stop Drop and Roll;Kill Vasa Nistirio before he performs his teleport attack for the second time.
+Chambers of Xeric;Chambers_of_Xeric; Master;Speed;No;Yes;Chambers of Xeric (Trio) Speed-Chaser;Complete a Chambers of Xeric (Trio) in less than 16 minutes and 30 seconds.
+Chambers of Xeric;Chambers_of_Xeric; Master;Perfection;No;Yes;Perfect Olm (Trio);Kill the Great Olm in a trio raid without any team member taking damage from any of the following: Teleport portals, Fire Walls, Healing pools, Crystal Bombs, Crystal Burst or Prayer Orbs. You also cannot let his claws regenerate or take damage from the same acid pool back to back.
+Chambers of Xeric;Chambers_of_Xeric; Grandmaster;Speed;No;Yes;Chambers of Xeric (5-Scale) Speed-Runner;Complete a Chambers of Xeric (5-scale) in less than 12 minutes and 30 seconds.
+Chambers of Xeric;Chambers_of_Xeric; Grandmaster;Speed;No;No;Chambers of Xeric (Solo) Speed-Runner;Complete a Chambers of Xeric (Solo) in less than 17 minutes.
+Chambers of Xeric;Chambers_of_Xeric; Grandmaster;Speed;No;Yes;Chambers of Xeric (Trio) Speed-Runner;Complete a Chambers of Xeric (Trio) in less than 14 minutes and 30 seconds.
+Chambers of Xeric;Chambers_of_Xeric; Grandmaster;Kill Count;No;No;Chambers of Xeric Grandmaster;Complete the Chambers of Xeric 150 times.
+Chambers of Xeric;Chambers_of_Xeric; Elite;Speed;No;No;Dust Seeker;Complete a Chambers of Xeric Challenge mode raid in the target time.
+Chambers of Xeric;Chambers_of_Xeric; Master;Speed;No;No;Chambers of Xeric: CM (Solo) Speed-Chaser;Complete a Chambers of Xeric: Challenge Mode (Solo) in less than 45 minutes.
+Chambers of Xeric;Chambers_of_Xeric; Master;Kill Count;No;No;Chambers of Xeric: CM Master;Complete the Chambers of Xeric: Challenge Mode 10 times.
+Chambers of Xeric;Chambers_of_Xeric; Master;Speed;No;Yes;Chambers of Xeric: CM (5-Scale) Speed-Chaser;Complete a Chambers of Xeric: Challenge Mode (5-scale) in less than 30 minutes.
+Chambers of Xeric;Chambers_of_Xeric; Master;Speed;No;Yes;Chambers of Xeric: CM (Trio) Speed-Chaser;Complete a Chambers of Xeric: Challenge Mode (Trio) in less than 35 minutes.
+Chambers of Xeric;Chambers_of_Xeric; Master;Perfection;No;No;Immortal Raider;Complete a Chambers of Xeric Challenge mode (Solo) raid without dying.
+Chambers of Xeric;Chambers_of_Xeric; Master;Perfection;No;Yes;Immortal Raid Team;Complete a Chambers of Xeric: Challenge mode raid without anyone dying.
+Chambers of Xeric;Chambers_of_Xeric; Grandmaster;Speed;No;No;Chambers of Xeric: CM (Solo) Speed-Runner;Complete a Chambers of Xeric: Challenge Mode (Solo) in less than 38 minutes and 30 seconds.
+Chambers of Xeric;Chambers_of_Xeric; Grandmaster;Kill Count;No;No;Chambers of Xeric: CM Grandmaster;Complete the Chambers of Xeric: Challenge Mode 25 times.
+Chambers of Xeric;Chambers_of_Xeric; Grandmaster;Speed;No;Yes;Chambers of Xeric: CM (5-Scale) Speed-Runner;Complete a Chambers of Xeric: Challenge Mode (5-scale) in less than 25 minutes.
+Chambers of Xeric;Chambers_of_Xeric; Grandmaster;Speed;No;Yes;Chambers of Xeric: CM (Trio) Speed-Runner;Complete a Chambers of Xeric: Challenge Mode (Trio) in less than 27 minutes.
+Chaos Elemental;Chaos_Elemental; Hard;Kill Count;No;No;Chaos Elemental Adept;Kill the Chaos Elemental 10 times.
+Chaos Elemental;Chaos_Elemental; Hard;Perfection;No;No;The Flincher;Kill the Chaos Elemental without taking any damage from its attacks.
+Chaos Elemental;Chaos_Elemental; Hard;Mechanical;No;No;Hoarder;Kill the Chaos Elemental without it unequipping any of your items.
+Chaos Elemental;Chaos_Elemental; Elite;Kill Count;No;No;Chaos Elemental Veteran;Kill the Chaos Elemental 25 times.
+Chaos Fanatic;Chaos_Fanatic; Medium;Perfection;No;No;Sorry, What Was That?;Kill the Chaos Fanatic without anyone being hit by his explosion attack.
+Chaos Fanatic;Chaos_Fanatic; Medium;Kill Count;No;No;Chaos Fanatic Champion;Kill the Chaos Fanatic 10 times.
+Chaos Fanatic;Chaos_Fanatic; Hard;Restriction;No;No;Praying to the Gods;Kill the Chaos Fanatic 10 times without drinking any potion which restores prayer or leaving the Wilderness.
+Chaos Fanatic;Chaos_Fanatic; Hard;Kill Count;No;No;Chaos Fanatic Adept;Kill the Chaos Fanatic 25 times.
+Commander Zilyana;Commander_Zilyana; Hard;Mechanical;No;No;Commander Showdown;Finish off Commander Zilyana while all of her bodyguards are dead.
+Commander Zilyana;Commander_Zilyana; Hard;Kill Count;No;No;Commander Zilyana Adept;Kill Commander Zilyana 50 times.
+Commander Zilyana;Commander_Zilyana; Elite;Restriction;No;No;Reminisce;Kill Commander Zilyana in a private instance with melee only.
+Commander Zilyana;Commander_Zilyana; Elite;Kill Count;No;No;Commander Zilyana Veteran;Kill Commander Zilyana 100 times.
+Commander Zilyana;Commander_Zilyana; Master;Restriction;No;No;Moving Collateral;Kill Commander Zilyana in a private instance without attacking her directly.
+Commander Zilyana;Commander_Zilyana; Grandmaster;Perfection;No;No;Animal Whisperer;Kill Commander Zilyana in a private instance without taking any damage from the boss or bodyguards.
+Commander Zilyana;Commander_Zilyana; Grandmaster;Stamina;No;No;Peach Conjurer;Kill Commander Zilyana 50 times in a privately rented instance without leaving the room.
+Corporeal Beast;Corporeal_Beast; Elite;Restriction;No;No;Finding the Weak Spot;Finish off the Corporeal Beast with a Halberd special attack.
+Corporeal Beast;Corporeal_Beast; Elite;Perfection;No;No;Hot on Your Feet;Kill the Corporeal Beast without anyone killing the dark core or taking damage from the dark core.
+Corporeal Beast;Corporeal_Beast; Elite;Restriction;No;No;Chicken Killer;Kill the Corporeal Beast solo.
+Corporeal Beast;Corporeal_Beast; Elite;Kill Count;No;No;Corporeal Beast Veteran;Kill the Corporeal Beast 25 times.
+Corporeal Beast;Corporeal_Beast; Master;Kill Count;No;No;Corporeal Beast Master;Kill the Corporeal Beast 50 times.
+Corrupted Hunllef;Corrupted_Hunllef; Elite;Perfection;No;No;3, 2, 1 - Mage;Kill the Corrupted Hunllef without taking damage off prayer.
+Corrupted Hunllef;Corrupted_Hunllef; Elite;Kill Count;No;No;Corrupted Gauntlet Veteran;Complete the Corrupted Gauntlet 5 times.
+Corrupted Hunllef;Corrupted_Hunllef; Master;Perfection;No;No;Perfect Corrupted Hunllef;Kill the Corrupted Hunllef without taking damage from: Tornadoes, Damaging Floor or Stomp Attacks. Also, do not take damage off prayer and do not attack the Corrupted Hunllef with the wrong weapon.
+Corrupted Hunllef;Corrupted_Hunllef; Master;Restriction;No;No;Corrupted Warrior;Kill the Corrupted Hunllef with a full set of perfected corrupted armour equipped.
+Corrupted Hunllef;Corrupted_Hunllef; Master;Speed;No;No;Corrupted Gauntlet Speed-Chaser;Complete a Corrupted Gauntlet in less than 7 minutes and 30 seconds.
+Corrupted Hunllef;Corrupted_Hunllef; Master;Kill Count;No;No;Corrupted Gauntlet Master;Complete the Corrupted Gauntlet 10 times.
+Corrupted Hunllef;Corrupted_Hunllef; Master;Restriction;No;No;Defence Doesn't Matter II;Kill the Corrupted Hunllef without making any armour within the Corrupted Gauntlet.
+Corrupted Hunllef;Corrupted_Hunllef; Grandmaster;Restriction;No;No;Wolf Puncher II;Kill the Corrupted Hunllef without making more than one attuned weapon.
+Corrupted Hunllef;Corrupted_Hunllef; Grandmaster;Kill Count;No;No;Corrupted Gauntlet Grandmaster;Complete the Corrupted Gauntlet 50 times.
+Corrupted Hunllef;Corrupted_Hunllef; Grandmaster;Speed;No;No;Corrupted Gauntlet Speed-Runner;Complete a Corrupted Gauntlet in less than 6 minutes and 30 seconds.
+Corrupted Hunllef;Corrupted_Hunllef; Grandmaster;Restriction;No;No;Egniol Diet II;Kill the Corrupted Hunllef without making an egniol potion within the Corrupted Gauntlet.
+Crazy Archaeologist;Crazy_archaeologist; Medium;Mechanical;No;No;Mage of the Ruins;Kill the Crazy Archaeologist with only magical attacks.
+Crazy Archaeologist;Crazy_archaeologist; Medium;Kill Count;No;No;Crazy Archaeologist Champion;Kill the Crazy Archaeologist 10 times.
+Crazy Archaeologist;Crazy_archaeologist; Medium;Perfection;No;No;I'd Rather Not Learn;"Kill the Crazy Archaeologist without anyone being hit by his ""Rain of Knowledge"" attack."
+Crazy Archaeologist;Crazy_archaeologist; Hard;Kill Count;No;No;Crazy Archaeologist Adept;Kill the Crazy Archaeologist 25 times.
+Crystalline Hunllef;Crystalline_Hunllef; Elite;Restriction;No;No;Wolf Puncher;Kill the Crystalline Hunllef without making more than one attuned weapon.
+Crystalline Hunllef;Crystalline_Hunllef; Elite;Kill Count;No;No;Gauntlet Veteran;Complete the Gauntlet 5 times.
+Crystalline Hunllef;Crystalline_Hunllef; Elite;Restriction;No;No;Egniol Diet;Kill the Crystalline Hunllef without making an egniol potion within the Gauntlet.
+Crystalline Hunllef;Crystalline_Hunllef; Elite;Restriction;No;No;Crystalline Warrior;Kill the Crystalline Hunllef with a full set of perfected armour equipped.
+Crystalline Hunllef;Crystalline_Hunllef; Elite;Perfection;No;No;3, 2, 1 - Range;Kill the Crystalline Hunllef without taking damage off prayer.
+Crystalline Hunllef;Crystalline_Hunllef; Master;Kill Count;No;No;Gauntlet Master;Complete the Gauntlet 20 times.
+Crystalline Hunllef;Crystalline_Hunllef; Master;Restriction;No;No;Defence Doesn't Matter;Kill the Crystalline Hunllef without making any armour within the Gauntlet.
+Crystalline Hunllef;Crystalline_Hunllef; Master;Speed;No;No;Gauntlet Speed-Chaser;Complete the Gauntlet in less than 5 minutes.
+Crystalline Hunllef;Crystalline_Hunllef; Master;Perfection;No;No;Perfect Crystalline Hunllef;Kill the Crystalline Hunllef without taking damage from: Tornadoes, Damaging Floor or Stomp Attacks. Also, do not take damage off prayer and do not attack the Crystalline Hunllef with the wrong weapon.
+Crystalline Hunllef;Crystalline_Hunllef; Grandmaster;Speed;No;No;Gauntlet Speed-Runner;Complete the Gauntlet in less than 4 minutes.
+Dagannoth Prime;Dagannoth_Prime; Medium;Kill Count;No;No;Dagannoth Prime Champion;Kill Dagannoth Prime 10 times.
+Dagannoth Prime;Dagannoth_Prime; Hard;Kill Count;No;No;Dagannoth Prime Adept;Kill Dagannoth Prime 25 times.
+Dagannoth Prime;Dagannoth_Prime; Elite;Mechanical;No;No;From One King to Another;Kill Prime using a Rune Thrownaxe special attack, bounced off Dagannoth Rex.
+Dagannoth Prime;Dagannoth_Prime; Elite;Mechanical;No;No;Death to the Seer King;Kill Dagannoth Prime whilst under attack by Dagannoth Supreme and Dagannoth Rex.
+Dagannoth Rex;Dagannoth_Rex; Medium;Mechanical;No;No;A Frozen King;Kill Dagannoth Rex whilst he is immobilized.
+Dagannoth Rex;Dagannoth_Rex; Medium;Kill Count;No;No;Dagannoth Rex Champion;Kill Dagannoth Rex 10 times.
+Dagannoth Rex;Dagannoth_Rex; Hard;Kill Count;No;No;Dagannoth Rex Adept;Kill Dagannoth Rex 25 times.
+Dagannoth Rex;Dagannoth_Rex; Elite;Mechanical;No;No;Toppling the Diarchy;Kill Dagannoth Rex and one other Dagannoth king at the exact same time.
+Dagannoth Rex;Dagannoth_Rex; Elite;Mechanical;No;No;Death to the Warrior King;Kill Dagannoth Rex whilst under attack by Dagannoth Supreme and Dagannoth Prime.
+Dagannoth Supreme;Dagannoth_Supreme; Medium;Kill Count;No;No;Dagannoth Supreme Champion;Kill Dagannoth Supreme 10 times.
+Dagannoth Supreme;Dagannoth_Supreme; Hard;Kill Count;No;No;Dagannoth Supreme Adept;Kill Dagannoth Supreme 25 times.
+Dagannoth Supreme;Dagannoth_Supreme; Elite;Mechanical;No;No;Rapid Succession;Kill all three Dagannoth Kings within 9 seconds of the first one.
+Dagannoth Supreme;Dagannoth_Supreme; Elite;Mechanical;No;No;Death to the Archer King;Kill Dagannoth Supreme whilst under attack by Dagannoth Prime and Dagannoth Rex.
+Demonic Gorilla;Demonic_gorilla; Elite;Restriction;No;No;Hitting Them Where It Hurts;Finish off a Demonic Gorilla with a demonbane weapon.
+Demonic Gorilla;Demonic_gorilla; Elite;Kill Count;No;No;If Gorillas Could Fly;Kill a Demonic Gorilla.
+Deranged Archaeologist;Deranged_archaeologist; Easy;Kill Count;No;No;Deranged Archaeologist Novice;Kill the Deranged Archaeologist 10 times.
+Deranged Archaeologist;Deranged_archaeologist; Medium;Perfection;No;No;I'd Rather Be Illiterate;"Kill the Deranged Archaeologist without anyone being hit by his ""Learn to Read"" attack."
+Deranged Archaeologist;Deranged_archaeologist; Medium;Mechanical;No;No;Mage of the Swamp;Kill the Deranged Archaeologist with only magical attacks.
+Deranged Archaeologist;Deranged_archaeologist; Medium;Kill Count;No;No;Deranged Archaeologist Champion;Kill the Deranged Archaeologist 25 times.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Elite;Kill Count;No;No;Doom Adept;Defeat the Doom of Mokhaiotl at delve level 3.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Elite;Speed;No;No;Doom Crawler;Defeat the Doom of Mokhaiotl level 1 in less than 30 seconds.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Elite;Mechanical;No;No;Exposed Doom;Defeat the Doom of Mokhaiotl during its Melee charge phase.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Master;Mechanical;No;No;Grub Patrol;Defeat the Doom of Mokhaiotl levels 1-8 without ever letting a grub be absorbed.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Master;Restriction;No;No;Mine's Better;Defeat the Doom of Mokhaiotl levels 1-8 whilst always wearing a shield.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Master;Mechanical;No;No;Mokhaiotl Drift;Defeat the Doom of Mokhaiotl at level 8 or above before he finishes the first burrow phase.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Master;Kill Count;No;No;Doom Veteran;Defeat the Doom of Mokhaiotl at delve level 8.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Master;Speed;No;No;Doom Chaser;Defeat the Doom of Mokhaiotl levels 1-8 in less than 10:00.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Grandmaster;Stamina;No;No;It's Dark Down Here;Defeat the Doom of Mokhaiotl at delve level 16.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Grandmaster;Restriction;No;No;Duel of Mokhaiotl;Defeat the Doom of Mokhaiotl levels 1-8 whilst only damaging the boss with one-handed melee attacks.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Grandmaster;Restriction;No;No;Darkness Is Your Ally?;Defeat the Doom of Mokhaiotl levels 1-8 without equipping a demonbane weapon.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Grandmaster;Perfection;No;No;Perfect Doom;Defeat the Doom of Mokhaiotl levels 1-8 without taking any damage from the boss, letting any grubs be absorbed, or stepping in acid blood.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Grandmaster;Restriction;No;No;The Praying Mantis;Defeat the Doom of Mokhaiotl levels 1-8 without restoring your prayer points through any method.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Grandmaster;Mechanical;No;No;Mopping up;Clear at least 8 acid splats in a single Volatile Earth special attack.
+Doom of Mokhaiotl;Doom_of_Mokhaiotl; Grandmaster;Speed;No;No;Doom Racer;Defeat the Doom of Mokhaiotl levels 1-8 in less than 7:15.
+Duke Sucellus;Duke_Sucellus; Elite;Kill Count;No;No;Duke Sucellus Adept;Kill Duke Sucellus once.
+Duke Sucellus;Duke_Sucellus; Elite;Speed;No;No;Duke Sucellus Speed-Trialist;Kill Duke Sucellus in less than 1:00 minutes without a slayer task.
+Duke Sucellus;Duke_Sucellus; Master;Speed;No;No;Duke Sucellus Speed-Chaser;Kill Duke Sucellus in less than 50 seconds without a slayer task.
+Duke Sucellus;Duke_Sucellus; Master;Perfection;No;No;Perfect Duke Sucellus;Kill Duke Sucellus without taking any avoidable damage 5 times without leaving.
+Duke Sucellus;Duke_Sucellus; Master;Restriction;No;No;Cold Feet;Kill Duke Sucellus without taking any avoidable damage, whilst also never running.
+Duke Sucellus;Duke_Sucellus; Master;Kill Count;No;No;Duke Sucellus Master;Kill Duke Sucellus 50 times.
+Duke Sucellus;Duke_Sucellus; Grandmaster;Kill Count;No;No;Duke Sucellus Sleeper;Kill Awakened Duke Sucellus.
+Duke Sucellus;Duke_Sucellus; Grandmaster;Speed;No;No;Duke Sucellus Speed-Runner;Kill Duke Sucellus in less than 40 seconds without a slayer task.
+Duke Sucellus;Duke_Sucellus; Grandmaster;Restriction;No;No;Mirror Image;Kill Duke Sucellus whilst only attacking the boss on the same tick Duke attacks you.
+Fire Giant;Fire_giant; Easy;Kill Count;No;No;The Walking Volcano;Kill a Fire Giant.
+Fortis Colosseum;Fortis_Colosseum; Elite;Perfection;No;No;Furball;Complete Wave 4 without taking avoidable damage from a Manticore.
+Fortis Colosseum;Fortis_Colosseum; Elite;Mechanical;No;No;Denied;Complete Wave 7 without the Minotaur ever healing other enemies.
+Fortis Colosseum;Fortis_Colosseum; Elite;Mechanical;No;No;I was here first!;Kill a Jaguar Warrior using a Claw-type weapon special attack.
+Fortis Colosseum;Fortis_Colosseum; Master;Speed;No;No;Colosseum Speed-Chaser;Complete the Colosseum with a total time of 28:00 or less.
+Fortis Colosseum;Fortis_Colosseum; Master;Mechanical;No;No;Showboating;Defeat Sol Heredit after using Fortis Salute to the north, east, south and west of the arena while he is below 10% hitpoints.
+Fortis Colosseum;Fortis_Colosseum; Master;Mechanical;No;No;One-off;Complete Wave 11 with either 'Red Flag', 'Dynamic Duo', or 'Doom II' active.
+Fortis Colosseum;Fortis_Colosseum; Master;Kill Count;No;No;Sportsmanship;Defeat Sol Heredit once.
+Fortis Colosseum;Fortis_Colosseum; Master;Restriction;No;No;I Brought Mine Too;Defeat Sol Heredit using only a Spear, Hasta or Halberd.
+Fortis Colosseum;Fortis_Colosseum; Grandmaster;Speed;No;No;Colosseum Speed-Runner;Complete the Colosseum with a total time of 24:00 or less.
+Fortis Colosseum;Fortis_Colosseum; Grandmaster;Kill Count;No;No;Colosseum Grand Champion;Defeat Sol Heredit 10 times.
+Fortis Colosseum;Fortis_Colosseum; Grandmaster;Mechanical;No;No;Reinforcements;"Defeat Sol Heredit with ""Bees II"", ""Quartet"" and ""Solarflare II"" modifiers active."
+Fortis Colosseum;Fortis_Colosseum; Grandmaster;Restriction;No;No;Slow Dancing in the Sand;Defeat Sol Heredit without running during the fight with him.
+Fortis Colosseum;Fortis_Colosseum; Grandmaster;Perfection;No;No;Perfect Footwork;Defeat Sol Heredit without taking any damage from his Spear, Shield, Grapple or Triple Attack.
+Fragment of Seren;Fragment_of_Seren; Elite;Speed;No;No;Fragment of Seren Speed-Trialist;Kill The Fragment of Seren in less than 4 minutes.
+Galvek;Galvek; Elite;Speed;No;No;Galvek Speed-Trialist;Kill Galvek in less than 3 minutes.
+Gargoyle;Gargoyle; Medium;Kill Count;Yes;No;A Smashing Time;Kill a Gargoyle.
+General Graardor;General_Graardor; Hard;Kill Count;No;No;General Graardor Adept;Kill General Graardor 50 times.
+General Graardor;General_Graardor; Hard;Mechanical;No;No;Ourg Freezer;Kill General Graardor whilst he is immobilized.
+General Graardor;General_Graardor; Hard;Mechanical;No;No;General Showdown;Finish off General Graardor whilst all of his bodyguards are dead.
+General Graardor;General_Graardor; Elite;Mechanical;No;No;Ourg Freezer II;Kill General Graardor without him attacking any players.
+General Graardor;General_Graardor; Elite;Kill Count;No;No;General Graardor Veteran;Kill General Graardor 100 times.
+General Graardor;General_Graardor; Grandmaster;Stamina;No;No;Ourg Killer;Kill General Graardor 15 times in a private instance without leaving the room.
+General Graardor;General_Graardor; Grandmaster;Perfection;No;No;Defence Matters;Kill General Graardor 2 times consecutively in a private instance without taking any damage from his bodyguards.
+General Graardor;General_Graardor; Grandmaster;Perfection;No;No;Keep Away;Kill General Graardor in a private instance without taking any damage from the boss or bodyguards.
+Giant Mole;Giant_Mole; Easy;Kill Count;No;No;Giant Mole Novice;Kill the Giant Mole 10 times.
+Giant Mole;Giant_Mole; Medium;Kill Count;No;No;Giant Mole Champion;Kill the Giant mole 25 times.
+Giant Mole;Giant_Mole; Medium;Perfection;No;No;Avoiding Those Little Arms;Kill the Giant Mole without her damaging anyone.
+Giant Mole;Giant_Mole; Hard;Mechanical;No;No;Why Are You Running?;Kill the Giant Mole without her burrowing more than 2 times.
+Giant Mole;Giant_Mole; Hard;Mechanical;No;No;Whack-a-Mole;Kill the Giant Mole within 10 seconds of her resurfacing.
+Giant Mole;Giant_Mole; Elite;Mechanical;No;No;Hard Hitter;Kill the Giant Mole with 4 or fewer instances of damage.
+Glough;Glough; Elite;Speed;No;No;Glough Speed-Trialist;Kill Glough in less than 2 minutes and 30 seconds.
+Greater Demon;Greater_demon; Easy;Restriction;No;No;Not So Great After All;Finish off a Greater Demon with a demonbane weapon.
+Greater Demon;Greater_demon; Easy;Kill Count;No;No;A Greater Foe;Kill a Greater Demon.
+Grotesque Guardians;Grotesque_Guardians; Hard;Mechanical;Yes;No;Granite Footwork;Kill the Grotesque Guardians without taking damage from Dawn's rockfall attack.
+Grotesque Guardians;Grotesque_Guardians; Hard;Mechanical;Yes;No;Don't Look at the Eclipse;Kill the Grotesque Guardians without taking damage from Dusk's blinding attack.
+Grotesque Guardians;Grotesque_Guardians; Hard;Mechanical;Yes;No;Prison Break;Kill the Grotesque Guardians without taking damage from Dusk's prison attack.
+Grotesque Guardians;Grotesque_Guardians; Hard;Mechanical;Yes;No;Heal No More;Kill the Grotesque Guardians without letting Dawn receive any healing from her orbs.
+Grotesque Guardians;Grotesque_Guardians; Hard;Mechanical;Yes;No;Static Awareness;Kill the Grotesque Guardians without being hit by any lightning attacks.
+Grotesque Guardians;Grotesque_Guardians; Hard;Kill Count;Yes;No;Grotesque Guardians Adept;Kill the Grotesque Guardians 25 times.
+Grotesque Guardians;Grotesque_Guardians; Elite;Speed;Yes;No;Grotesque Guardians Speed-Trialist;Kill the Grotesque Guardians in less than 2 minutes.
+Grotesque Guardians;Grotesque_Guardians; Elite;Mechanical;Yes;No;Done before Dusk;Kill the Grotesque Guardians before Dusk uses his prison attack for a second time.
+Grotesque Guardians;Grotesque_Guardians; Elite;Kill Count;Yes;No;Grotesque Guardians Veteran;Kill the Grotesque Guardians 50 times.
+Grotesque Guardians;Grotesque_Guardians; Elite;Stamina;Yes;No;From Dusk...;Kill the Grotesque Guardians 10 times without leaving the instance.
+Grotesque Guardians;Grotesque_Guardians; Elite;Perfection;Yes;No;Perfect Grotesque Guardians;"Kill the Grotesque Guardians whilst completing the ""Don't look at the eclipse"", ""Prison Break"", ""Granite Footwork"", ""Heal no more"", ""Static Awareness"" and ""Done before dusk"" tasks."
+Grotesque Guardians;Grotesque_Guardians; Master;Perfection;Yes;No;Perfect Grotesque Guardians II;Kill the Grotesque Guardians 5 times in a row without leaving the instance, whilst completing the Perfect Grotesque Guardians task every time.
+Grotesque Guardians;Grotesque_Guardians; Master;Stamina;Yes;No;... 'til Dawn;Kill the Grotesque Guardians 20 times without leaving the instance.
+Grotesque Guardians;Grotesque_Guardians; Master;Speed;Yes;No;Grotesque Guardians Speed-Chaser;Kill the Grotesque Guardians in less than 1:40 minutes.
+Grotesque Guardians;Grotesque_Guardians; Grandmaster;Speed;Yes;No;Grotesque Guardians Speed-Runner;Kill the Grotesque Guardians in less than 1:20 minutes.
+Hellhound;Hellhound; Easy;Kill Count;No;No;A Demon's Best Friend;Kill a Hellhound.
+Hespori;Hespori; Hard;Kill Count;No;No;Hespori Adept;Kill Hespori 5 times.
+Hespori;Hespori; Hard;Mechanical;No;No;Hesporisn't;Finish off Hespori with a special attack.
+Hespori;Hespori; Hard;Mechanical;No;No;Weed Whacker;Kill all of Hesporis flowers within 5 seconds.
+Hespori;Hespori; Elite;Restriction;No;No;Plant-Based Diet;Kill Hespori without losing any prayer points.
+Hespori;Hespori; Elite;Speed;No;No;Hespori Speed-Trialist;Kill the Hespori in less than 48 seconds.
+Hespori;Hespori; Master;Speed;No;No;Hespori Speed-Chaser;Kill the Hespori in less than 36 seconds.
+Kalphite Queen;Kalphite_Queen; Hard;Kill Count;No;No;Kalphite Queen Adept;Kill the Kalphite Queen 25 times.
+Kalphite Queen;Kalphite_Queen; Hard;Mechanical;No;No;Chitin Penetrator;Kill the Kalphite Queen while her defence was last lowered by you.
+Kalphite Queen;Kalphite_Queen; Elite;Mechanical;No;No;Insect Deflection;Kill the Kalphite Queen by using the Vengeance spell as the finishing blow.
+Kalphite Queen;Kalphite_Queen; Elite;Kill Count;No;No;Kalphite Queen Veteran;Kill the Kalphite Queen 50 times.
+Kalphite Queen;Kalphite_Queen; Elite;Restriction;No;No;Prayer Smasher;Kill the Kalphite Queen using only the Verac's Flail as a weapon.
+King Black Dragon;King_Black_Dragon; Easy;Kill Count;No;No;King Black Dragon Novice;Kill the King Black Dragon 10 times.
+King Black Dragon;King_Black_Dragon; Medium;Mechanical;No;No;Claw Clipper;Kill the King Black Dragon with the Protect from Melee prayer activated.
+King Black Dragon;King_Black_Dragon; Medium;Restriction;No;No;Antifire Protection;Kill the King Black Dragon with an antifire potion active and an antidragon shield equipped.
+King Black Dragon;King_Black_Dragon; Medium;Kill Count;No;No;King Black Dragon Champion;Kill the King Black Dragon 25 times.
+King Black Dragon;King_Black_Dragon; Medium;Restriction;No;No;Hide Penetration;Kill the King Black Dragon with a stab weapon.
+King Black Dragon;King_Black_Dragon; Hard;Stamina;No;No;Who Is the King Now?;Kill The King Black Dragon 10 times in a private instance without leaving the instance.
+Kraken;Kraken; Hard;Mechanical;Yes;No;Unnecessary Optimisation;Kill the Kraken after killing all four tentacles.
+Kraken;Kraken; Hard;Kill Count;Yes;No;Kraken Adept;Kill the Kraken 20 times.
+Kraken;Kraken; Hard;Stamina;Yes;No;Krakan't Hurt Me;Kill the Kraken 25 times in a private instance without leaving the room.
+Kraken;Kraken; Elite;Stamina;Yes;No;Ten-tacles;Kill the Kraken 50 times in a private instance without leaving the room.
+Kraken;Kraken; Master;Stamina;Yes;No;One Hundred Tentacles;Kill the Kraken 100 times in a private instance without leaving the room.
+Kree'arra;Kree_arra; Hard;Mechanical;No;No;Airborne Showdown;Finish off Kree'arra whilst all of his bodyguards are dead.
+Kree'arra;Kree_arra; Hard;Kill Count;No;No;Kree'arra Adept;Kill Kree'arra 50 times.
+Kree'arra;Kree_arra; Elite;Kill Count;No;No;Kree'arra Veteran;Kill Kree'arra 100 times.
+Kree'arra;Kree_arra; Master;Mechanical;No;No;Collateral Damage;Kill Kree'arra in a private instance without ever attacking him directly.
+Kree'arra;Kree_arra; Master;Perfection;No;No;Swoop No More;Kill Kree'arra in a private instance without taking any melee damage from the boss or his bodyguards.
+Kree'arra;Kree_arra; Grandmaster;Stamina;No;No;Feather Hunter;Kill Kree'arra 30 times in a private instance without leaving the room.
+Kree'arra;Kree_arra; Grandmaster;Restriction;No;No;The Worst Ranged Weapon;Kill Kree'arra by only dealing damage to him with a salamander.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Hard;Mechanical;No;No;Demonic Showdown;Finish off K'ril Tsutsaroth whilst all of his bodyguards are dead.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Hard;Restriction;No;No;Demonbane Weaponry II;Finish off K'ril Tsutsaroth with a demonbane weapon.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Hard;Mechanical;No;No;Yarr No More;Receive kill-credit for K'ril Tsutsaroth without him using his special attack.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Hard;Kill Count;No;No;K'ril Tsutsaroth Adept;Kill K'ril Tsutsaroth 50 times.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Elite;Kill Count;No;No;K'ril Tsutsaroth Veteran;Kill K'ril Tsutsaroth 100 times.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Elite;Perfection;No;No;Demonic Defence;Kill K'ril Tsutsaroth in a private instance without taking any of his melee hits.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Elite;Mechanical;No;No;The Bane of Demons;Defeat K'ril Tsutsaroth in a private instance using only demonbane spells.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Grandmaster;Stamina;No;No;Ash Collector;Kill K'ril Tsutsaroth 20 times in a private instance without leaving the room.
+K'ril Tsutsaroth;Kril_Tsutsaroth; Grandmaster;Perfection;No;No;Demon Whisperer;Kill K'ril Tsutsaroth in a private instance without ever being hit by his bodyguards.
+Kurask;Kurask; Medium;Kill Count;Yes;No;Master of Broad Weaponry;Kill a Kurask.
+Leviathan;The_Leviathan; Elite;Speed;No;No;Leviathan Speed-Trialist;Kill the Leviathan in less than 1:50 without a slayer task.
+Leviathan;The_Leviathan; Elite;Kill Count;No;No;Leviathan Adept;Kill the Leviathan once.
+Leviathan;The_Leviathan; Master;Speed;No;No;Leviathan Speed-Chaser;Kill the Leviathan in less than 1:25 without a slayer task.
+Leviathan;The_Leviathan; Master;Perfection;No;No;Perfect Leviathan;Kill the Leviathan perfectly 5 times without leaving.
+Leviathan;The_Leviathan; Master;Mechanical;No;No;Serpentine Solo;Kill the Leviathan without stunning the boss more than once.
+Leviathan;The_Leviathan; Master;Kill Count;No;No;Leviathan Master;Kill the Leviathan 50 times.
+Leviathan;The_Leviathan; Grandmaster;Speed;No;No;Leviathan Speed-Runner;Kill the Leviathan in less than 1:10 without a slayer task.
+Leviathan;The_Leviathan; Grandmaster;Kill Count;No;No;Leviathan Sleeper;Kill the Awakened Leviathan.
+Leviathan;The_Leviathan; Grandmaster;Restriction;No;No;Unconventional;Kill the Leviathan using only Mithril ammunition whilst having no more than 25 Hitpoints throughout the entire fight.
+Lizardman Shaman;Lizardman_shaman; Easy;Kill Count;No;No;A Scaley Encounter;Kill a Lizardman Shaman.
+Lizardman Shaman;Lizardman_shaman; Easy;Perfection;No;No;Shayzien Protector;Kill a Lizardman Shaman in Molch which has not dealt damage to anyone (excluding its Spawns).
+Moons of Peril;Moons_of_peril; Medium;Kill Count;No;No;Perilous Novice;Open the Reward Chest 5 times.
+Moons of Peril;Moons_of_peril; Medium;Kill Count;No;No;Lunar Triplet;Open the Reward Chest after defeating all three Moons.
+Moons of Peril;Moons_of_peril; Medium;Speed;No;No;Moons of Peril Speed-Trialist;Defeat all three Moons in one run in under 8 minutes.
+Moons of Peril;Moons_of_peril; Medium;Restriction;No;No;Back to Our Roots;Defeat all three Moons in one run by only attacking with a Dragon Scimitar.
+Moons of Peril;Moons_of_peril; Hard;Restriction;No;No;Betrayal;Defeat a Moon using its associated weapon drop.
+Moons of Peril;Moons_of_peril; Hard;Speed;No;No;Moons of Peril Speed-Chaser;Defeat all three Moons in one run in under 6 minutes.
+Moons of Peril;Moons_of_peril; Hard;Restriction;No;No;Fortified;Defeat a Moon without consuming any supplies.
+Moons of Peril;Moons_of_peril; Hard;Stamina;No;No;Fat of the Land;Defeat 30 Moons of Peril bosses without leaving the dungeon.
+Moons of Peril;Moons_of_peril; Hard;Kill Count;No;No;Perilous Champion;Open the Reward Chest 25 times.
+Moons of Peril;Moons_of_peril; Hard;Perfection;No;No;Perilous Dancer;Defeat all the Moons in one run while only taking damage from regular attacks.
+Moons of Peril;Moons_of_peril; Hard;Mechanical;No;No;The Clone Zone;Defeat the Eclipse moon by only attacking its clones.
+Moons of Peril;Moons_of_peril; Elite;Mechanical;No;No;High Hitter;Defeat a Moon before they start their second special attack.
+Nex;Nex; Elite;Restriction;No;No;Nex Survivors;Kill Nex without anyone dying.
+Nex;Nex; Elite;Kill Count;No;No;Nex Veteran;Kill Nex once.
+Nex;Nex; Master;Kill Count;No;No;Nex Master;Kill Nex 25 times.
+Nex;Nex; Master;Restriction;No;Yes;Nex Trio;Kill Nex with three or less players at the start of the fight.
+Nex;Nex; Master;Mechanical;No;No;Shadows Move...;Kill Nex without anyone being hit by the Shadow Smash attack.
+Nex;Nex; Master;Mechanical;No;No;Contain this!;Kill Nex without anyone taking damage from any Ice special attack.
+Nex;Nex; Master;Mechanical;No;No;A siphon will solve this;Kill Nex without letting her heal from her Blood Siphon special attack.
+Nex;Nex; Master;Mechanical;No;No;There is no escape!;Kill Nex without anyone being hit by the Smoke Dash special attack.
+Nex;Nex; Grandmaster;Restriction;No;Yes;Nex Duo;Kill Nex with two or less players at the start of the fight.
+Nex;Nex; Grandmaster;Perfection;No;No;Perfect Nex;"Kill Nex whilst completing the requirements for ""There is no escape"", ""Shadows move"", ""A siphon will solve this"", and ""Contain this!"""
+Nex;Nex; Grandmaster;Restriction;No;Yes;I should see a doctor;Kill Nex whilst a player is coughing.
+Obor;Obor; Easy;Restriction;No;No;Fighting as Intended;Kill Obor on a free to play world.
+Obor;Obor; Easy;Kill Count;No;No;Obor Novice;Open Obor's chest once.
+Obor;Obor; Easy;Mechanical;No;No;Sleeping Giant;Kill Obor whilst he is immobilized.
+Obor;Obor; Medium;Perfection;No;No;Squashing the Giant;Kill Obor without taking any damage off prayer.
+Obor;Obor; Medium;Kill Count;No;No;Obor Champion;Open Obor's chest 5 times.
+Obor;Obor; Medium;Mechanical;No;No;Back to the Wall;Kill Obor without being pushed back more than one square by his knockback attack.
+Phantom Muspah;Phantom_Muspah; Hard;Kill Count;No;No;Phantom Muspah Adept;Kill the Phantom Muspah.
+Phantom Muspah;Phantom_Muspah; Elite;Restriction;No;No;Can't Escape;Kill the Phantom Muspah without running.
+Phantom Muspah;Phantom_Muspah; Elite;Kill Count;No;No;Phantom Muspah Veteran;Kill the Phantom Muspah 25 times.
+Phantom Muspah;Phantom_Muspah; Elite;Mechanical;No;No;Versatile Drainer;Drain the Phantom Muspah's Prayer with three different sources in one kill.
+Phantom Muspah;Phantom_Muspah; Elite;Speed;No;No;Phantom Muspah Speed-Trialist;Kill the Phantom Muspah in less than 3 minutes without a slayer task.
+Phantom Muspah;Phantom_Muspah; Master;Perfection;No;No;Walk Straight Pray True;Kill the Phantom Muspah without taking any avoidable damage.
+Phantom Muspah;Phantom_Muspah; Master;Speed;No;No;Phantom Muspah Speed-Chaser;Kill the Phantom Muspah in less than 2 minutes without a slayer task.
+Phantom Muspah;Phantom_Muspah; Master;Stamina;No;No;Essence Farmer;Kill the Phantom Muspah 10 times in one trip.
+Phantom Muspah;Phantom_Muspah; Master;Restriction;No;No;More than just a ranged weapon;Kill the Phantom Muspah by only dealing damage to it with a salamander.
+Phantom Muspah;Phantom_Muspah; Master;Mechanical;No;No;Space is Tight;Kill the Phantom Muspah whilst it is surrounded by spikes.
+Phantom Muspah;Phantom_Muspah; Master;Kill Count;No;No;Phantom Muspah Master;Kill the Phantom Muspah 50 times.
+Phantom Muspah;Phantom_Muspah; Grandmaster;Perfection;No;No;Phantom Muspah Manipulator;Kill the Phantom Muspah whilst completing Walk Straight Pray True, Space is Tight & Can't Escape.
+Phantom Muspah;Phantom_Muspah; Grandmaster;Speed;No;No;Phantom Muspah Speed-Runner;Kill the Phantom Muspah in less than 1 minute and 30 seconds without a slayer task.
+Phosani's Nightmare;The_Nightmare; Elite;Kill Count;No;No;Phosani's Veteran;Kill Phosani's Nightmare once.
+Phosani's Nightmare;The_Nightmare; Master;Mechanical;No;No;Crush Hour;Kill Phosani's Nightmare while killing every parasite and husk in one hit.
+Phosani's Nightmare;The_Nightmare; Master;Speed;No;No;Phosani's Speedchaser;Kill Phosani's Nightmare within 7 minutes and 30 seconds
+Phosani's Nightmare;The_Nightmare; Master;Kill Count;No;No;Phosani's Master;Kill Phosani's Nightmare 5 times.
+Phosani's Nightmare;The_Nightmare; Master;Mechanical;No;No;Dreamland Express;Kill Phosani's Nightmare without a sleepwalker reaching her during her desperation phase.
+Phosani's Nightmare;The_Nightmare; Master;Mechanical;No;No;I Would Simply React;Kill Phosani's Nightmare without allowing your prayer to be disabled.
+Phosani's Nightmare;The_Nightmare; Grandmaster;Speed;No;No;Phosani's Speedrunner;Kill Phosani's Nightmare within 6 minutes.
+Phosani's Nightmare;The_Nightmare; Grandmaster;Perfection;No;No;Perfect Phosani's Nightmare;Kill Phosani's Nightmare while only taking damage from husks, power blasts and weakened Parasites. Also, without having your attacks slowed by the Nightmare Spores or letting a Sleepwalker reach Phosani's Nightmare.
+Phosani's Nightmare;The_Nightmare; Grandmaster;Kill Count;No;No;Phosani's Grandmaster;Kill Phosani's Nightmare 25 times.
+Phosani's Nightmare;The_Nightmare; Grandmaster;Stamina;No;No;Can't Wake Up;Kill Phosani's Nightmare 5 times in a row without leaving Phosani's Dream.
+Royal Titans;Royal_titans; Easy;Restriction;No;No;One by one;Kill one Titan at a time, without attacking the other.
+Royal Titans;Royal_titans; Easy;Restriction;No;No;Elemental Company;Kill the Royal Titans without attacking any elementals.
+Royal Titans;Royal_titans; Easy;Restriction;No;No;Let them fight;Kill the Royal Titans while having the Royal Titans kill a total of 10 elementals.
+Royal Titans;Royal_titans; Medium;Kill Count;No;No;Royal Titan Adept;Kill the Royal Titans 25 times.
+Royal Titans;Royal_titans; Medium;Mechanical;No;No;It takes too long;Kill both Royal Titans while they are charging up their area attack. Both titans must die during the same charging phase.
+Royal Titans;Royal_titans; Medium;Kill Count;No;No;Royal Titan Champion;Kill the Royal Titans 10 times.
+Royal Titans;Royal_titans; Hard;Perfection;No;No;Perfect Royal Titans;Kill the Royal Titans without getting hit by any avoidable damage. This includes: Melee attacks, Explosions from the ice or fire elemental, Icicle or fire spawn damage, and Ice or fire pulse attacks.
+Royal Titans;Royal_titans; Hard;Speed;No;No;Royal Titan Speed-Runner;Kill the Royal Titans in less than 1:30 minutes.
+Royal Titans;Royal_titans; Hard;Stamina;No;No;Titan Killer;Kill the Royal Titans 15 times without anyone leaving the instance. If a player joins the fight, the current streak will be reset to 0. If a player leaves the fight, the task will be failed and a new instance will need to be created.
+Royal Titans;Royal_titans; Hard;Restriction;No;No;I need room;Kill the Royal Titans while extinguishing all fires and melting all icicles before they dissipate naturally.
+Royal Titans;Royal_titans; Elite;Restriction;No;No;No time to pray;Kill the Royal Titans without losing any prayer points.
+Sarachnis;Sarachnis; Easy;Kill Count;No;No;Sarachnis Novice;Kill Sarachnis 10 times.
+Sarachnis;Sarachnis; Medium;Kill Count;No;No;Sarachnis Champion;Kill Sarachnis 25 times.
+Sarachnis;Sarachnis; Medium;Restriction;No;No;Newspaper Enthusiast;Kill Sarachnis with a crush weapon.
+Sarachnis;Sarachnis; Hard;Perfection;No;No;Inspect Repellent;Kill Sarachnis without her dealing damage to anyone.
+Sarachnis;Sarachnis; Hard;Mechanical;No;No;Ready to Pounce;Kill Sarachnis without her using her range attack twice in a row.
+Scorpia;Scorpia; Hard;Perfection;No;No;I Can't Reach That;Kill Scorpia without taking any damage from her.
+Scorpia;Scorpia; Hard;Kill Count;No;No;Scorpia Adept;Kill Scorpia 10 times.
+Scorpia;Scorpia; Hard;Restriction;No;No;Guardians No More;Kill Scorpia without killing her guardians.
+Scorpia;Scorpia; Elite;Kill Count;No;No;Scorpia Veteran;Kill Scorpia 25 times.
+Scurrius;Scurrius; Easy;Kill Count;No;No;Scurrius Novice;Kill Scurrius once.
+Scurrius;Scurrius; Easy;Restriction;No;No;Sit Rat;Finish off Scurrius with a ratbane weapon in a private instance.
+Scurrius;Scurrius; Medium;Mechanical;No;No;Efficient Pest Control;Kill 6 Giant Rats within Scurrius' lair in 3 seconds.
+Scurrius;Scurrius; Medium;Perfection;No;No;Perfect Scurrius;Kill Scurrius in a private instance without taking damage from the following attacks: Tail Swipe and Falling Bricks. Pray correctly against the following attacks: Flying Fur and Bolts of Electricity.
+Scurrius;Scurrius; Medium;Kill Count;No;No;Scurrius Champion;Kill Scurrius 10 times.
+Shellbane gryphon;Shellbane_gryphon; Easy;Mechanical;Yes;No;Dry Cleaning;Kill the Shellbane Gryphon after clearing its corrosive spit from your armour.
+Shellbane gryphon;Shellbane_gryphon; Easy;Kill Count;Yes;No;Shellbane Adept;Kill the Shellbane Gryphon 25 times.
+Shellbane gryphon;Shellbane_gryphon; Medium;Speed;Yes;No;Shellbane Speedrunner;Kill the Shellbane Gryphon 10 times within 12:30 minutes of entering the cave.
+Shellbane gryphon;Shellbane_gryphon; Medium;Perfection;Yes;No;Perfect Shellbane;Kill the Shellbane Gryphon without taking damage.
+Shellbane gryphon;Shellbane_gryphon; Medium;Kill Count;Yes;No;Shellbane Veteran;Kill the Shellbane Gryphon 50 times.
+Shellbane gryphon;Shellbane_gryphon; Hard;Stamina;Yes;No;Shellbane Survivor;Kill the Shellbane Gryphon 25 times without leaving the cave.
+Shellbane gryphon;Shellbane_gryphon; Hard;Restriction;Yes;No;Featherweight Fighter;Kill the Shellbane Gryphon 5 times without leaving the cave, while wearing gear weighing less than 40kg.
+Skeletal Wyvern;Skeletal_Wyvern; Medium;Kill Count;Yes;No;A Frozen Foe from the Past;Kill a Skeletal Wyvern
+Skotizo;Skotizo; Medium;Restriction;No;No;Demonbane Weaponry;Kill Skotizo with a demonbane weapon equipped.
+Skotizo;Skotizo; Medium;Kill Count;No;No;Skotizo Champion;Kill Skotizo once.
+Skotizo;Skotizo; Medium;Mechanical;No;No;Demonic Weakening;Kill Skotizo with no altars active.
+Skotizo;Skotizo; Hard;Kill Count;No;No;Skotizo Adept;Kill Skotizo 5 times.
+Skotizo;Skotizo; Elite;Restriction;No;No;Up for the Challenge;Kill Skotizo without equipping a demonbane weapon.
+Skotizo;Skotizo; Elite;Perfection;No;No;Demon Evasion;Kill Skotizo without taking any damage.
+Skotizo;Skotizo; Master;Restriction;No;No;Precise Positioning;Kill Skotizo with the final source of damage being a Chinchompa explosion.
+Tempoross;Tempoross; Easy;Kill Count;No;No;Tempoross Novice;Subdue Tempoross 5 times.
+Tempoross;Tempoross; Easy;Mechanical;No;No;Master of Buckets;Extinguish at least 5 fires during a single Tempoross fight.
+Tempoross;Tempoross; Easy;Mechanical;No;No;Calm Before the Storm;Repair either a mast or a totem pole.
+Tempoross;Tempoross; Easy;Mechanical;No;No;Fire in the Hole!;Attack Tempoross from both sides by loading both cannons on both ships.
+Tempoross;Tempoross; Medium;Perfection;No;No;The Lone Angler;Subdue Tempoross alone without getting hit by any fires, torrents or waves.
+Tempoross;Tempoross; Medium;Kill Count;No;No;Tempoross Champion;Subdue Tempoross 10 times.
+Tempoross;Tempoross; Hard;Restriction;No;No;Dress Like You Mean It;Subdue Tempoross while wearing any variation of the angler outfit.
+Tempoross;Tempoross; Hard;Mechanical;No;No;Why Cook?;Subdue Tempoross, getting rewarded with 10 reward permits from a single Tempoross fight.
+The Hueycoatl;The_Hueycoatl; Medium;Kill Count;No;No;Hueycoatl Champion;Kill the Hueycoatl once.
+The Hueycoatl;The_Hueycoatl; Medium;Restriction;No;No;You're a wizard;Kill the Hueycoatl using only earth spells.
+The Hueycoatl;The_Hueycoatl; Hard;Restriction;No;No;I'm your son;Kill the Hueycoatl whilst wearing two pieces of Hueycoatl armour.
+The Hueycoatl;The_Hueycoatl; Hard;Mechanical;No;No;Pillar Lover;Kill the Hueycoatl whilst it is vulnerable.
+The Hueycoatl;The_Hueycoatl; Hard;Kill Count;No;No;Hueycoatl Adept;Kill the Hueycoatl 10 times.
+The Hueycoatl;The_Hueycoatl; Elite;Kill Count;No;No;Hueycoatl Veteran;Kill the Hueycoatl 25 times.
+The Hueycoatl;The_Hueycoatl; Elite;Speed;No;No;Hueycoatl Speed-Trialist;Kill the Hueycoatl in 2:30
+The Hueycoatl;The_Hueycoatl; Elite;Perfection;No;No;Perfect Hueycoatl;Kill the Hueycoatl perfectly 5 times without leaving. To get a perfect kill, you must not take any avoidable damage from the Hueycoatl's lightning attack, tail slam attack or off-prayer projectile attacks.
+The Hueycoatl;The_Hueycoatl; Master;Speed;No;Yes;Hueycoatl Speed-Chaser;Kill the Hueycoatl in 2:30 with five or fewer players.
+The Hueycoatl;The_Hueycoatl; Master;Restriction;No;No;Is it a bird?;Kill the Hueycoatl using only dragonbane weaponry.
+The Hueycoatl;The_Hueycoatl; Grandmaster;Speed;No;Yes;Hueycoatl Speed-Runner;Kill the Hueycoatl in 2:30 with three or fewer players.
+The Mimic;The_Mimic; Elite;Kill Count;No;No;Mimic Veteran;Kill the Mimic once.
+The Nightmare;The_Nightmare; Hard;Kill Count;No;No;Nightmare Adept;Kill The Nightmare once.
+The Nightmare;The_Nightmare; Elite;Speed;No;No;Nightmare (Solo) Speed-Trialist;Defeat the Nightmare (Solo) in less than 23 minutes.
+The Nightmare;The_Nightmare; Elite;Speed;No;Yes;Nightmare (5-Scale) Speed-Trialist;Defeat the Nightmare (5-scale) in less than 5 minutes.
+The Nightmare;The_Nightmare; Elite;Kill Count;No;No;Nightmare Veteran;Kill The Nightmare 25 times.
+The Nightmare;The_Nightmare; Elite;Mechanical;No;No;Explosion!;Kill two Husks at the same time.
+The Nightmare;The_Nightmare; Elite;Restriction;No;No;Sleep Tight;Kill the Nightmare solo.
+The Nightmare;The_Nightmare; Master;Speed;No;No;Nightmare (Solo) Speed-Chaser;Defeat the Nightmare (Solo) in less than 19 minutes.
+The Nightmare;The_Nightmare; Master;Speed;No;Yes;Nightmare (5-Scale) Speed-Chaser;Defeat the Nightmare (5-scale) in less than 4 minutes.
+The Nightmare;The_Nightmare; Master;Kill Count;No;No;Nightmare Master;Kill The Nightmare 50 times.
+The Nightmare;The_Nightmare; Master;Perfection;No;No;Perfect Nightmare;Kill the Nightmare without any player taking damage from the following attacks: Nightmare rifts, an un-cured parasite explosion, Corpse flowers or the Nightmare's Surge. Also, no player can take damage off prayer or have their attacks slowed by the Nightmare spores.
+The Nightmare;The_Nightmare; Grandmaster;Speed;No;Yes;Nightmare (5-Scale) Speed-Runner;Defeat the Nightmare (5-scale) in less than 3:30 minutes.
+The Nightmare;The_Nightmare; Grandmaster;Mechanical;No;No;Terrible Parent;Kill the Nightmare solo without the Parasites healing the boss for more than 100 health.
+The Nightmare;The_Nightmare; Grandmaster;Speed;No;No;Nightmare (Solo) Speed-Runner;Defeat the Nightmare (Solo) in less than 16 minutes.
+The Nightmare;The_Nightmare; Grandmaster;Restriction;No;No;A Long Trip;Kill the Nightmare without any player losing any prayer points.
+Theatre of Blood;Theatre_of_Blood; Elite;Kill Count;No;No;Theatre of Blood Veteran;Complete the Theatre of Blood 25 times.
+Theatre of Blood;Theatre_of_Blood; Master;Restriction;No;No;Can You Dance?;Kill Xarpus without anyone in the team using a ranged or magic weapon.
+Theatre of Blood;Theatre_of_Blood; Master;Mechanical;No;No;Pop It;Kill Verzik without any Nylocas being frozen and without anyone taking damage from the Nylocas.
+Theatre of Blood;Theatre_of_Blood; Master;Speed;No;Yes;Theatre (5-Scale) Speed-Chaser;Complete the Theatre of Blood (5-scale) in less than 16 minutes.
+Theatre of Blood;Theatre_of_Blood; Master;Perfection;No;Yes;Perfect Bloat;Kill the Pestilent Bloat without anyone in the team taking damage from the following sources: Pestilent flies, Falling body parts or The Pestilent Bloats stomp attack.
+Theatre of Blood;Theatre_of_Blood; Master;Perfection;No;Yes;Perfect Nylocas;Kill the Nylocas Vasilias without anyone in the team attacking any Nylocas with the wrong attack style, without letting a pillar collapse and without getting hit by any of the Nylocas Vasilias attacks whilst off prayer.
+Theatre of Blood;Theatre_of_Blood; Master;Speed;No;Yes;Theatre (4-Scale) Speed-Chaser;Complete the Theatre of Blood (4-scale) in less than 17 minutes.
+Theatre of Blood;Theatre_of_Blood; Master;Perfection;No;No;Perfect Xarpus;Kill Xarpus without anyone in the team taking any damage from Xarpus' attacks and without letting an exhumed heal Xarpus more than twice.
+Theatre of Blood;Theatre_of_Blood; Master;Perfection;No;No;Perfect Sotetseg;Kill Sotetseg without anyone in the team stepping on the wrong tile in the maze, without getting hit by the tornado and without taking any damage from Sotetseg's attacks whilst off prayer.
+Theatre of Blood;Theatre_of_Blood; Master;Restriction;No;No;Back in My Day...;Complete the Theatre of Blood without any member of the team equipping a Scythe of Vitur.
+Theatre of Blood;Theatre_of_Blood; Master;Perfection;No;No;Perfect Verzik;Defeat Verzik Vitur without anyone in the team taking damage from Verzik Vitur's attacks other than her spider form's correctly prayed against regular magical and ranged attacks.
+Theatre of Blood;Theatre_of_Blood; Master;Perfection;No;No;Perfect Maiden;Kill The Maiden of Sugadinti without anyone in the team taking damage from the following sources: Blood Spawn projectiles and Blood Spawn trails. Also, without taking damage off prayer and without letting any of the Nylocas Matomenos heal The Maiden.
+Theatre of Blood;Theatre_of_Blood; Master;Restriction;No;No;Can't Drain This;Kill The Maiden of Sugadinti without anyone in the team losing any prayer points.
+Theatre of Blood;Theatre_of_Blood; Master;Speed;No;Yes;Theatre (Trio) Speed-Chaser;Complete the Theatre of Blood (Trio) in less than 20 minutes.
+Theatre of Blood;Theatre_of_Blood; Master;Mechanical;No;No;A Timely Snack;Kill Sotetseg after surviving at least 3 ball attacks without sharing the damage and without anyone dying throughout the fight.
+Theatre of Blood;Theatre_of_Blood; Master;Mechanical;No;No;Two-Down;Kill the Pestilent Bloat before he shuts down for the third time.
+Theatre of Blood;Theatre_of_Blood; Master;Kill Count;No;No;Theatre of Blood Master;Complete the Theatre of Blood 75 times.
+Theatre of Blood;Theatre_of_Blood; Grandmaster;Speed;No;Yes;Theatre (Trio) Speed-Runner;Complete the Theatre of Blood (Trio) in less than 17 minutes and 30 seconds.
+Theatre of Blood;Theatre_of_Blood; Grandmaster;Speed;No;Yes;Theatre (4-Scale) Speed-Runner;Complete the Theatre of Blood (4-scale) in less than 15 minutes.
+Theatre of Blood;Theatre_of_Blood; Grandmaster;Restriction;No;No;Morytania Only;Complete the Theatre of Blood without any member of the team equipping a non-barrows weapon (except Dawnbringer).
+Theatre of Blood;Theatre_of_Blood; Grandmaster;Speed;No;Yes;Theatre (5-Scale) Speed-Runner;Complete the Theatre of Blood (5-scale) in less than 14 minutes and 15 seconds.
+Theatre of Blood;Theatre_of_Blood; Grandmaster;Speed;No;Yes;Theatre (Duo) Speed-Runner;Complete the Theatre of Blood (Duo) in less than 26 minutes.
+Theatre of Blood;Theatre_of_Blood; Grandmaster;Perfection;No;Yes;Perfect Theatre;"Complete the Theatre of Blood without anyone dying through any means and whilst everyone in the team completes the following Combat Achievement tasks in a single run: ""Perfect Maiden"", ""Perfect Bloat"", ""Perfect Nylocas"", ""Perfect Sotetseg"", ""Perfect Xarpus"" and ""Perfect Verzik""."
+Theatre of Blood;Theatre_of_Blood; Grandmaster;Kill Count;No;No;Theatre of Blood Grandmaster;Complete the Theatre of Blood 150 times.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Hard;Kill Count;No;No;Theatre of Blood: SM Adept;Complete the Theatre of Blood: Entry Mode 1 time.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;Chally Time;Defeat the Pestilent Bloat in the Theatre of Blood: Entry Mode by using a halberd special attack as your final attack.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;Don't Look at Me!;Kill Xarpus in the Theatre of Blood: Entry Mode without him reflecting any damage to anyone.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;Pass It On;In the Theatre of Blood: Entry Mode, successfully pass on the green ball to a team mate.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;Yes;Just To Be Safe;Defeat Sotetseg in the Theatre of Blood: Entry Mode after having split the big ball with your entire team. This must be done with a group size of at least 2.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;Appropriate Tools;Defeat the Pestilent Bloat in the Theatre of Blood: Entry Mode with everyone having a salve amulet equipped.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;Anticoagulants;Defeat the Maiden of Sugadinti in the Theatre of Blood: Entry Mode without letting any bloodspawn live for longer than 10 seconds.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;Attack, Step, Wait;Survive Verzik Vitur's second phase in the Theatre of Blood: Entry Mode without anyone getting bounced by Verzik.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;Nylocas, On the Rocks;In the Theatre of Blood: Entry Mode, freeze any 4 Nylocas with a single Ice Barrage spell.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;No-Pillar;Survive Verzik Vitur's pillar phase in the Theatre of Blood: Entry Mode without losing a single pillar.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Elite;Mechanical;No;No;They Won't Expect This;In the Theatre of Blood: Entry Mode, enter the Pestilent Bloat room from the opposite side.
+Theatre of Blood: Entry Mode;Theatre_of_Blood; Master;Speed;No;No;Theatre of Blood: SM Speed-Chaser;Complete the Theatre of Blood: Entry Mode in less than 17 minutes.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Master;Speed;No;No;Hard Mode? Completed It;Complete the Theatre of Blood: Hard Mode within the challenge time.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Mechanical;No;No;Nylo Sniper;Defeat Verzik Vitur's in the Theatre of Blood: Hard Mode without anyone in your team causing a Nylocas to explode by getting too close.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Mechanical;No;Yes;Personal Space;Defeat the Pestilent Bloat in the Theatre of Blood: Hard Mode with at least 3 people in the room, without anyone in your team standing on top of each other.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Speed;No;Yes;Theatre: HM (5-Scale) Speed-Runner;Complete the Theatre of Blood: Hard Mode (5-scale) with an overall time of less than 19 minutes.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Speed;No;Yes;Theatre: HM (Trio) Speed-Runner;Complete the Theatre of Blood: Hard Mode (Trio) with an overall time of less than 23 minutes.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Speed;No;Yes;Theatre: HM (4-Scale) Speed-Runner;Complete the Theatre of Blood: Hard Mode (4-scale) with an overall time of less than 21 minutes.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Restriction;No;No;Pack Like a Yak;Complete the Theatre of Blood: Hard Mode within the challenge time, with no deaths and without anyone buying anything from a supply chest.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Mechanical;No;No;Stop Right There!;Defeat the Maiden of Sugadinti in the Theatre of Blood: Hard Mode without letting blood spawns create more than 15 blood trails.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Mechanical;No;No;Royal Affairs;In the Theatre of Blood: Hard Mode, complete the Nylocas room without ever letting the Nylocas Prinkipas change styles.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Perfection;No;No;Harder Mode II;Defeat Xarpus in the Theatre of Blood: Hard Mode after letting the exhumeds heal him to full health and without anyone in the team taking any damage.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Restriction;No;No;Harder Mode III;Defeat Verzik Vitur in the Theatre of Blood: Hard Mode without anyone attacking her with a melee weapon during her third phase.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Mechanical;No;No;Team Work Makes the Dream Work;When Verzik Vitur in the Theatre of Blood: Hard Mode uses her yellow power blast attack while the tornadoes are active, have everyone get through the attack without taking damage. This cannot be completed with one player alive
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Kill Count;No;No;Theatre of Blood: HM Grandmaster;Complete the Theatre of Blood: Hard Mode 50 times.
+Theatre of Blood: Hard Mode;Theatre_of_Blood; Grandmaster;Perfection;No;No;Harder Mode I;Defeat Sotetseg in the Theatre of Blood: Hard Mode without anyone sharing the ball with anyone, without anyone dying, and without anyone taking damage from any of its other attacks or stepping on the wrong tile in the maze.
+Thermonuclear Smoke Devil;Thermonuclear_smoke_devil; Elite;Perfection;Yes;No;Hazard Prevention;Kill the Thermonuclear Smoke Devil without it hitting anyone.
+Thermonuclear Smoke Devil;Thermonuclear_smoke_devil; Elite;Restriction;Yes;No;Spec'd Out;Kill the Thermonuclear Smoke Devil using only special attacks.
+Thermonuclear Smoke Devil;Thermonuclear_smoke_devil; Elite;Kill Count;Yes;No;Thermonuclear Veteran;Kill the Thermonuclear Smoke Devil 20 times.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Perfection;No;Yes;Hardcore Raiders;Complete the Tombs of Amascut in a group of two or more without anyone dying.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Mechanical;No;No;Down Do Specs;Defeat the Wardens after staggering the boss a maximum of twice during phase two, without dying yourself.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Restriction;No;No;Helpful spirit who?;Complete the Tombs of Amascut without using any supplies from the Helpful Spirit and without anyone dying. Honey locusts are included in this restriction.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Kill Count;No;No;Tomb Explorer;Complete the Tombs of Amascut once.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Perfection;No;No;Perfect Het;Complete the Het room without taking any damage from the light beam and orbs. You must destroy the core after one exposure.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Perfection;No;No;Hardcore Tombs;Complete the Tombs of Amascut solo without dying.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Mechanical;No;No;Dropped the ball;Defeat Akkha without dropping any materialising orbs and without dying yourself.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Mechanical;No;No;No skipping allowed;Defeat Ba-Ba after only attacking the non-weakened boulders in the rolling boulder phase, without dying yourself. The Boulderdash invocation must be activated.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Perfection;No;No;Perfect Crondis;Complete the Crondis room without letting a crocodile get to the tree, without anyone losing water from their container and in under one minute.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Perfection;No;Yes;Perfect Apmeken;Complete the Apmeken room in a group of two or more, without anyone allowing any dangers to trigger, standing in venom or being hit by a volatile baboon. You must complete this room in less than three minutes.
+Tombs of Amascut;Tombs_of_Amascut; Elite;Mechanical;No;No;I'm in a rush;Defeat Ba-Ba after destroying four or fewer rolling boulders in total without dying yourself.
+Tombs of Amascut;Tombs_of_Amascut; Master;Restriction;No;No;You are not prepared;Complete a full Tombs of Amascut raid only using supplies given inside the tomb and without anyone dying.
+Tombs of Amascut;Tombs_of_Amascut; Master;Kill Count;No;No;Tomb Raider;Complete the Tombs of Amascut 50 times.
+Tombs of Amascut;Tombs_of_Amascut; Master;Mechanical;No;No;Better get movin';Defeat Elidinis' Warden in phase three of the Wardens fight with 'Aerial Assault', 'Stay vigilant' and 'Insanity' invocations activated and without dying yourself.
+Tombs of Amascut;Tombs_of_Amascut; Master;Kill Count;No;No;Tomb Looter;Complete the Tombs of Amascut 25 times.
+Tombs of Amascut;Tombs_of_Amascut; Master;Mechanical;No;No;Chompington;Defeat Zebak using only melee attacks and without dying yourself.
+Tombs of Amascut;Tombs_of_Amascut; Master;Speed;No;No;Tombs Speed Runner;Complete the Tombs of Amascut (normal) within 18 mins at any group size.
+Tombs of Amascut;Tombs_of_Amascut; Master;Perfection;No;Yes;Perfect Wardens;Defeat The Wardens in a group of two or more, without anyone taking avoidable damage from the following: Warden attacks, obelisk attacks, lightning attacks in phase three, skull attack in phase three, Demi god attacks in phase three. You must have all Wardens invocations activated.
+Tombs of Amascut;Tombs_of_Amascut; Master;Perfection;No;Yes;Perfect Akkha;Complete Akkha in a group of two or more, without anyone taking any damage from the following: Akkha's attacks off-prayer, Akkha's special attacks (orbs, memory, detonate), exploding shadow timers, orbs in the enrage phase or attacking Akkha with the wrong style. You must have all Akkha invocations activated.
+Tombs of Amascut;Tombs_of_Amascut; Master;Perfection;No;Yes;Perfect Ba-Ba;Defeat Ba-Ba in a group of two or more, without anyone taking any damage from the following: Ba-Ba's Attacks off-prayer, Ba-Ba's slam, rolling boulders, rubble attack or falling rocks. No sarcophagi may be opened. You must have all Ba-Ba invocations activated.
+Tombs of Amascut;Tombs_of_Amascut; Master;Perfection;No;Yes;Perfect Zebak;Defeat Zebak without anyone taking any damage from: poison, Zebak's basic attacks off-prayer, blood spawns and waves. You also must not push more than two jugs on the roar attack during the fight (you may destroy stationary ones). You must have all Zebak invocations activated.
+Tombs of Amascut;Tombs_of_Amascut; Master;Perfection;No;No;Perfect Scabaras;Complete the Scabaras room in less than a minute without anyone taking any damage from puzzles.
+Tombs of Amascut;Tombs_of_Amascut; Master;Perfection;No;Yes;Perfect Kephri;Defeat Kephri in a group of two or more, without anyone taking any damage from the following: egg explosions, Kephri's attacks, Exploding Scarabs, Bodyguards, dung attacks. No eggs may hatch throughout the fight.
+Tombs of Amascut: Entry Mode;Tombs_of_Amascut; Hard;Restriction;No;No;Confident Raider;Complete a Tombs of Amascut raid at level 100 or above.
+Tombs of Amascut: Entry Mode;Tombs_of_Amascut; Hard;Restriction;No;No;Movin' on up;Complete a Tombs of Amascut raid at level 50 or above.
+Tombs of Amascut: Entry Mode;Tombs_of_Amascut; Hard;Kill Count;No;No;Novice Tomb Explorer;Complete the Tombs of Amascut in Entry mode (or above) once.
+Tombs of Amascut: Entry Mode;Tombs_of_Amascut; Hard;Kill Count;No;No;Novice Tomb Looter;Complete the Tombs of Amascut in Entry mode (or above) 25 times.
+Tombs of Amascut: Entry Mode;Tombs_of_Amascut; Elite;Kill Count;No;No;Novice Tomb Raider;Complete the Tombs of Amascut in Entry mode (or above) 50 times.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Elite;Kill Count;No;No;Expert Tomb Explorer;Complete the Tombs of Amascut (Expert mode) once.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Restriction;No;Yes;Fancy feet;Complete phase three of The Wardens in a group of two or more, using only melee attacks and without dying yourself. The 'Insanity' invocation must be activated.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Kill Count;No;No;Expert Tomb Looter;Complete the Tombs of Amascut (Expert mode) 25 times.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Mechanical;No;No;Something of an expert myself;Complete the Tombs of Amascut raid at level 350 or above without anyone dying.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Mechanical;No;No;Rockin' around the croc;Defeat Zebak with all Zebak invocations activated and the path levelled up to at least four, without dying yourself.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Mechanical;No;No;All out of medics;Defeat Kephri without letting her heal above 25% after the first down. The 'Medic' invocation must be activated. You must do this without dying yourself.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Mechanical;No;No;Warden't you believe it;Defeat the Wardens with all Wardens invocations activated, at expert level and without dying yourself.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Restriction;No;No;Resourceful Raider;"Complete the Tombs of Amascut with the ""On a diet"" and ""Dehydration"" invocations activated and without anyone dying."
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Mechanical;No;No;Ba-Bananza;Defeat Ba-Ba with all Ba-Ba invocations activated and the path levelled up to at least four, without dying yourself.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Restriction;No;No;But... Damage;Complete the Tombs of Amascut without anyone in your party wearing or holding any equipment at tier 75 or above.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Master;Mechanical;No;No;Doesn't bug me;Defeat Kephri with all Kephri invocations activated and the path levelled up to at least four, without dying yourself.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Mechanical;No;No;All Praise Zebak;Defeat Zebak without losing a single prayer point. You must also meet the conditions of the 'Rockin' Around The Croc' achievement.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Perfection;No;No;Perfection of Apmeken;Complete 'Perfect Apmeken' and 'Perfect Ba-Ba' in a single run of the Tombs of Amascut.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Perfection;No;No;Perfection of Crondis;Complete 'Perfect Crondis' and 'Perfect Zebak' in a single run of the Tombs of Amascut.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Perfection;No;No;Perfection of Het;Complete 'Perfect Het' and 'Perfect Akkha' in a single run of the Tombs of Amascut.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Mechanical;No;No;Amascut's Remnant;Complete the Tombs of Amascut at raid level 500 or above without anyone dying.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Mechanical;No;No;Maybe I'm the boss.;Complete a Tombs of Amascut raid with every single boss invocation activated and without anyone dying.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Speed;No;Yes;Tombs Speed Runner III;Complete the Tombs of Amascut (expert) within 18 mins in a group of 8.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Mechanical;No;No;Akkhan't Do it;Defeat Akkha with all Akkha invocations activated and the path levelled up to at least four, without dying yourself.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Kill Count;No;No;Expert Tomb Raider;Complete the Tombs of Amascut (Expert mode) 50 times.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Speed;No;No;Tombs Speed Runner II;Complete the Tombs of Amascut (expert) within 20 mins at any group size.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Perfection;No;No;Perfection of Scabaras;Complete 'Perfect Scabaras' and 'Perfect Kephri' in a single run of Tombs of Amascut.
+Tombs of Amascut: Expert Mode;Tombs_of_Amascut; Grandmaster;Perfection;No;No;Insanity;Complete 'Perfect Wardens' at expert or above.
+Tormented Demon;Tormented_Demon; Elite;Restriction;No;No;Two Times the Torment;Kill two Tormented Demons within 2 seconds.
+Tormented Demon;Tormented_Demon; Elite;Mechanical;No;No;Rapid Reload;Hit three Tormented Demons within 3 seconds using a ballista or a crossbow.
+Tormented Demon;Tormented_Demon; Elite;Kill Count;No;No;Unending Torment;Kill a Tormented Demon.
+Tormented Demon;Tormented_Demon; Elite;Restriction;No;No;Through Fire and Flames;Kill a Tormented Demon whilst their shield is inactive.
+Tormented Demon;Tormented_Demon; Master;Restriction;No;No;Three Times the Thrashing;Kill three Tormented Demons within 3 seconds.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Elite;Restriction;No;No;Facing Jad Head-on III;Complete TzHaar-Ket-Rak's second challenge with only melee.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Elite;Speed;No;No;TzHaar-Ket-Rak's Speed-Trialist;Complete TzHaar-Ket-Rak's first challenge in less than 45 seconds.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Elite;Kill Count;No;No;The II Jad Challenge;Complete TzHaar-Ket-Rak's second challenge.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Master;Perfection;No;No;Supplies? Who Needs 'em?;Complete TzHaar-Ket-Rak's third challenge without having anything in your inventory.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Master;Restriction;No;No;Facing Jad Head-on IV;Complete TzHaar-Ket-Rak's fourth challenge with only melee.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Master;Mechanical;No;No;Multi-Style Specialist;Complete TzHaar-Ket-Rak's third challenge while using a different attack style for each JalTok-Jad.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Master;Kill Count;No;No;The IV Jad Challenge;Complete TzHaar-Ket-Rak's fourth challenge.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Master;Speed;No;No;TzHaar-Ket-Rak's Speed-Chaser;Complete TzHaar-Ket-Rak's third challenge in less than 3 minutes.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Grandmaster;Perfection;No;No;It Wasn't a Fluke;Complete TzHaar-Ket-Rak's fifth and sixth challenges back to back without failing.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Grandmaster;Speed;No;No;TzHaar-Ket-Rak's Speed-Runner;Complete TzHaar-Ket-Rak's fifth challenge in less than 5 minutes.
+TzHaar-Ket-Rak's Challenges;TzHaar-Ket-Raks_Challenges; Grandmaster;Kill Count;No;No;The VI Jad Challenge;Complete TzHaar-Ket-Rak's sixth challenge.
+TzKal-Zuk;TzKal-Zuk; Elite;Kill Count;No;No;Half-Way There;Kill a Jal-Zek within the Inferno.
+TzKal-Zuk;TzKal-Zuk; Master;Perfection;No;No;Nibblers, Begone!;Kill Tzkal-Zuk without letting a pillar fall before wave 67.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Perfection;No;No;No Luck Required;Kill Tzkal-Zuk without being attacked by TzKal-Zuk and without taking damage from a JalTok-Jad.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Restriction;No;No;Jad? What Are You Doing Here?;Kill Tzkal-Zuk without killing the JalTok-Jad which spawns during wave 69.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Restriction;No;No;Nibbler Chaser;Kill Tzkal-Zuk without using any magic spells during any wave in the Inferno.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Mechanical;No;No;Playing with Jads;Complete wave 68 of the Inferno within 30 seconds of the first JalTok-Jad dying.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Restriction;No;No;Wasn't Even Close;Kill Tzkal-Zuk without letting your hitpoints fall below 50 during any wave in the Inferno.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Mechanical;No;No;The Floor Is Lava;Kill Tzkal-Zuk without letting Jal-ImKot dig during any wave in the Inferno.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Kill Count;No;No;Inferno Grandmaster;Complete the Inferno 5 times.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Speed;No;No;Inferno Speed-Runner;Complete the Inferno in less than 65 minutes.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Restriction;No;No;Facing Jad Head-on II;Kill Tzkal-Zuk without equipping any range or mage weapons before wave 69.
+TzKal-Zuk;TzKal-Zuk; Grandmaster;Restriction;No;No;Budget Setup;Kill Tzkal-Zuk without equipping a Twisted Bow within the Inferno.
+TzTok-Jad;TzTok-Jad; Elite;Restriction;No;No;Facing Jad Head-on;Complete the Fight Caves with only melee.
+TzTok-Jad;TzTok-Jad; Elite;Mechanical;No;No;A Near Miss!;Complete the Fight Caves after surviving a hit from TzTok-Jad without praying.
+TzTok-Jad;TzTok-Jad; Elite;Kill Count;No;No;Fight Caves Veteran;Complete the Fight Caves once.
+TzTok-Jad;TzTok-Jad; Master;Kill Count;No;No;Fight Caves Master;Complete the Fight Caves 5 times.
+TzTok-Jad;TzTok-Jad; Master;Speed;No;No;Fight Caves Speed-Chaser;Complete the Fight Caves in less than 30 minutes.
+TzTok-Jad;TzTok-Jad; Master;Mechanical;No;No;Denying the Healers;Complete the Fight caves without letting any of the Yt-MejKot heal.
+TzTok-Jad;TzTok-Jad; Master;Mechanical;No;No;You Didn't Say Anything About a Bat;Complete the Fight Caves without being attacked by a Tz-Kih.
+TzTok-Jad;TzTok-Jad; Grandmaster;Speed;No;No;Fight Caves Speed-Runner;Complete the Fight Caves in less than 26 minutes and 30 seconds.
+TzTok-Jad;TzTok-Jad; Grandmaster;Mechanical;No;No;Denying the Healers II;Complete the Fight Caves without TzTok-Jad being healed by a Yt-HurKot.
+TzTok-Jad;TzTok-Jad; Grandmaster;Restriction;No;No;No Time for a Drink;Complete the Fight Caves without losing any prayer points.
+Vardorvis;Vardorvis; Elite;Speed;No;No;Vardorvis Speed-Trialist;Kill Vardorvis in less than 1:15 minutes without a slayer task.
+Vardorvis;Vardorvis; Elite;Kill Count;No;No;Vardorvis Adept;Kill Vardorvis once.
+Vardorvis;Vardorvis; Master;Speed;No;No;Vardorvis Speed-Chaser;Kill Vardorvis in less than 1:05 without a slayer task.
+Vardorvis;Vardorvis; Master;Kill Count;No;No;Vardorvis Master;Kill Vardorvis 50 times.
+Vardorvis;Vardorvis; Master;Perfection;No;No;Perfect Vardorvis;Kill Vardorvis perfectly 5 times without leaving.
+Vardorvis;Vardorvis; Master;Restriction;No;No;Budget Cutter;Kill Vardorvis with gear worth 2m or less in total.
+Vardorvis;Vardorvis; Grandmaster;Kill Count;No;No;Vardorvis Sleeper;Kill Awakened Vardorvis.
+Vardorvis;Vardorvis; Grandmaster;Mechanical;No;No;Axe Enthusiast;Kill Vardorvis after surviving for 3 minutes of Vardorvis' max speed, and never leaving the centre 25 tiles.
+Vardorvis;Vardorvis; Grandmaster;Speed;No;No;Vardorvis Speed-Runner;Kill Vardorvis in less than 0:55 without a slayer task.
+Venenatis;Venenatis; Hard;Kill Count;No;No;Venenatis Adept;Kill Venenatis 10 times.
+Venenatis;Venenatis; Elite;Kill Count;No;No;Venenatis Veteran;Kill Venenatis 20 times.
+Vet'ion;Vetion; Hard;Kill Count;No;No;Vet'ion Adept;Kill Vet'ion 10 times.
+Vet'ion;Vetion; Elite;Kill Count;No;No;Vet'eran;Kill Vet'ion 20 times.
+Vorkath;Vorkath; Elite;Restriction;No;No;Stick 'em With the Pointy End;Kill Vorkath using melee weapons only.
+Vorkath;Vorkath; Elite;Kill Count;No;No;Vorkath Veteran;Kill Vorkath 50 times.
+Vorkath;Vorkath; Elite;Restriction;No;No;Zombie Destroyer;Kill Vorkath's zombified spawn without using crumble undead.
+Vorkath;Vorkath; Master;Stamina;No;No;Extended Encounter;Kill Vorkath 10 times without leaving his area.
+Vorkath;Vorkath; Master;Perfection;No;No;Dodging the Dragon;Kill Vorkath 5 times without taking any damage from his special attacks and without leaving his area.
+Vorkath;Vorkath; Master;Kill Count;No;No;Vorkath Master;Kill Vorkath 100 times.
+Vorkath;Vorkath; Master;Mechanical;No;No;The Walk;Hit Vorkath 12 times during the acid special without getting hit by his rapid fire or the acid pools.
+Vorkath;Vorkath; Master;Speed;No;No;Vorkath Speed-Chaser;Kill Vorkath in less than 1 minute and 15 seconds.
+Vorkath;Vorkath; Grandmaster;Restriction;No;No;The Fremennik Way;Kill Vorkath with only your fists.
+Vorkath;Vorkath; Grandmaster;Speed;No;No;Vorkath Speed-Runner;Kill Vorkath in less than 54 seconds.
+Vorkath;Vorkath; Grandmaster;Restriction;No;No;Faithless Encounter;Kill Vorkath without losing any prayer points.
+Whisperer;The_Whisperer; Elite;Kill Count;No;No;Whisperer Adept;Kill the Whisperer once.
+Whisperer;The_Whisperer; Elite;Restriction;No;No;Tentacular;Kill the Whisperer whilst only being on the Arceuus spellbook.
+Whisperer;The_Whisperer; Elite;Speed;No;No;Whisperer Speed-Trialist;Kill the Whisperer in less than 3:00 without a slayer task.
+Whisperer;The_Whisperer; Master;Speed;No;No;Whisperer Speed-Chaser;Kill the Whisperer in less than 2:25 without a slayer task.
+Whisperer;The_Whisperer; Master;Kill Count;No;No;Whisperer Master;Kill the Whisperer 50 times.
+Whisperer;The_Whisperer; Master;Perfection;No;No;Perfect Whisperer;Kill the Whisperer without taking avoidable damage 5 times without leaving.
+Whisperer;The_Whisperer; Grandmaster;Restriction;No;No;Dark Memories;Kill the Whisperer whilst spending less than 6 seconds in the pre-enrage shadow realm.
+Whisperer;The_Whisperer; Grandmaster;Kill Count;No;No;Whispered;Kill the Awakened Whisperer.
+Whisperer;The_Whisperer; Grandmaster;Speed;No;No;Whisperer Speed-Runner;Kill the Whisperer in less than 2:05 without a slayer task.
+Wintertodt;Wintertodt; Easy;Mechanical;No;No;Handyman;Repair a brazier which has been destroyed by the Wintertodt.
+Wintertodt;Wintertodt; Easy;Kill Count;No;No;Wintertodt Novice;Subdue the Wintertodt 5 times.
+Wintertodt;Wintertodt; Easy;Restriction;No;No;Cosy;Subdue the Wintertodt with four pieces of warm equipment equipped.
+Wintertodt;Wintertodt; Easy;Mechanical;No;No;Mummy!;Heal a pyromancer after they have fallen.
+Wintertodt;Wintertodt; Medium;Perfection;No;No;Can We Fix It?;Subdue the Wintertodt without allowing all 4 braziers to be broken at the same time.
+Wintertodt;Wintertodt; Medium;Kill Count;No;No;Wintertodt Champion;Subdue the Wintertodt 10 times.
+Wintertodt;Wintertodt; Medium;Restriction;No;No;Leaving No One Behind;Subdue the Wintertodt without any of the Pyromancers falling.
+Wintertodt;Wintertodt; Hard;Stamina;No;No;Why Fletch?;Subdue the Wintertodt after earning 3000 or more points.
+Wyrm;Wyrm; Easy;Kill Count;Yes;No;A Slithery Encounter;Kill a Wyrm.
+Yama;Yama; Elite;Kill Count;No;No;Yama Adept;Defeat Yama once.
+Yama;Yama; Elite;Speed;No;No;Yama Speed-Trialist;Defeat Yama in an average time of under 3:38 over your last four kills.
+Yama;Yama; Elite;Mechanical;No;No;Back so soon?;Defeat Yama without the judge being attacked with the wrong style and without taking more than one instance of damage each time you are exiled from the arena.
+Yama;Yama; Master;Mechanical;No;No;Fire fighter;Defeat Yama without getting hit by fire and having only killed void flares with special attacks.
+Yama;Yama; Master;Kill Count;No;No;Yama Veteran;Defeat Yama 50 times.
+Yama;Yama; Master;Restriction;No;No;No toppings, no drinks, thanks;Defeat Yama without anybody healing using anything other than plain pizza and without anybody drinking any potions.
+Yama;Yama; Master;Mechanical;No;No;Shadow dancer;Defeat Yama without getting hit by shadows and without being more than one tile away from the center of his shadow crash attack.
+Yama;Yama; Master;Speed;No;No;Yama Speed-Chaser;Defeat Yama in an average time of under 3:00 over your last four kills.
+Yama;Yama; Grandmaster;Perfection;No;No;Contract Choreographer;Defeat Yama whilst completing 'Shadow Dancer', 'Fire Fighter', 'Back so soon?' and without taking any other avoidable damage.
+Yama;Yama; Grandmaster;Speed;No;No;Yama Speed-Runner;Defeat Yama in an average time of under 2:34 over your last four kills.
+Yama;Yama; Grandmaster;Kill Count;No;No;Contractually Unbound;Defeat Yama under the elevated conditions of one of his non-standard contracts.
+Zalcano;Zalcano; Elite;Mechanical;No;No;Team Player;Receive imbued tephra from a golem.
+Zalcano;Zalcano; Elite;Mechanical;No;No;The Spurned Hero;Kill Zalcano as the player who has dealt the most damage to her.
+Zalcano;Zalcano; Elite;Perfection;No;No;Perfect Zalcano;Kill Zalcano 5 times in a row without leaving or getting hit by the following: Falling rocks, rock explosions, Zalcano powering up, or standing in a red symbol.
+Zalcano;Zalcano; Elite;Kill Count;No;No;Zalcano Veteran;Kill Zalcano 25 times.
+Zulrah;Zulrah; Hard;Kill Count;No;No;Zulrah Adept;Kill Zulrah 25 times.
+Zulrah;Zulrah; Elite;Speed;No;No;Zulrah Speed-Trialist;Kill Zulrah in less than 1 minute 20 seconds, without a slayer task.
+Zulrah;Zulrah; Elite;Kill Count;No;No;Zulrah Veteran;Kill Zulrah 75 times.
+Zulrah;Zulrah; Elite;Mechanical;No;No;Snake. Snake!? Snaaaaaake!;Kill 3 Snakelings simultaneously.
+Zulrah;Zulrah; Elite;Mechanical;No;No;Snake Rebound;Kill Zulrah by using the Vengeance spell as the finishing blow.
+Zulrah;Zulrah; Master;Kill Count;No;No;Zulrah Master;Kill Zulrah 150 times.
+Zulrah;Zulrah; Master;Speed;No;No;Zulrah Speed-Chaser;Kill Zulrah in less than 1 minute, without a slayer task.
+Zulrah;Zulrah; Master;Perfection;No;No;Perfect Zulrah;Kill Zulrah whilst taking no damage from the following: Snakelings, Venom Clouds, Zulrah's Green or Crimson phase.
+Zulrah;Zulrah; Grandmaster;Speed;No;No;Zulrah Speed-Runner;Kill Zulrah in less than 54 seconds, without a slayer task.
