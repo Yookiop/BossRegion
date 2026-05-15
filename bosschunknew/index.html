@@ -1102,31 +1102,51 @@
         }
       }
 
-      // Distinct color palette for region borders
+      // Explicit region colors first, then fallback palette for anything not listed.
+      const REGION_COLOR_OVERRIDES = Object.freeze({
+        Asgarnia: 'rgba(236, 102, 170, 0.96)',
+        Desert: 'rgba(247, 210, 66, 0.96)',
+        Fremennik: 'rgba(214, 66, 66, 0.96)',
+        Karamja: 'rgba(104, 68, 42, 0.96)',
+        Kourend: 'rgba(148, 96, 214, 0.96)',
+        Zeah: 'rgba(148, 96, 214, 0.96)',
+        Misthalin: 'rgba(88, 174, 255, 0.96)',
+        Morytania: 'rgba(82, 168, 98, 0.96)',
+        Tirannwn: 'rgba(70, 224, 224, 0.96)',
+        Varlamore: 'rgba(244, 150, 54, 0.96)',
+        Wilderness: 'rgba(150, 156, 166, 0.96)',
+      });
       const REGION_COLOR_PALETTE = [
-        'rgba(255, 80,  80,  0.95)',  // red
-        'rgba(0,   200, 255, 0.95)',  // cyan
-        'rgba(100, 220,  60, 0.95)',  // lime
-        'rgba(255, 160,  0,  0.95)',  // orange
-        'rgba(120, 100, 255, 0.95)',  // blue-purple
-        'rgba(255, 220,  0,  0.95)',  // yellow
-        'rgba(255,  80, 180, 0.95)',  // pink
-        'rgba(0,   210, 160, 0.95)',  // teal
-        'rgba(200,  80, 255, 0.95)',  // violet
-        'rgba(255, 140,  60, 0.95)',  // salmon
-        'rgba(255, 255, 200, 0.95)',  // cream
-        'rgba(60,  180,  60, 0.95)',  // green
-        'rgba(255,  60,  60, 0.95)',  // crimson
-        'rgba(60,  140, 255, 0.95)',  // sky blue
-        'rgba(255, 200,  80, 0.95)',  // amber
-        'rgba(180, 255, 120, 0.95)',  // light green
+        'rgba(255, 105, 105, 0.96)',
+        'rgba(95, 190, 255, 0.96)',
+        'rgba(255, 190, 84, 0.96)',
+        'rgba(88, 210, 176, 0.96)',
+        'rgba(214, 118, 255, 0.96)',
+        'rgba(175, 228, 90, 0.96)',
+        'rgba(255, 122, 199, 0.96)',
+        'rgba(255, 235, 120, 0.96)',
       ];
+      const REGION_LABEL_OFFSETS = Object.freeze({
+        Fremennik: { x: 0.08, y: -0.12 },
+      });
+
+      function getRegionBorderMetrics() {
+        const inverseScale = 1 / Math.max(currentScale || 1, 0.2);
+        const thickness = Math.max(16, Math.min(40, Math.round(14 * inverseScale)));
+        const half = Math.floor(thickness / 2);
+        const inwardOffset = Math.max(8, Math.round(thickness * 0.7));
+        return { thickness, half, inwardOffset };
+      }
 
       function getRegionColor(regionName) {
         if(!window._regionColorMap) {
           window._regionColorMap = new Map();
           const sorted = window.REGION_CHUNKS ? [...window.REGION_CHUNKS.keys()].sort() : [];
-          sorted.forEach((name, i) => window._regionColorMap.set(name, REGION_COLOR_PALETTE[i % REGION_COLOR_PALETTE.length]));
+          let fallbackIndex = 0;
+          sorted.forEach((name) => {
+            const color = REGION_COLOR_OVERRIDES[name] || REGION_COLOR_PALETTE[fallbackIndex++ % REGION_COLOR_PALETTE.length];
+            window._regionColorMap.set(name, color);
+          });
         }
         return window._regionColorMap.get(regionName) || 'rgba(255,210,0,0.95)';
       }
@@ -1336,8 +1356,7 @@
         }
 
         ctx.save();
-        const innerW = 5, innerHalf = 2;
-        const inwardOffset = 3;
+        const { thickness: innerW, half: innerHalf, inwardOffset } = getRegionBorderMetrics();
 
         // Pass 1: region-specific colored lines — offset INWARD so overlapping boundaries both show
         // For bars whose inward direction is positive (+x or +y), the bar must start AT the chunk
@@ -1428,8 +1447,13 @@
             if(top < minY) minY = top; if(top + h > maxY) maxY = top + h;
           }
           if(!count) continue;
-          const labelX = sumX / count, labelY = sumY / count;
+          let labelX = sumX / count, labelY = sumY / count;
           const regionW = maxX - minX, regionH = maxY - minY;
+          const labelOffset = REGION_LABEL_OFFSETS[regionName];
+          if(labelOffset){
+            labelX += regionW * labelOffset.x;
+            labelY += regionH * labelOffset.y;
+          }
           // Scale font to fit within the region bounding box
           let fontSize = Math.min(regionH * 0.20, regionW * 0.12, baseTileW * 2.0);
           fontSize = Math.max(fontSize, 10);
