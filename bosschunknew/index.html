@@ -93,6 +93,9 @@
     .combat-achievements-panel.hide-completed .tier-section.all-completed {
       display: none !important;
     }
+    .combat-achievements-panel.panel-minimized .panel-header {
+      border-bottom: none;
+    }
     
     .achievement-content { flex: 1; }
     .achievement-name { 
@@ -248,6 +251,7 @@
         <button id="numberBtn" title="Auto-number chunks" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:bold;">123</button>
         <button id="iMenuBtn" style="width:60px; height:2px; padding:0; background:#000; border:1px solid #000; color:#000; font-size:0; overflow:hidden;">≡</button>
         <button id="infoBtn" title="Inspect chunk" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer;">🔍 Identify</button>
+        <button id="splitEditBtn" title="Edit split lines for overlapping chunks (right-click a yellow chunk)" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer; background:transparent; border:1px solid #444; border-radius:4px; color:#888;">✂ Splits</button>
       </div>
     </div>
     <div id="iMenuDropdown" style="display:none; background:#101010; padding:8px; margin-top:8px; border-radius:6px; color:#ddd;">
@@ -278,22 +282,7 @@
 
     <div id="infoLine" style="color:#ddd; margin-top:10px; font-size:0.9rem;"></div>
 
-    <!-- Filters Section -->
-    <div style="margin-top:12px; border-top:1px solid #333; padding-top:8px;">
-      <div style="font-weight:bold; color:#ddd; font-size:1.1rem; margin-bottom:8px;">Enable slayer/group combat achievements?</div>
-      <div style="display:flex; gap:32px; justify-content:center; align-items:flex-end;">
-        <div style="display:flex; flex-direction:column; align-items:center; cursor:pointer;" id="filterSlayerBtn">
-          <img src="static/Slayer_icon_(detail).png" style="width:38px; height:38px; object-fit:contain; image-rendering:pixelated;">
-          <span id="filterSlayerIcon" style="font-size:20px; margin-top:4px; user-select:none;">✅</span>
-          <input type="checkbox" id="filterSlayer" style="display:none;">
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:center; cursor:pointer; margin-top:-24px;" id="filterGroupBtn">
-          <img src="static/157px-Group_Ironman_Display (1).png" style="width:84px; height:84px; object-fit:contain;">
-          <span id="filterGroupIcon" style="font-size:20px; margin-top:4px; user-select:none;">✅</span>
-          <input type="checkbox" id="filterGroup" style="display:none;">
-        </div>
-      </div>
-    </div>
+
     
     <!-- Change Mode Button -->
     <div style="margin-top:12px; border-top:1px solid #333; padding-top:8px;">
@@ -804,8 +793,11 @@
     async function loadRegionData(){
       window.REGION_CHUNKS = new Map();
       window.CHUNK_TO_REGION = new Map();
+      window.CHUNK_MULTI_REGION = new Map(); // chunk key → Set of region names that claim it
       try{
-        const resp = await fetch('static/Map1.csv');
+        // Try static/Map1.csv first, then fall back to ../Map1.csv (repo root when served from bosschunknew/)
+        let resp = await fetch('static/Map1.csv');
+        if(!resp.ok) resp = await fetch('../Map1.csv');
         if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const text = await resp.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
@@ -823,7 +815,15 @@
           const regionChunks = window.REGION_CHUNKS.get(region);
           for(const cp of chunksField.split(',')){
             const m = cp.trim().match(/^chunk_(\d+)_(\d+)$/);
-            if(m){ const key=`${m[1]},${m[2]}`; regionChunks.add(key); window.CHUNK_TO_REGION.set(key, region); }
+            if(m){
+              const key=`${m[1]},${m[2]}`;
+              regionChunks.add(key);
+              if(window.CHUNK_TO_REGION.has(key) && window.CHUNK_TO_REGION.get(key) !== region){
+                if(!window.CHUNK_MULTI_REGION.has(key)) window.CHUNK_MULTI_REGION.set(key, new Set([window.CHUNK_TO_REGION.get(key)]));
+                window.CHUNK_MULTI_REGION.get(key).add(region);
+              }
+              window.CHUNK_TO_REGION.set(key, region);
+            }
           }
         }
         console.log('Loaded regions:', Array.from(window.REGION_CHUNKS.keys()));
@@ -1102,6 +1102,276 @@
         }
       }
 
+      // Distinct color palette for region borders
+      const REGION_COLOR_PALETTE = [
+        'rgba(255, 80,  80,  0.95)',  // red
+        'rgba(0,   200, 255, 0.95)',  // cyan
+        'rgba(100, 220,  60, 0.95)',  // lime
+        'rgba(255, 160,  0,  0.95)',  // orange
+        'rgba(120, 100, 255, 0.95)',  // blue-purple
+        'rgba(255, 220,  0,  0.95)',  // yellow
+        'rgba(255,  80, 180, 0.95)',  // pink
+        'rgba(0,   210, 160, 0.95)',  // teal
+        'rgba(200,  80, 255, 0.95)',  // violet
+        'rgba(255, 140,  60, 0.95)',  // salmon
+        'rgba(255, 255, 200, 0.95)',  // cream
+        'rgba(60,  180,  60, 0.95)',  // green
+        'rgba(255,  60,  60, 0.95)',  // crimson
+        'rgba(60,  140, 255, 0.95)',  // sky blue
+        'rgba(255, 200,  80, 0.95)',  // amber
+        'rgba(180, 255, 120, 0.95)',  // light green
+      ];
+
+      function getRegionColor(regionName) {
+        if(!window._regionColorMap) {
+          window._regionColorMap = new Map();
+          const sorted = window.REGION_CHUNKS ? [...window.REGION_CHUNKS.keys()].sort() : [];
+          sorted.forEach((name, i) => window._regionColorMap.set(name, REGION_COLOR_PALETTE[i % REGION_COLOR_PALETTE.length]));
+        }
+        return window._regionColorMap.get(regionName) || 'rgba(255,210,0,0.95)';
+      }
+
+      function loadChunkSplits() {
+        try { return JSON.parse(localStorage.getItem('_chunkSplits') || '{}'); } catch(e) { return {}; }
+      }
+      function saveChunkSplits(splits) {
+        try { localStorage.setItem('_chunkSplits', JSON.stringify(splits)); } catch(e) {}
+      }
+
+      function drawRegionBorders(ctx) {
+        if(!window.REGION_CHUNKS || !window.REGION_CHUNKS.size) return;
+        if(!window.CHUNK_TO_REGION) return;
+        // Invalidate color map if region set changed size
+        if(window._regionColorMap && window._regionColorMap.size !== window.REGION_CHUNKS.size) window._regionColorMap = null;
+        const gi = window._gridInfo;
+        const first = manifest.chunks[0];
+        const tileW = first.bbox[2] - first.bbox[0];
+        const tileH = first.bbox[3] - first.bbox[1];
+
+        // Helper: get pixel bounds for a chunk (r,c)
+        function chunkBounds(r, c) {
+          if(gi && gi.colLefts[c] !== undefined && gi.rowTops[r] !== undefined){
+            return { left: gi.colLefts[c], top: gi.rowTops[r], w: gi.colWidths[c], h: gi.rowHeights[r] };
+          }
+          return { left: c * tileW, top: r * tileH, w: tileW, h: tileH };
+        }
+
+        const splitData = loadChunkSplits();
+
+        // Get the region on a specific face of neighbor chunk (nr, nc).
+        // face: 'left'|'right' for vertical neighbors, 'top'|'bottom' for horizontal neighbors.
+        // This makes adjacent normal chunks aware of defined splits so they don't draw redundant borders.
+        // callerRegion: the region of the chunk making this call — used to suppress
+        // full-width borders on faces perpendicular to the split direction.
+        function getNbrRegion(nr, nc, face, callerRegion) {
+          const nk = `${nr},${nc}`;
+          if(window.CHUNK_MULTI_REGION && window.CHUNK_MULTI_REGION.has(nk)){
+            const sp = splitData[nk];
+            if(sp){
+              if(sp.dir === 'v'){
+                if(face === 'left')  return sp.r1;
+                if(face === 'right') return sp.r2;
+                // 'top'/'bottom' are perpendicular to v-split: suppress border if caller is r1 or r2
+                // (the split-chunk itself already draws the correct partial border for that face)
+                if(callerRegion === sp.r1 || callerRegion === sp.r2) return callerRegion;
+              } else {
+                if(face === 'top')    return sp.r1;
+                if(face === 'bottom') return sp.r2;
+                // 'left'/'right' are perpendicular to h-split: same suppression
+                if(callerRegion === sp.r1 || callerRegion === sp.r2) return callerRegion;
+              }
+            }
+            return '__multi__';
+          }
+          return window.CHUNK_TO_REGION.get(nk);
+        }
+
+        // regionSegments: regionName → array of {x, y, w, h, inwardDx, inwardDy}
+        const regionSegments = new Map();
+        for(const rn of window.REGION_CHUNKS.keys()) regionSegments.set(rn, []);
+
+        // Collect normal border segments (skip multi-region chunks)
+        for(const [regionName, chunks] of window.REGION_CHUNKS){
+          const segs = regionSegments.get(regionName);
+          for(const ck of chunks){
+            if(window.CHUNK_MULTI_REGION && window.CHUNK_MULTI_REGION.has(ck)) continue;
+            const [r, c] = ck.split(',').map(Number);
+            const { left, top, w, h } = chunkBounds(r, c);
+            const right = left + w, bottom = top + h;
+            // For each border, check the *face of the neighbor* that touches us
+            if(getNbrRegion(r, c-1, 'right',  regionName) !== regionName)  // left border
+              segs.push({x: Math.round(left),   y: Math.round(top), w: 0, h: Math.round(h), inwardDx: 1,  inwardDy: 0});
+            if(getNbrRegion(r, c+1, 'left',   regionName) !== regionName)  // right border
+              segs.push({x: Math.round(right),  y: Math.round(top), w: 0, h: Math.round(h), inwardDx: -1, inwardDy: 0});
+            if(getNbrRegion(r-1, c, 'bottom', regionName) !== regionName)  // top border
+              segs.push({x: Math.round(left),   y: Math.round(top),    w: Math.round(w), h: 0, inwardDx: 0, inwardDy: 1});
+            if(getNbrRegion(r+1, c, 'top',    regionName) !== regionName)  // bottom border
+              segs.push({x: Math.round(left),   y: Math.round(bottom), w: Math.round(w), h: 0, inwardDx: 0, inwardDy: -1});
+          }
+        }
+
+        // For split chunks: add partial border segments from both regions and record split lines
+        const splitLines = []; // {x, y, w, h, r1, r2}
+        if(window.CHUNK_MULTI_REGION){
+          for(const [ck, regions] of window.CHUNK_MULTI_REGION){
+            const [r, c] = ck.split(',').map(Number);
+            const { left, top, w, h } = chunkBounds(r, c);
+            const right = left + w, bottom = top + h;
+            const split = splitData[ck];
+            const regArr = Array.from(regions);
+            for(const rn of regArr) if(!regionSegments.has(rn)) regionSegments.set(rn, []);
+
+            if(split){
+              const r1 = split.r1, r2 = split.r2;
+              const segs1 = regionSegments.get(r1) || [];
+              const segs2 = regionSegments.get(r2) || [];
+              // Helper: push a segment for region rn AND the opposing neighbor region (mirror inward dir).
+              // The opposing region was suppressed in the normal loop (perpendicular face fix), so we
+              // inject its segment here to ensure both sides of the boundary are visually represented.
+              function pushWithOpposing(segs, seg, nbrRegion) {
+                segs.push(seg);
+                const oppSegs = regionSegments.get(nbrRegion);
+                if(oppSegs) oppSegs.push({
+                  x: seg.x, y: seg.y, w: seg.w, h: seg.h,
+                  inwardDx: -seg.inwardDx, inwardDy: -seg.inwardDy
+                });
+              }
+              if(split.dir === 'v'){
+                const sx = Math.round(left + w * split.pos);
+                // r1 occupies left part (left → sx)
+                if(getNbrRegion(r, c-1, 'right',  r1) !== r1)
+                  segs1.push({x: Math.round(left), y: Math.round(top), w: 0, h: Math.round(h), inwardDx: 1, inwardDy: 0});
+                const t1 = getNbrRegion(r-1, c, 'bottom', r1);
+                if(t1 !== r1) pushWithOpposing(segs1, {x: Math.round(left), y: Math.round(top), w: sx - Math.round(left), h: 0, inwardDx: 0, inwardDy: 1}, t1);
+                const b1 = getNbrRegion(r+1, c, 'top',    r1);
+                if(b1 !== r1) pushWithOpposing(segs1, {x: Math.round(left), y: Math.round(bottom), w: sx - Math.round(left), h: 0, inwardDx: 0, inwardDy: -1}, b1);
+                // r2 occupies right part (sx → right)
+                if(getNbrRegion(r, c+1, 'left',   r2) !== r2)
+                  segs2.push({x: Math.round(right), y: Math.round(top), w: 0, h: Math.round(h), inwardDx: -1, inwardDy: 0});
+                const t2 = getNbrRegion(r-1, c, 'bottom', r2);
+                if(t2 !== r2) pushWithOpposing(segs2, {x: sx, y: Math.round(top), w: Math.round(right) - sx, h: 0, inwardDx: 0, inwardDy: 1}, t2);
+                const b2 = getNbrRegion(r+1, c, 'top',    r2);
+                if(b2 !== r2) pushWithOpposing(segs2, {x: sx, y: Math.round(bottom), w: Math.round(right) - sx, h: 0, inwardDx: 0, inwardDy: -1}, b2);
+                splitLines.push({x: sx, y: Math.round(top), w: 0, h: Math.round(h), r1, r2});
+              } else { // horizontal split
+                const sy = Math.round(top + h * split.pos);
+                // r1 occupies top part (top → sy)
+                if(getNbrRegion(r-1, c, 'bottom', r1) !== r1)
+                  segs1.push({x: Math.round(left), y: Math.round(top), w: Math.round(w), h: 0, inwardDx: 0, inwardDy: 1});
+                const l1 = getNbrRegion(r, c-1, 'right',  r1);
+                if(l1 !== r1) pushWithOpposing(segs1, {x: Math.round(left), y: Math.round(top), w: 0, h: sy - Math.round(top), inwardDx: 1, inwardDy: 0}, l1);
+                const rr1 = getNbrRegion(r, c+1, 'left',   r1);
+                if(rr1 !== r1) pushWithOpposing(segs1, {x: Math.round(right), y: Math.round(top), w: 0, h: sy - Math.round(top), inwardDx: -1, inwardDy: 0}, rr1);
+                // r2 occupies bottom part (sy → bottom)
+                if(getNbrRegion(r+1, c, 'top',    r2) !== r2)
+                  segs2.push({x: Math.round(left), y: Math.round(bottom), w: Math.round(w), h: 0, inwardDx: 0, inwardDy: -1});
+                const l2 = getNbrRegion(r, c-1, 'right',  r2);
+                if(l2 !== r2) pushWithOpposing(segs2, {x: Math.round(left), y: sy, w: 0, h: Math.round(bottom) - sy, inwardDx: 1, inwardDy: 0}, l2);
+                const rr2 = getNbrRegion(r, c+1, 'left',   r2);
+                if(rr2 !== r2) pushWithOpposing(segs2, {x: Math.round(right), y: sy, w: 0, h: Math.round(bottom) - sy, inwardDx: -1, inwardDy: 0}, rr2);
+                splitLines.push({x: Math.round(left), y: sy, w: Math.round(w), h: 0, r1, r2});
+              }
+            }
+          }
+        }
+
+        ctx.save();
+        const innerW = 5, innerHalf = 2;
+        const inwardOffset = 3;
+
+        // Pass 1: region-specific colored lines — offset INWARD so overlapping boundaries both show
+        for(const [regionName, segs] of regionSegments){
+          ctx.fillStyle = getRegionColor(regionName);
+          for(const seg of segs){
+            if(seg.w === 0){
+              const ox = seg.inwardDx * inwardOffset;
+              ctx.fillRect(seg.x + ox - innerHalf, seg.y, innerW, seg.h);
+            } else {
+              const oy = seg.inwardDy * inwardOffset;
+              ctx.fillRect(seg.x, seg.y + oy - innerHalf, seg.w, innerW);
+            }
+          }
+        }
+        // Colored split lines (both sides, inward from the split position)
+        for(const sl of splitLines){
+          if(sl.w === 0){
+            ctx.fillStyle = getRegionColor(sl.r1);
+            ctx.fillRect(sl.x - inwardOffset - innerHalf, sl.y, innerW, sl.h);
+            ctx.fillStyle = getRegionColor(sl.r2);
+            ctx.fillRect(sl.x + inwardOffset - innerHalf, sl.y, innerW, sl.h);
+          } else {
+            ctx.fillStyle = getRegionColor(sl.r1);
+            ctx.fillRect(sl.x, sl.y - inwardOffset - innerHalf, sl.w, innerW);
+            ctx.fillStyle = getRegionColor(sl.r2);
+            ctx.fillRect(sl.x, sl.y + inwardOffset - innerHalf, sl.w, innerW);
+          }
+        }
+
+        // Pass 2: pending-split indicator — yellow dashed box for unsplit multi-region chunks
+        if(window.CHUNK_MULTI_REGION){
+          ctx.save();
+          ctx.strokeStyle = 'rgba(255,210,0,0.85)';
+          ctx.lineWidth = 3;
+          ctx.setLineDash([7, 5]);
+          for(const [ck] of window.CHUNK_MULTI_REGION){
+            if(splitData[ck]) continue; // already split — skip indicator
+            const [r, c] = ck.split(',').map(Number);
+            const { left, top, w, h } = chunkBounds(r, c);
+            ctx.strokeRect(left + 3, top + 3, w - 6, h - 6);
+          }
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+
+      function drawRegionLabels(ctx) {
+        if(!window.REGION_CHUNKS || !window.REGION_CHUNKS.size) return;
+        const gi = window._gridInfo;
+        const first = manifest.chunks[0];
+        const tileW = first.bbox[2] - first.bbox[0];
+        const tileH = first.bbox[3] - first.bbox[1];
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        for(const [regionName, chunks] of window.REGION_CHUNKS){
+          if(!chunks || chunks.size === 0) continue;
+          let sumX = 0, sumY = 0, count = 0;
+          let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+          for(const ck of chunks){
+            const [r, c] = ck.split(',').map(Number);
+            let left, top, w, h;
+            if(gi && gi.colLefts[c] !== undefined && gi.rowTops[r] !== undefined){
+              left = gi.colLefts[c]; top = gi.rowTops[r]; w = gi.colWidths[c]; h = gi.rowHeights[r];
+            } else { left = c * tileW; top = r * tileH; w = tileW; h = tileH; }
+            const cx = left + w / 2, cy = top + h / 2;
+            sumX += cx; sumY += cy; count++;
+            if(left < minX) minX = left; if(left + w > maxX) maxX = left + w;
+            if(top < minY) minY = top; if(top + h > maxY) maxY = top + h;
+          }
+          if(!count) continue;
+          const labelX = sumX / count, labelY = sumY / count;
+          const regionW = maxX - minX, regionH = maxY - minY;
+          // Scale font to fit within the region bounding box
+          let fontSize = Math.min(regionH * 0.20, regionW * 0.12, baseTileW * 2.0);
+          fontSize = Math.max(fontSize, 10);
+          ctx.font = `bold ${Math.round(fontSize)}px system-ui, sans-serif`;
+          const measured = ctx.measureText(regionName).width;
+          if(measured > regionW * 0.85){
+            fontSize = fontSize * (regionW * 0.85) / measured;
+            fontSize = Math.max(fontSize, 8);
+            ctx.font = `bold ${Math.round(fontSize)}px system-ui, sans-serif`;
+          }
+          const color = getRegionColor(regionName);
+          ctx.lineWidth = Math.max(Math.round(fontSize) * 0.18, 2);
+          ctx.strokeStyle = 'rgba(0,0,0,0.80)';
+          ctx.lineJoin = 'round';
+          ctx.strokeText(regionName, labelX, labelY);
+          ctx.fillStyle = color;
+          ctx.fillText(regionName, labelX, labelY);
+        }
+        ctx.restore();
+      }
+
       function drawSelectionsAndUnlocked(){
         // Always draw special markers even if no selection/unlocked
         const ctx = canvas.getContext('2d');
@@ -1111,8 +1381,9 @@
         const gi = window._gridInfo;
 
         if(selected.size===0 && unlocked.size===0 && newlyUnlocked.size===0) {
-           // just draw markers if any
+           drawRegionBorders(ctx);
            drawSpecialMarkers(ctx, gi, tileW, tileH, chunkW, chunkH);
+           drawRegionLabels(ctx);
            return;
         }
         
@@ -1121,6 +1392,7 @@
           if(selected.size===0 && unlocked.size===0 && newlyUnlocked.size===0) return;
           try{ for(const u of unlocked){ if(selected.has(u)){ if(DEBUG) console.log('auto-remove selected for unlocked', u); selected.delete(u); } } }catch(e){}
           try{ for(const nu of newlyUnlocked){ if(selected.has(nu)){ if(DEBUG) console.log('auto-remove selected for newlyUnlocked', nu); selected.delete(nu); } } }catch(e){}
+          drawRegionBorders(ctx);
           ctx.save();
           // selected: purple fill
           for(const s of selected){
@@ -1226,6 +1498,7 @@
           
           // Draw markers at the end so they appear on top of selections
           drawSpecialMarkers(ctx, gi, tileW, tileH, chunkW, chunkH);
+          drawRegionLabels(ctx);
       }
 
       // ensureSvgOverlay removed (canvas-based approach used instead)
@@ -1303,7 +1576,7 @@
             if(stitched.style.display === 'none') stitched.style.display = 'block';
           }
         }catch(e){ /* ignore draw errors */ }
-        ctx.fillStyle = 'rgba(200,50,50,0.9)';
+        ctx.fillStyle = 'rgba(0,0,0,0)'; // grid lines hidden; region borders drawn separately
         const first = manifest.chunks[0];
         const gi = window._gridInfo;
         // draw grid boundaries as crisp filled rects on integer coords to avoid AA gaps
@@ -2091,7 +2364,88 @@
         });
       }
 
-      // calculate natural coordinates using inverse of translate+scale transform
+      // ---- Split-line editor ----
+      let _splitEditorChunkKey = null;
+      let _splitEditorRegions = [];
+
+      function updateSplitRegionLabels() {
+        const dir = document.querySelector('input[name="splitDir"]:checked') ? document.querySelector('input[name="splitDir"]:checked').value : 'v';
+        const pos = parseInt(document.getElementById('splitPosSlider').value);
+        document.getElementById('splitPosValue').textContent = pos + '%';
+        const r1 = _splitEditorRegions[0] || '?', r2 = _splitEditorRegions[1] || '?';
+        const c1 = getRegionColor ? getRegionColor(r1) : '#ffd700';
+        const c2 = getRegionColor ? getRegionColor(r2) : '#00cfff';
+        if(dir === 'v'){
+          document.getElementById('splitRegionLabels').innerHTML =
+            `<span style="color:${c1}">■ ${r1}</span> — left side (0–${pos}%)<br>`+
+            `<span style="color:${c2}">■ ${r2}</span> — right side (${pos}–100%)`;
+        } else {
+          document.getElementById('splitRegionLabels').innerHTML =
+            `<span style="color:${c1}">■ ${r1}</span> — top side (0–${pos}%)<br>`+
+            `<span style="color:${c2}">■ ${r2}</span> — bottom side (${pos}–100%)`;
+        }
+      }
+
+      function openSplitEditor(chunkKey) {
+        const regions = window.CHUNK_MULTI_REGION ? window.CHUNK_MULTI_REGION.get(chunkKey) : null;
+        if(!regions) return;
+        _splitEditorChunkKey = chunkKey;
+        const splits = loadChunkSplits();
+        const existing = splits[chunkKey];
+        _splitEditorRegions = existing ? [existing.r1, existing.r2] : Array.from(regions);
+        document.getElementById('splitEditorChunkInfo').textContent = 'Chunk: chunk_' + chunkKey.replace(',','_');
+        document.getElementById('splitEditorRegions').textContent = _splitEditorRegions.join(' & ');
+        const dirV = document.getElementById('splitDirV'), dirH = document.getElementById('splitDirH');
+        if(existing){ dirV.checked = existing.dir === 'v'; dirH.checked = existing.dir === 'h'; }
+        else { dirV.checked = true; dirH.checked = false; }
+        const slider = document.getElementById('splitPosSlider');
+        slider.value = existing ? Math.round(existing.pos * 100) : 50;
+        updateSplitRegionLabels();
+        document.getElementById('splitEditorDialog').style.display = 'block';
+      }
+
+      document.getElementById('splitPosSlider').addEventListener('input', updateSplitRegionLabels);
+      document.querySelectorAll('input[name="splitDir"]').forEach(r => r.addEventListener('change', updateSplitRegionLabels));
+
+      document.getElementById('splitSwapBtn').addEventListener('click', ()=>{
+        _splitEditorRegions = [_splitEditorRegions[1], _splitEditorRegions[0]];
+        document.getElementById('splitEditorRegions').textContent = _splitEditorRegions.join(' & ');
+        updateSplitRegionLabels();
+      });
+      document.getElementById('splitCancelBtn').addEventListener('click', ()=>{
+        document.getElementById('splitEditorDialog').style.display = 'none';
+      });
+      document.getElementById('splitClearBtn').addEventListener('click', ()=>{
+        if(_splitEditorChunkKey){
+          const splits = loadChunkSplits();
+          delete splits[_splitEditorChunkKey];
+          saveChunkSplits(splits);
+        }
+        document.getElementById('splitEditorDialog').style.display = 'none';
+        try{ drawGrid(); drawSelectionsAndUnlocked(); }catch(e){}
+      });
+      document.getElementById('splitSaveBtn').addEventListener('click', ()=>{
+        if(_splitEditorChunkKey){
+          const dir = document.querySelector('input[name="splitDir"]:checked').value;
+          const pos = parseInt(document.getElementById('splitPosSlider').value) / 100;
+          const splits = loadChunkSplits();
+          splits[_splitEditorChunkKey] = { dir, pos, r1: _splitEditorRegions[0], r2: _splitEditorRegions[1] };
+          saveChunkSplits(splits);
+        }
+        document.getElementById('splitEditorDialog').style.display = 'none';
+        try{ drawGrid(); drawSelectionsAndUnlocked(); }catch(e){}
+      });
+
+      const splitEditBtn = document.getElementById('splitEditBtn');
+      if(splitEditBtn){
+        splitEditBtn.addEventListener('click', ()=>{
+          // Show how many split chunks exist
+          const count = window.CHUNK_MULTI_REGION ? window.CHUNK_MULTI_REGION.size : 0;
+          alert(`There are ${count} chunk(s) that belong to multiple regions (shown with yellow dashed borders).\nRight-click any yellow-dashed chunk to define its split line.`);
+        });
+      }
+
+
       function eventToNatural(ev){
         const containerRect = cachedContainerRect || fullMap.getBoundingClientRect();
         // current transforms
@@ -2332,6 +2686,11 @@
         const row = (typeof getRowAtY === 'function' ? getRowAtY(yNat) : Math.floor(yNat / tileH));
         if(row === null || col === null || row<0||col<0||row>=manifest.rows||col>=manifest.cols) return;
         const key = `${row},${col}`;
+        // Right-click on a multi-region chunk → open split editor
+        if(ev.type === 'contextmenu' && window.CHUNK_MULTI_REGION && window.CHUNK_MULTI_REGION.has(key)){
+          openSplitEditor(key);
+          return;
+        }
         const region = window.CHUNK_TO_REGION ? window.CHUNK_TO_REGION.get(key) : null;
         if(region && selectedRegions.has(region)){
           deselectRegion(region);
@@ -2679,5 +3038,29 @@
       window.addEventListener('resize', ()=>{ if(stitched.complete){ setupCanvas(); drawGrid(); drawSelectionsAndUnlocked(); applyTransform(); } });
     }
   </script>
+
+  <!-- Split-line editor dialog -->
+  <div id="splitEditorDialog" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:9999; background:#1a1a1a; border:2px solid #666; border-radius:10px; padding:20px 24px; min-width:300px; max-width:360px; color:#ddd; box-shadow:0 8px 32px rgba(0,0,0,0.7);">
+    <div style="font-weight:bold; font-size:1.1rem; margin-bottom:10px; color:#fff;">✂ Define Split Line</div>
+    <div id="splitEditorChunkInfo" style="font-size:0.82rem; color:#999; margin-bottom:10px;"></div>
+    <div style="margin-bottom:12px; font-size:0.9rem;">
+      Regions in this chunk:<br>
+      <span id="splitEditorRegions" style="color:#ffd700; font-weight:bold;"></span>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:0.85rem; color:#aaa; margin-bottom:4px;">Split direction:</div>
+      <label style="margin-right:16px; cursor:pointer;"><input type="radio" name="splitDir" id="splitDirV" value="v" checked style="margin-right:4px;">Vertical (left | right)</label>
+      <label style="cursor:pointer;"><input type="radio" name="splitDir" id="splitDirH" value="h" style="margin-right:4px;">Horizontal (top / bottom)</label>
+    </div>
+    <div style="margin-bottom:6px; font-size:0.85rem; color:#aaa;">Position from start: <span id="splitPosValue" style="color:#fff; font-weight:bold;">50%</span></div>
+    <input type="range" id="splitPosSlider" min="5" max="95" value="50" style="width:100%; margin-bottom:12px; accent-color:#ffd700;">
+    <div id="splitRegionLabels" style="margin-bottom:16px; font-size:0.82rem; color:#bbb; background:#111; padding:8px; border-radius:6px; line-height:1.7;"></div>
+    <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+      <button id="splitSwapBtn" title="Swap which region is on which side" style="padding:6px 12px; background:#333; color:#ccc; border:1px solid #555; border-radius:4px; cursor:pointer;">⇄ Swap</button>
+      <button id="splitClearBtn" style="padding:6px 12px; background:#4a1515; color:#faa; border:1px solid #7a3333; border-radius:4px; cursor:pointer;">✕ Remove</button>
+      <button id="splitCancelBtn" style="padding:6px 12px; background:#333; color:#ccc; border:1px solid #555; border-radius:4px; cursor:pointer;">Cancel</button>
+      <button id="splitSaveBtn" style="padding:6px 12px; background:#1a5c1a; color:#9eff9e; border:1px solid #3a8c3a; border-radius:4px; cursor:pointer; font-weight:bold;">✓ Save</button>
+    </div>
+  </div>
 </body>
 </html>

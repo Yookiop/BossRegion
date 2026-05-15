@@ -16,57 +16,9 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'Obor.png',
         chunkIds: ['chunk_10_32']
     },
-    'Dagannoth Prime': {
-        fileName: 'Dagannoth_Prime.png',
-        chunkIds: ['chunk_6_23']
-    },
     'Dagannoth Rex': {
         fileName: 'Dagannoth_Rex.png',
         chunkIds: ['chunk_6_23']
-    },
-    'Dagannoth Supreme': {
-        fileName: 'Dagannoth_Supreme.png',
-        chunkIds: ['chunk_6_23']
-    },
-    'Aberrant Spectre': {
-        fileName: 'Aberrant_spectre.png',
-        chunkIds: ['chunk_21_14', 'chunk_9_37', 'chunk_11_21']
-    },
-    'Abyssal Sire': {
-        fileName: 'Abyssal_Sire.png',
-        chunkIds: ['chunk_9_32']
-    },
-    'Wyrm': {
-        fileName: 'Wyrm.png',
-        chunkIds: ['chunk_5_4']
-    },
-    'Alchemical Hydra': {
-        fileName: 'Alchemical_Hydra.png',
-        chunkIds: ['chunk_5_4']
-    },
-    'Amoxliatl': {
-        fileName: 'Amoxliatl.png',
-        chunkIds: ['chunk_14_10']
-    },
-    'Araxxor': {
-        fileName: 'Araxxor.png',
-        chunkIds: ['chunk_11_41']
-    },
-    'Basilisk Knight': {
-        fileName: 'Basilisk_Knight.png',
-        chunkIds: ['chunk_2_22']
-    },
-    'Black Dragon': {
-        fileName: 'Black_dragon.png',
-        chunkIds: ['chunk_27_25', 'chunk_20_22', 'chunk_15_34', 'chunk_4_31', 'chunk_11_17', 'chunk_11_29', 'chunk_7_34', 'chunk_6_35']
-    },
-    'Bloodveld': {
-        fileName: 'Bloodveld.png',
-        chunkIds: ['chunk_11_21', 'chunk_6_31', 'chunk_9_37', 'chunk_13_40', 'chunk_6_29']
-    },
-    'Brutal Black Dragon': {
-        fileName: 'Brutal_black_dragon.png',
-        chunkIds: ['chunk_7_9']
     },
     'Brutus': {
         fileName: 'Brutus.png',
@@ -75,10 +27,6 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
     'Callisto': {
         fileName: 'Callisto.png',
         chunkIds: ['chunk_4_35']
-    },
-    'Cerberus': {
-        fileName: 'Cerberus.png',
-        chunkIds: ['chunk_11_29']
     },
     'Chaos Elemental': {
         fileName: 'Chaos_Elemental.png',
@@ -108,10 +56,6 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'Crazy_archaeologist.png',
         chunkIds: ['chunk_7_30']
     },
-    'Demonic Gorilla': {
-        fileName: 'Demonic_gorilla.png',
-        chunkIds: ['chunk_9_22']
-    },
     'Deranged Archaeologist': {
         fileName: 'Deranged_archaeologist.png',
         chunkIds: ['chunk_7_41']
@@ -124,26 +68,6 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'Duke_Sucellus.png',
         chunkIds: ['chunk_3_28']
     },
-    'Grotesque Guardians': {
-        fileName: 'Grotesque_Guardians.png',
-        chunkIds: ['chunk_9_37']
-    },
-    'Fire Giant': {
-        fileName: 'Fire_giant.png',
-        chunkIds: ['chunk_11_21', 'chunk_10_23', 'chunk_18_35', 'chunk_5_4', 'chunk_19_20', 'chunk_8_6', 'chunk_7_9', 'chunk_3_31', 'chunk_15_26', 'chunk_27_25']
-    },
-    'Fragment of Seren': {
-        fileName: 'Fragment_of_Seren.png',
-        chunkIds: ['chunk_13_19']
-    },
-    'Galvek': {
-        fileName: 'Galvek.png',
-        chunkIds: ['chunk_20_22']
-    },
-    'Gargoyle': {
-        fileName: 'Gargoyle.png',
-        chunkIds: ['chunk_9_37']
-    },
     'General Graardor': {
         fileName: 'General_Graardor.png',
         chunkIds: ['chunk_6_29']
@@ -152,17 +76,9 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'Giant_Mole.png',
         chunkIds: ['chunk_12_30']
     },
-    'Glough': {
-        fileName: 'Glough.png',
-        chunkIds: ['chunk_10_21']
-    },
     'Chambers of Xeric': {
         fileName: 'Chambers_of_Xeric.png',
         chunkIds: ['chunk_9_3']
-    },
-    'Greater Demon': {
-        fileName: 'Greater_demon.png',
-        chunkIds: ['chunk_19_20', 'chunk_15_26', 'chunk_12_28', 'chunk_12_42', 'chunk_13_42', 'chunk_4_35', 'chunk_7_34', 'chunk_6_35', 'chunk_5_4', 'chunk_17_23', 'chunk_7_6', 'chunk_7_9']
     },
     'Yama': {
         fileName: 'Yama.png',
@@ -172,10 +88,6 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'Zalcano.png',
         chunkIds: ['chunk_13_19']
     },
-    'Hellhound': {
-        fileName: 'Hellhound.png',
-        chunkIds: ['chunk_3_33', 'chunk_7_34', 'chunk_6_35', 'chunk_6_29', 'chunk_5_4', 'chunk_7_16', 'chunk_7_9', 'chunk_11_29', 'chunk_11_21', 'chunk_13_26']
-    },
     'Hespori': {
         fileName: 'Hespori.png',
         chunkIds: ['chunk_6_3']
@@ -183,10 +95,6 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
     'Wintertodt': {
         fileName: 'Wintertodt.png',
         chunkIds: ['chunk_2_9']
-    },
-    'TzHaar-Ket-Rak\'s Challenges': {
-        fileName: 'TzHaar-Ket-Raks_Challenges.png',
-        chunkIds: ['chunk_15_28']
     },
     'TzKal-Zuk': {
         fileName: 'TzKal-Zuk.png',
@@ -208,10 +116,6 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'King_Black_Dragon.png',
         chunkIds: ['chunk_4_31']
     },
-    'Kraken': {
-        fileName: 'Kraken.png',
-        chunkIds: ['chunk_8_19']
-    },
     'Kree\'arra': {
         fileName: 'Kree_arra.png',
         chunkIds: ['chunk_6_29']
@@ -220,21 +124,9 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'Kril_Tsutsaroth.png',
         chunkIds: ['chunk_6_29']
     },
-    'Kurask': {
-        fileName: 'Kurask.png',
-        chunkIds: ['chunk_8_27', 'chunk_13_18', 'chunk_21_2']
-    },
-    'Lizardman Shaman': {
-        fileName: 'Lizardman_shaman.png',
-        chunkIds: ['chunk_6_6', 'chunk_7_6', 'chunk_9_4', 'chunk_7_4']
-    },
     'Moons of Peril': {
         fileName: 'Moons_of_peril.png',
         chunkIds: ['chunk_16_6']
-    },
-    'Nex': {
-        fileName: 'Nex.png',
-        chunkIds: ['chunk_6_29']
     },
     'Phantom Muspah': {
         fileName: 'Phantom_Muspah.png',
@@ -251,14 +143,6 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
     'Scorpia': {
         fileName: 'Scorpia.png',
         chunkIds: ['chunk_3_34']
-    },
-    'Shellbane gryphon': {
-        fileName: 'Shellbane_gryphon.png',
-        chunkIds: ['chunk_26_33']
-    },
-    'Skeletal Wyvern': {
-        fileName: 'Skeletal_Wyvern.png',
-        chunkIds: ['chunk_15_31']
     },
     'Skotizo': {
         fileName: 'Skotizo.png',
@@ -280,10 +164,6 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'The_Leviathan.png',
         chunkIds: ['chunk_15_32']
     },
-    'The Mimic': {
-        fileName: 'The_Mimic.png',
-        chunkIds: ['chunk_9_9']
-    },
     'The Nightmare': {
         fileName: 'The_Nightmare.png',
         chunkIds: ['chunk_13_42', 'chunk_12_42']
@@ -292,13 +172,9 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
         fileName: 'The_Whisperer.png',
         chunkIds: ['chunk_10_30']
     },
-    'Thermonuclear Smoke Devil': {
-        fileName: 'Thermonuclear_smoke_devil.png',
-        chunkIds: ['chunk_17_21']
-    },
-    'Tormented Demon': {
-        fileName: 'Tormented_Demon.png',
-        chunkIds: ['chunk_14_34', 'chunk_15_33']
+    'Amoxliatl': {
+        fileName: 'Amoxliatl.png',
+        chunkIds: ['chunk_14_10']
     },
     'Tombs of Amascut': {
         fileName: 'Tombs_of_Amascut.png',
@@ -658,14 +534,11 @@ async function loadCombatAchievementsFromCSV() {
       this.manifest = manifest; this.stitchedWrap = stitchedWrapArg; this.canvas = canvasArg; this.fullMap = fullMapArg;
       this.tierViewMode = tierViewMode;
 
-      // Load combat achievements from CSV before rendering anything
+      // Load combat achievements from CSV (needed for boss filtering)
       CODE_CONFIGURED_COMBAT_ACHIEVEMENTS = await loadCombatAchievementsFromCSV();
       
       // Automatically plot configured bosses
       this.plotConfiguredBosses();
-      
-      // Initialize combat achievements panel
-      this.initCombatAchievements();
     },
     plotConfiguredBosses(){
         if(!this.manifest || !this.stitchedWrap) return;
@@ -795,10 +668,14 @@ async function loadCombatAchievementsFromCSV() {
       
       // Build header
       const hideCompleted = localStorage.getItem('combat_hide_completed') === '1';
+      const isMinimized = localStorage.getItem('combat_panel_minimized') === '1';
       let headerHtml = `
           <div class="panel-header" style="display: flex; align-items: center; justify-content: space-between;">
             <div class="panel-title">Combat achievements</div>
-            <span id="toggleCompletedBtn" title="${hideCompleted ? 'Show completed tasks' : 'Hide completed tasks'}" style="cursor:pointer; font-size:16px; font-weight:bold; line-height:1; user-select:none; color:#aaa;">${hideCompleted ? '▼' : '▲'}</span>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span id="toggleCompletedBtn" title="${hideCompleted ? 'Show completed tasks' : 'Hide completed tasks'}" style="cursor:pointer; font-size:16px; font-weight:bold; line-height:1; user-select:none; color:#aaa;">${hideCompleted ? '▼' : '▲'}</span>
+              <span id="minimizePanelBtn" title="${isMinimized ? 'Expand panel' : 'Minimize panel'}" style="cursor:pointer; font-size:18px; font-weight:bold; line-height:1; user-select:none; color:#aaa;">${isMinimized ? '+' : '−'}</span>
+            </div>
           </div>
         `;
       
@@ -811,7 +688,14 @@ async function loadCombatAchievementsFromCSV() {
       // Apply initial hide-completed state
       if(hideCompleted) panel.classList.add('hide-completed');
       
-      // Wire toggle button
+      // Apply initial minimized state
+      const listEl = panel.querySelector('#combatAchievementsList');
+      if(isMinimized && listEl){
+        listEl.style.display = 'none';
+        panel.classList.add('panel-minimized');
+      }
+      
+      // Wire toggle-completed button
       const toggleBtn = panel.querySelector('#toggleCompletedBtn');
       if(toggleBtn){
         toggleBtn.addEventListener('click', () => {
@@ -819,6 +703,20 @@ async function loadCombatAchievementsFromCSV() {
           localStorage.setItem('combat_hide_completed', isHidden ? '1' : '0');
           toggleBtn.textContent = isHidden ? '▼' : '▲';
           toggleBtn.title = isHidden ? 'Show completed tasks' : 'Hide completed tasks';
+        });
+      }
+      
+      // Wire minimize button
+      const minimizeBtn = panel.querySelector('#minimizePanelBtn');
+      if(minimizeBtn){
+        minimizeBtn.addEventListener('click', () => {
+          const list = document.getElementById('combatAchievementsList');
+          const nowMinimized = list && list.style.display !== 'none' ? true : false;
+          if(list) list.style.display = nowMinimized ? 'none' : '';
+          panel.classList.toggle('panel-minimized', nowMinimized);
+          localStorage.setItem('combat_panel_minimized', nowMinimized ? '1' : '0');
+          minimizeBtn.textContent = nowMinimized ? '+' : '−';
+          minimizeBtn.title = nowMinimized ? 'Expand panel' : 'Minimize panel';
         });
       }
       
