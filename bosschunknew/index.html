@@ -1375,6 +1375,34 @@
               ctx.fillRect(seg.x, seg.y + oy - (oy >= 0 ? inwardOffset : innerHalf), seg.w, innerW);
             }
           }
+
+          const cornerMap = new Map();
+          function addCornerPoint(pointX, pointY, seg) {
+            const key = `${pointX},${pointY}`;
+            if(!cornerMap.has(key)) cornerMap.set(key, { vertical: [], horizontal: [] });
+            const bucket = cornerMap.get(key);
+            if(seg.w === 0) bucket.vertical.push(seg);
+            else bucket.horizontal.push(seg);
+          }
+          for(const seg of segs){
+            if(seg.w === 0){
+              addCornerPoint(seg.x, seg.y, seg);
+              addCornerPoint(seg.x, seg.y + seg.h, seg);
+            } else {
+              addCornerPoint(seg.x, seg.y, seg);
+              addCornerPoint(seg.x + seg.w, seg.y, seg);
+            }
+          }
+          for(const point of cornerMap.values()){
+            if(point.vertical.length === 0 || point.horizontal.length === 0) continue;
+            const vSeg = point.vertical[0];
+            const hSeg = point.horizontal[0];
+            const ox = vSeg.inwardDx * inwardOffset;
+            const oy = hSeg.inwardDy * inwardOffset;
+            const fillX = vSeg.x + ox - (ox >= 0 ? inwardOffset : innerHalf);
+            const fillY = hSeg.y + oy - (oy >= 0 ? inwardOffset : innerHalf);
+            ctx.fillRect(fillX, fillY, innerW, innerW);
+          }
         }
         // Colored split lines (both sides, inward from the split position)
         // r2 side: start AT the split boundary (sl.x / sl.y) so it abuts the r1 bar with no gap
