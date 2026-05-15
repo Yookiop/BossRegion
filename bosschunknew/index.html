@@ -245,9 +245,9 @@
       </div>
       <button id="resetAllBtn" style="padding:8px 10px; text-align:left; display:none;">Reset</button>
       <div style="display:flex; gap:8px; align-items:center;">
-        <button id="numberBtn" title="Auto-number chunks" style="width:60px; height:2px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:0; font-weight:bold; background:#000; border:1px solid #000; color:#000; overflow:hidden;">123</button>
+        <button id="numberBtn" title="Auto-number chunks" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:bold;">123</button>
         <button id="iMenuBtn" style="width:60px; height:2px; padding:0; background:#000; border:1px solid #000; color:#000; font-size:0; overflow:hidden;">≡</button>
-        <button id="infoBtn" title="Inspect chunk" style="width:60px; height:2px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:0; background:#000; border:1px solid #000; color:#000; cursor:pointer; overflow:hidden;">🔍</button>
+        <button id="infoBtn" title="Inspect chunk" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer;">🔍 Identify</button>
       </div>
     </div>
     <div id="iMenuDropdown" style="display:none; background:#101010; padding:8px; margin-top:8px; border-radius:6px; color:#ddd;">
@@ -2116,10 +2116,16 @@
       let dragState = { dragging:false, startX:0, startY:0, startTX:0, startTY:0, moved:false };
       if(infoBtn) infoBtn.addEventListener('click', ()=>{
         infoMode = !infoMode;
-        if(infoMode) { if(numberBtn) numberBtn.style.background = ''; numberBtn.style.color = '#ddd'; }
-        infoBtn.style.background = '#000';
-        infoBtn.style.color = '#000';
-        infoBtn.style.border = '1px solid #000';
+        if(infoMode) {
+          if(numberBtn) { numberBtn.style.background = ''; numberBtn.style.color = '#ddd'; }
+          infoBtn.style.background = '#007acc';
+          infoBtn.style.color = '#fff';
+          infoBtn.style.border = '1px solid #007acc';
+        } else {
+          infoBtn.style.background = '';
+          infoBtn.style.color = '';
+          infoBtn.style.border = '';
+        }
         // toggle cursor on stitchedWrap
         stitchedWrap.classList.toggle('info-cursor', infoMode);
         if(!infoMode){
