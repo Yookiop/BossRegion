@@ -1174,11 +1174,14 @@
                 // 'top'/'bottom' are perpendicular to v-split: suppress border if caller is r1 or r2
                 // (the split-chunk itself already draws the correct partial border for that face)
                 if(callerRegion === sp.r1 || callerRegion === sp.r2) return callerRegion;
-              } else {
+              } else if(sp.dir === 'h'){
                 if(face === 'top')    return sp.r1;
                 if(face === 'bottom') return sp.r2;
-                // 'left'/'right' are perpendicular to h-split: same suppression
                 if(callerRegion === sp.r1 || callerRegion === sp.r2) return callerRegion;
+              } else if(sp.dir === 'both'){
+                // All 4 faces are mixed — suppress full borders for any quadrant-region caller
+                if(callerRegion === sp.tl || callerRegion === sp.tr || callerRegion === sp.bl || callerRegion === sp.br)
+                  return callerRegion;
               }
             }
             return '__multi__';
@@ -1222,20 +1225,16 @@
             for(const rn of regArr) if(!regionSegments.has(rn)) regionSegments.set(rn, []);
 
             if(split){
-              const r1 = split.r1, r2 = split.r2;
-              const segs1 = regionSegments.get(r1) || [];
-              const segs2 = regionSegments.get(r2) || [];
-              // Helper: push a segment for region rn AND the opposing neighbor region (mirror inward dir).
-              // The opposing region was suppressed in the normal loop (perpendicular face fix), so we
-              // inject its segment here to ensure both sides of the boundary are visually represented.
+              // Helper: push segment AND its opposing-side mirror into the neighbor's segment list.
               function pushWithOpposing(segs, seg, nbrRegion) {
                 segs.push(seg);
                 const oppSegs = regionSegments.get(nbrRegion);
-                if(oppSegs) oppSegs.push({
-                  x: seg.x, y: seg.y, w: seg.w, h: seg.h,
-                  inwardDx: -seg.inwardDx, inwardDy: -seg.inwardDy
-                });
+                if(oppSegs) oppSegs.push({x:seg.x,y:seg.y,w:seg.w,h:seg.h,inwardDx:-seg.inwardDx,inwardDy:-seg.inwardDy});
               }
+              if(split.dir === 'v' || split.dir === 'h'){
+              const r1 = split.r1, r2 = split.r2;
+              const segs1 = regionSegments.get(r1) || [];
+              const segs2 = regionSegments.get(r2) || [];
               if(split.dir === 'v'){
                 const sx = Math.round(left + w * split.pos);
                 // r1 occupies left part (left → sx)
@@ -1270,6 +1269,31 @@
                 const rr2 = getNbrRegion(r, c+1, 'left',   r2);
                 if(rr2 !== r2) pushWithOpposing(segs2, {x: Math.round(right), y: sy, w: 0, h: Math.round(bottom) - sy, inwardDx: -1, inwardDy: 0}, rr2);
                 splitLines.push({x: Math.round(left), y: sy, w: Math.round(w), h: 0, r1, r2});
+              }
+              } else if(split.dir === 'both'){
+                // 4-quadrant (H+V) split
+                const {tl, tr, bl, br, vpos, hpos} = split;
+                for(const rn of [tl,tr,bl,br]) if(rn && !regionSegments.has(rn)) regionSegments.set(rn,[]);
+                const segtl=regionSegments.get(tl)||[], segtr=regionSegments.get(tr)||[];
+                const segbl=regionSegments.get(bl)||[], segbr=regionSegments.get(br)||[];
+                const vx=Math.round(left+w*vpos), hy=Math.round(top+h*hpos);
+                // TL quadrant: left edge (top→hy), top edge (left→vx)
+                const tlL=getNbrRegion(r,c-1,'right',tl); if(tlL!==tl) pushWithOpposing(segtl,{x:Math.round(left),y:Math.round(top),w:0,h:hy-Math.round(top),inwardDx:1,inwardDy:0},tlL);
+                const tlT=getNbrRegion(r-1,c,'bottom',tl); if(tlT!==tl) pushWithOpposing(segtl,{x:Math.round(left),y:Math.round(top),w:vx-Math.round(left),h:0,inwardDx:0,inwardDy:1},tlT);
+                // TR quadrant: right edge (top→hy), top edge (vx→right)
+                const trR=getNbrRegion(r,c+1,'left',tr); if(trR!==tr) pushWithOpposing(segtr,{x:Math.round(right),y:Math.round(top),w:0,h:hy-Math.round(top),inwardDx:-1,inwardDy:0},trR);
+                const trT=getNbrRegion(r-1,c,'bottom',tr); if(trT!==tr) pushWithOpposing(segtr,{x:vx,y:Math.round(top),w:Math.round(right)-vx,h:0,inwardDx:0,inwardDy:1},trT);
+                // BL quadrant: left edge (hy→bottom), bottom edge (left→vx)
+                const blL=getNbrRegion(r,c-1,'right',bl); if(blL!==bl) pushWithOpposing(segbl,{x:Math.round(left),y:hy,w:0,h:Math.round(bottom)-hy,inwardDx:1,inwardDy:0},blL);
+                const blB=getNbrRegion(r+1,c,'top',bl); if(blB!==bl) pushWithOpposing(segbl,{x:Math.round(left),y:Math.round(bottom),w:vx-Math.round(left),h:0,inwardDx:0,inwardDy:-1},blB);
+                // BR quadrant: right edge (hy→bottom), bottom edge (vx→right)
+                const brR=getNbrRegion(r,c+1,'left',br); if(brR!==br) pushWithOpposing(segbr,{x:Math.round(right),y:hy,w:0,h:Math.round(bottom)-hy,inwardDx:-1,inwardDy:0},brR);
+                const brB=getNbrRegion(r+1,c,'top',br); if(brB!==br) pushWithOpposing(segbr,{x:vx,y:Math.round(bottom),w:Math.round(right)-vx,h:0,inwardDx:0,inwardDy:-1},brB);
+                // Internal + shape: 4 colored split-line segments
+                splitLines.push({x:vx,y:Math.round(top),w:0,h:hy-Math.round(top),r1:tl,r2:tr});      // top-V  (TL|TR)
+                splitLines.push({x:vx,y:hy,w:0,h:Math.round(bottom)-hy,r1:bl,r2:br});                // bot-V  (BL|BR)
+                splitLines.push({x:Math.round(left),y:hy,w:vx-Math.round(left),h:0,r1:tl,r2:bl});    // left-H (TL|BL)
+                splitLines.push({x:vx,y:hy,w:Math.round(right)-vx,h:0,r1:tr,r2:br});                 // right-H(TR|BR)
               }
             }
           }
@@ -2368,21 +2392,40 @@
       let _splitEditorChunkKey = null;
       let _splitEditorRegions = [];
 
+      function populateSplitQuadSelects(regions) {
+        ['splitQuadTL','splitQuadTR','splitQuadBL','splitQuadBR'].forEach(id => {
+          const sel = document.getElementById(id);
+          sel.innerHTML = '';
+          for(const rn of regions){
+            const opt = document.createElement('option');
+            opt.value = rn; opt.textContent = rn; sel.appendChild(opt);
+          }
+        });
+      }
+
       function updateSplitRegionLabels() {
-        const dir = document.querySelector('input[name="splitDir"]:checked') ? document.querySelector('input[name="splitDir"]:checked').value : 'v';
+        const dir = document.querySelector('input[name="splitDir"]:checked')?.value || 'v';
+        const isBoth = dir === 'both';
+        document.getElementById('splitSecondSliderRow').style.display = isBoth ? 'block' : 'none';
+        document.getElementById('splitQuadrantRows').style.display   = isBoth ? 'block' : 'none';
+        document.getElementById('splitRegionLabels').style.display   = isBoth ? 'none'  : 'block';
+        document.getElementById('splitSwapBtn').style.display        = isBoth ? 'none'  : '';
+        document.getElementById('splitPosLabel').textContent = isBoth ? 'V split position (left↔right)' : 'Position from start';
         const pos = parseInt(document.getElementById('splitPosSlider').value);
         document.getElementById('splitPosValue').textContent = pos + '%';
-        const r1 = _splitEditorRegions[0] || '?', r2 = _splitEditorRegions[1] || '?';
-        const c1 = getRegionColor ? getRegionColor(r1) : '#ffd700';
-        const c2 = getRegionColor ? getRegionColor(r2) : '#00cfff';
-        if(dir === 'v'){
-          document.getElementById('splitRegionLabels').innerHTML =
-            `<span style="color:${c1}">■ ${r1}</span> — left side (0–${pos}%)<br>`+
-            `<span style="color:${c2}">■ ${r2}</span> — right side (${pos}–100%)`;
-        } else {
-          document.getElementById('splitRegionLabels').innerHTML =
-            `<span style="color:${c1}">■ ${r1}</span> — top side (0–${pos}%)<br>`+
-            `<span style="color:${c2}">■ ${r2}</span> — bottom side (${pos}–100%)`;
+        if(!isBoth){
+          const r1 = _splitEditorRegions[0] || '?', r2 = _splitEditorRegions[1] || '?';
+          const c1 = getRegionColor ? getRegionColor(r1) : '#ffd700';
+          const c2 = getRegionColor ? getRegionColor(r2) : '#00cfff';
+          if(dir === 'v'){
+            document.getElementById('splitRegionLabels').innerHTML =
+              `<span style="color:${c1}">■ ${r1}</span> — left side (0–${pos}%)<br>`+
+              `<span style="color:${c2}">■ ${r2}</span> — right side (${pos}–100%)`;
+          } else {
+            document.getElementById('splitRegionLabels').innerHTML =
+              `<span style="color:${c1}">■ ${r1}</span> — top side (0–${pos}%)<br>`+
+              `<span style="color:${c2}">■ ${r2}</span> — bottom side (${pos}–100%)`;
+          }
         }
       }
 
@@ -2392,19 +2435,42 @@
         _splitEditorChunkKey = chunkKey;
         const splits = loadChunkSplits();
         const existing = splits[chunkKey];
-        _splitEditorRegions = existing ? [existing.r1, existing.r2] : Array.from(regions);
+        const regArr = Array.from(regions);
+        _splitEditorRegions = existing && existing.dir !== 'both' ? [existing.r1, existing.r2] : regArr;
         document.getElementById('splitEditorChunkInfo').textContent = 'Chunk: chunk_' + chunkKey.replace(',','_');
-        document.getElementById('splitEditorRegions').textContent = _splitEditorRegions.join(' & ');
-        const dirV = document.getElementById('splitDirV'), dirH = document.getElementById('splitDirH');
-        if(existing){ dirV.checked = existing.dir === 'v'; dirH.checked = existing.dir === 'h'; }
-        else { dirV.checked = true; dirH.checked = false; }
+        document.getElementById('splitEditorRegions').textContent = regArr.join(' & ');
+        const dirV = document.getElementById('splitDirV');
+        const dirH = document.getElementById('splitDirH');
+        const dirBoth = document.getElementById('splitDirBoth');
         const slider = document.getElementById('splitPosSlider');
-        slider.value = existing ? Math.round(existing.pos * 100) : 50;
+        const hSlider = document.getElementById('splitHPosSlider');
+        populateSplitQuadSelects(regArr);
+        if(existing && existing.dir === 'both'){
+          dirV.checked = false; dirH.checked = false; dirBoth.checked = true;
+          slider.value = Math.round(existing.vpos * 100);
+          hSlider.value = Math.round(existing.hpos * 100);
+          document.getElementById('splitHPosValue').textContent = Math.round(existing.hpos * 100) + '%';
+          document.getElementById('splitQuadTL').value = existing.tl;
+          document.getElementById('splitQuadTR').value = existing.tr;
+          document.getElementById('splitQuadBL').value = existing.bl;
+          document.getElementById('splitQuadBR').value = existing.br;
+        } else if(existing){
+          dirV.checked = existing.dir === 'v';
+          dirH.checked = existing.dir === 'h';
+          dirBoth.checked = false;
+          slider.value = Math.round(existing.pos * 100);
+        } else {
+          dirV.checked = true; dirH.checked = false; dirBoth.checked = false;
+          slider.value = 50;
+        }
         updateSplitRegionLabels();
         document.getElementById('splitEditorDialog').style.display = 'block';
       }
 
       document.getElementById('splitPosSlider').addEventListener('input', updateSplitRegionLabels);
+      document.getElementById('splitHPosSlider').addEventListener('input', () => {
+        document.getElementById('splitHPosValue').textContent = document.getElementById('splitHPosSlider').value + '%';
+      });
       document.querySelectorAll('input[name="splitDir"]').forEach(r => r.addEventListener('change', updateSplitRegionLabels));
 
       document.getElementById('splitSwapBtn').addEventListener('click', ()=>{
@@ -2427,9 +2493,21 @@
       document.getElementById('splitSaveBtn').addEventListener('click', ()=>{
         if(_splitEditorChunkKey){
           const dir = document.querySelector('input[name="splitDir"]:checked').value;
-          const pos = parseInt(document.getElementById('splitPosSlider').value) / 100;
           const splits = loadChunkSplits();
-          splits[_splitEditorChunkKey] = { dir, pos, r1: _splitEditorRegions[0], r2: _splitEditorRegions[1] };
+          if(dir === 'both'){
+            splits[_splitEditorChunkKey] = {
+              dir: 'both',
+              vpos: parseInt(document.getElementById('splitPosSlider').value) / 100,
+              hpos: parseInt(document.getElementById('splitHPosSlider').value) / 100,
+              tl: document.getElementById('splitQuadTL').value,
+              tr: document.getElementById('splitQuadTR').value,
+              bl: document.getElementById('splitQuadBL').value,
+              br: document.getElementById('splitQuadBR').value
+            };
+          } else {
+            const pos = parseInt(document.getElementById('splitPosSlider').value) / 100;
+            splits[_splitEditorChunkKey] = { dir, pos, r1: _splitEditorRegions[0], r2: _splitEditorRegions[1] };
+          }
           saveChunkSplits(splits);
         }
         document.getElementById('splitEditorDialog').style.display = 'none';
@@ -3051,10 +3129,21 @@
       <div style="font-size:0.85rem; color:#aaa; margin-bottom:4px;">Split direction:</div>
       <label style="margin-right:16px; cursor:pointer;"><input type="radio" name="splitDir" id="splitDirV" value="v" checked style="margin-right:4px;">Vertical (left | right)</label>
       <label style="cursor:pointer;"><input type="radio" name="splitDir" id="splitDirH" value="h" style="margin-right:4px;">Horizontal (top / bottom)</label>
+      <label style="margin-left:16px; cursor:pointer;"><input type="radio" name="splitDir" id="splitDirBoth" value="both" style="margin-right:4px;">Both (H + V)</label>
     </div>
-    <div style="margin-bottom:6px; font-size:0.85rem; color:#aaa;">Position from start: <span id="splitPosValue" style="color:#fff; font-weight:bold;">50%</span></div>
-    <input type="range" id="splitPosSlider" min="5" max="95" value="50" style="width:100%; margin-bottom:12px; accent-color:#ffd700;">
+    <div style="margin-bottom:6px; font-size:0.85rem; color:#aaa;"><span id="splitPosLabel">Position from start</span>: <span id="splitPosValue" style="color:#fff; font-weight:bold;">50%</span></div>
+    <input type="range" id="splitPosSlider" min="5" max="95" value="50" style="width:100%; margin-bottom:8px; accent-color:#ffd700;">
+    <div id="splitSecondSliderRow" style="display:none; margin-bottom:8px;">
+      <div style="font-size:0.85rem; color:#aaa;">H split position (top↕): <span id="splitHPosValue" style="color:#fff; font-weight:bold;">50%</span></div>
+      <input type="range" id="splitHPosSlider" min="5" max="95" value="50" style="width:100%; accent-color:#ffd700;">
+    </div>
     <div id="splitRegionLabels" style="margin-bottom:16px; font-size:0.82rem; color:#bbb; background:#111; padding:8px; border-radius:6px; line-height:1.7;"></div>
+    <div id="splitQuadrantRows" style="display:none; margin-bottom:16px; font-size:0.82rem; color:#bbb; background:#111; padding:8px; border-radius:6px; line-height:2.0;">
+      <div>↖ TL:&nbsp;<select id="splitQuadTL" style="background:#222; color:#ddd; border:1px solid #555; border-radius:3px;"></select></div>
+      <div>↗ TR:&nbsp;<select id="splitQuadTR" style="background:#222; color:#ddd; border:1px solid #555; border-radius:3px;"></select></div>
+      <div>↙ BL:&nbsp;<select id="splitQuadBL" style="background:#222; color:#ddd; border:1px solid #555; border-radius:3px;"></select></div>
+      <div>↘ BR:&nbsp;<select id="splitQuadBR" style="background:#222; color:#ddd; border:1px solid #555; border-radius:3px;"></select></div>
+    </div>
     <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
       <button id="splitSwapBtn" title="Swap which region is on which side" style="padding:6px 12px; background:#333; color:#ccc; border:1px solid #555; border-radius:4px; cursor:pointer;">⇄ Swap</button>
       <button id="splitClearBtn" style="padding:6px 12px; background:#4a1515; color:#faa; border:1px solid #7a3333; border-radius:4px; cursor:pointer;">✕ Remove</button>
