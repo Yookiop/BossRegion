@@ -1546,95 +1546,128 @@
         const first = manifest.chunks[0];
         const tileW = first.bbox[2] - first.bbox[0];
         const tileH = first.bbox[3] - first.bbox[1];
+
+        function getRegionChunkComponents(regionChunks) {
+          const remaining = new Set(regionChunks);
+          const components = [];
+          while(remaining.size){
+            const start = remaining.values().next().value;
+            const component = new Set([start]);
+            const queue = [start];
+            remaining.delete(start);
+            while(queue.length){
+              const current = queue.pop();
+              const [r, c] = current.split(',').map(Number);
+              const neighbors = [
+                `${r - 1},${c}`,
+                `${r + 1},${c}`,
+                `${r},${c - 1}`,
+                `${r},${c + 1}`,
+              ];
+              for(const neighborKey of neighbors){
+                if(!remaining.has(neighborKey)) continue;
+                remaining.delete(neighborKey);
+                component.add(neighborKey);
+                queue.push(neighborKey);
+              }
+            }
+            components.push(component);
+          }
+          components.sort((a, b) => b.size - a.size);
+          return components;
+        }
+
         ctx.save();
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         for(const [regionName, chunks] of window.REGION_CHUNKS){
           if(!chunks || chunks.size === 0) continue;
-          let sumX = 0, sumY = 0, count = 0;
-          let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-          for(const ck of chunks){
-            const [r, c] = ck.split(',').map(Number);
-            let left, top, w, h;
-            if(gi && gi.colLefts[c] !== undefined && gi.rowTops[r] !== undefined){
-              left = gi.colLefts[c]; top = gi.rowTops[r]; w = gi.colWidths[c]; h = gi.rowHeights[r];
-            } else { left = c * tileW; top = r * tileH; w = tileW; h = tileH; }
-            const cx = left + w / 2, cy = top + h / 2;
-            sumX += cx; sumY += cy; count++;
-            if(left < minX) minX = left; if(left + w > maxX) maxX = left + w;
-            if(top < minY) minY = top; if(top + h > maxY) maxY = top + h;
-          }
-          if(!count) continue;
-          let labelX = sumX / count, labelY = sumY / count;
-          const regionW = maxX - minX, regionH = maxY - minY;
-          const labelOffset = REGION_LABEL_OFFSETS[regionName];
-          if(labelOffset){
-            labelX += regionW * labelOffset.x;
-            labelY += regionH * labelOffset.y;
-          }
-          // Scale font to fit within the region bounding box
-          let fontSize = Math.min(regionH * 0.20, regionW * 0.12, baseTileW * 2.0);
-          fontSize = Math.max(fontSize, 10);
-          ctx.font = `bold ${Math.round(fontSize)}px system-ui, sans-serif`;
-          const measured = ctx.measureText(regionName).width;
-          if(measured > regionW * 0.85){
-            fontSize = fontSize * (regionW * 0.85) / measured;
-            fontSize = Math.max(fontSize, 8);
+          for(const chunkGroup of getRegionChunkComponents(chunks)){
+            let sumX = 0, sumY = 0, count = 0;
+            let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+            for(const ck of chunkGroup){
+              const [r, c] = ck.split(',').map(Number);
+              let left, top, w, h;
+              if(gi && gi.colLefts[c] !== undefined && gi.rowTops[r] !== undefined){
+                left = gi.colLefts[c]; top = gi.rowTops[r]; w = gi.colWidths[c]; h = gi.rowHeights[r];
+              } else { left = c * tileW; top = r * tileH; w = tileW; h = tileH; }
+              const cx = left + w / 2, cy = top + h / 2;
+              sumX += cx; sumY += cy; count++;
+              if(left < minX) minX = left; if(left + w > maxX) maxX = left + w;
+              if(top < minY) minY = top; if(top + h > maxY) maxY = top + h;
+            }
+            if(!count) continue;
+            let labelX = sumX / count, labelY = sumY / count;
+            const regionW = maxX - minX, regionH = maxY - minY;
+            const labelOffset = REGION_LABEL_OFFSETS[regionName];
+            if(labelOffset){
+              labelX += regionW * labelOffset.x;
+              labelY += regionH * labelOffset.y;
+            }
+            // Scale font to fit within the component bounding box
+            let fontSize = Math.min(regionH * 0.20, regionW * 0.12, baseTileW * 2.0);
+            fontSize = Math.max(fontSize, 10);
             ctx.font = `bold ${Math.round(fontSize)}px system-ui, sans-serif`;
-          }
-          const color = getRegionColor(regionName);
-          const isUnlockedRegion = unlockedRegions.has(regionName);
-          const hasLockIcon = !isUnlockedRegion && regionLockImage.complete && regionLockImage.naturalWidth > 0;
-          const lockSize = hasLockIcon ? Math.max(168, Math.min(Math.round(fontSize * 8.1), 336)) : 0;
-          const sidePad = Math.max(Math.round(fontSize * 0.4), 12);
-          const verticalPad = Math.max(Math.round(fontSize * 0.45), 12);
-          const textHalfW = Math.max(ctx.measureText(regionName).width / 2, fontSize * 0.8);
-          const textHalfH = Math.max(fontSize * 0.52, 10);
-          const titleLockGap = hasLockIcon ? Math.max(4, Math.min(Math.round(fontSize * 0.12), 10)) : 0;
-          labelX = Math.max(minX + sidePad + textHalfW, Math.min(maxX - sidePad - textHalfW, labelX));
-          const lockedStackHeight = hasLockIcon ? ((textHalfH * 2) + titleLockGap + lockSize) : 0;
-          let textY = hasLockIcon ? (labelY - (lockedStackHeight / 2) + textHalfH) : labelY;
-          let iconY = hasLockIcon ? (textY + textHalfH + titleLockGap + (lockSize / 2)) : textY;
-          const stackTop = Math.min(textY - textHalfH, hasLockIcon ? (iconY - lockSize / 2) : Infinity);
-          const stackBottom = Math.max(textY + textHalfH, hasLockIcon ? (iconY + lockSize / 2) : -Infinity);
-          if(stackTop < minY + verticalPad){
-            const shiftDown = (minY + verticalPad) - stackTop;
-            textY += shiftDown;
-            iconY += shiftDown;
-          }
-          if(stackBottom > maxY - verticalPad){
-            const shiftUp = stackBottom - (maxY - verticalPad);
-            textY -= shiftUp;
-            iconY -= shiftUp;
-          }
-          if(isUnlockedRegion){
-            ctx.shadowColor = 'rgba(80,255,120,0.95)';
-            ctx.shadowBlur = Math.max(Math.round(fontSize * 0.45), 10);
-          } else {
-            ctx.shadowColor = 'transparent';
-            ctx.shadowBlur = 0;
-          }
-          ctx.lineWidth = Math.max(Math.round(fontSize) * 0.18, 2);
-          ctx.strokeStyle = 'rgba(0,0,0,0.80)';
-          ctx.lineJoin = 'round';
-          ctx.strokeText(regionName, labelX, textY);
-          ctx.fillStyle = color;
-          ctx.fillText(regionName, labelX, textY);
-          if(isUnlockedRegion){
-            ctx.shadowColor = 'transparent';
-            ctx.shadowBlur = 0;
-          }
-          if(hasLockIcon){
-            ctx.save();
-            ctx.fillStyle = 'rgba(0,0,0,0.52)';
-            ctx.strokeStyle = 'rgba(255,255,255,0.28)';
-            ctx.lineWidth = Math.max(2, Math.round(lockSize * 0.06));
-            ctx.beginPath();
-            ctx.arc(Math.round(labelX), Math.round(iconY), Math.round(lockSize * 0.44), 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-            ctx.drawImage(regionLockImage, Math.round(labelX - lockSize / 2), Math.round(iconY - lockSize / 2), lockSize, lockSize);
-            ctx.restore();
+            const measured = ctx.measureText(regionName).width;
+            if(measured > regionW * 0.85){
+              fontSize = fontSize * (regionW * 0.85) / measured;
+              fontSize = Math.max(fontSize, 8);
+              ctx.font = `bold ${Math.round(fontSize)}px system-ui, sans-serif`;
+            }
+            const color = getRegionColor(regionName);
+            const isUnlockedRegion = unlockedRegions.has(regionName);
+            const hasLockIcon = !isUnlockedRegion && regionLockImage.complete && regionLockImage.naturalWidth > 0;
+            const lockSize = hasLockIcon ? Math.max(168, Math.min(Math.round(fontSize * 8.1), 336)) : 0;
+            const sidePad = Math.max(Math.round(fontSize * 0.4), 12);
+            const verticalPad = Math.max(Math.round(fontSize * 0.45), 12);
+            const textHalfW = Math.max(ctx.measureText(regionName).width / 2, fontSize * 0.8);
+            const textHalfH = Math.max(fontSize * 0.52, 10);
+            const titleLockGap = hasLockIcon ? Math.max(4, Math.min(Math.round(fontSize * 0.12), 10)) : 0;
+            labelX = Math.max(minX + sidePad + textHalfW, Math.min(maxX - sidePad - textHalfW, labelX));
+            const lockedStackHeight = hasLockIcon ? ((textHalfH * 2) + titleLockGap + lockSize) : 0;
+            let textY = hasLockIcon ? (labelY - (lockedStackHeight / 2) + textHalfH) : labelY;
+            let iconY = hasLockIcon ? (textY + textHalfH + titleLockGap + (lockSize / 2)) : textY;
+            const stackTop = Math.min(textY - textHalfH, hasLockIcon ? (iconY - lockSize / 2) : Infinity);
+            const stackBottom = Math.max(textY + textHalfH, hasLockIcon ? (iconY + lockSize / 2) : -Infinity);
+            if(stackTop < minY + verticalPad){
+              const shiftDown = (minY + verticalPad) - stackTop;
+              textY += shiftDown;
+              iconY += shiftDown;
+            }
+            if(stackBottom > maxY - verticalPad){
+              const shiftUp = stackBottom - (maxY - verticalPad);
+              textY -= shiftUp;
+              iconY -= shiftUp;
+            }
+            if(isUnlockedRegion){
+              ctx.shadowColor = 'rgba(80,255,120,0.95)';
+              ctx.shadowBlur = Math.max(Math.round(fontSize * 0.45), 10);
+            } else {
+              ctx.shadowColor = 'transparent';
+              ctx.shadowBlur = 0;
+            }
+            ctx.lineWidth = Math.max(Math.round(fontSize) * 0.18, 2);
+            ctx.strokeStyle = 'rgba(0,0,0,0.80)';
+            ctx.lineJoin = 'round';
+            ctx.strokeText(regionName, labelX, textY);
+            ctx.fillStyle = color;
+            ctx.fillText(regionName, labelX, textY);
+            if(isUnlockedRegion){
+              ctx.shadowColor = 'transparent';
+              ctx.shadowBlur = 0;
+            }
+            if(hasLockIcon){
+              ctx.save();
+              ctx.fillStyle = 'rgba(0,0,0,0.52)';
+              ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+              ctx.lineWidth = Math.max(2, Math.round(lockSize * 0.06));
+              ctx.beginPath();
+              ctx.arc(Math.round(labelX), Math.round(iconY), Math.round(lockSize * 0.44), 0, Math.PI * 2);
+              ctx.fill();
+              ctx.stroke();
+              ctx.drawImage(regionLockImage, Math.round(labelX - lockSize / 2), Math.round(iconY - lockSize / 2), lockSize, lockSize);
+              ctx.restore();
+            }
           }
         }
         ctx.restore();
