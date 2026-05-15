@@ -1359,27 +1359,18 @@
         const { thickness: innerW, half: innerHalf, inwardOffset } = getRegionBorderMetrics();
 
         // Pass 1: region-specific colored lines — offset INWARD so overlapping boundaries both show
-        // For bars whose inward direction is positive (+x or +y), the bar must start AT the chunk
-        // boundary (not 1px inside) so that perpendicular bars share the corner pixel and the border
-        // line closes properly at every junction/corner.
+        ctx.lineCap = 'butt';
+        ctx.lineJoin = 'miter';
+        ctx.miterLimit = 2;
+        ctx.lineWidth = innerW;
         for(const [regionName, segs] of regionSegments){
-          ctx.fillStyle = getRegionColor(regionName);
-          for(const seg of segs){
-            if(seg.w === 0){
-              const ox = seg.inwardDx * inwardOffset;
-              // ox>=0 → bar starts at seg.x (boundary); ox<0 → bar starts innerHalf inside
-              ctx.fillRect(seg.x + ox - (ox >= 0 ? inwardOffset : innerHalf), seg.y, innerW, seg.h);
-            } else {
-              const oy = seg.inwardDy * inwardOffset;
-              // oy>=0 → bar starts at seg.y (boundary); oy<0 → bar starts innerHalf inside
-              ctx.fillRect(seg.x, seg.y + oy - (oy >= 0 ? inwardOffset : innerHalf), seg.w, innerW);
-            }
-          }
-
+          ctx.strokeStyle = getRegionColor(regionName);
+          ctx.beginPath();
+          
           const cornerMap = new Map();
           function addCornerPoint(pointX, pointY, seg) {
             const key = `${pointX},${pointY}`;
-            if(!cornerMap.has(key)) cornerMap.set(key, { vertical: [], horizontal: [] });
+            if(!cornerMap.has(key)) cornerMap.set(key, { x: pointX, y: pointY, vertical: [], horizontal: [] });
             const bucket = cornerMap.get(key);
             if(seg.w === 0) bucket.vertical.push(seg);
             else bucket.horizontal.push(seg);
@@ -1393,43 +1384,118 @@
               addCornerPoint(seg.x + seg.w, seg.y, seg);
             }
           }
-          for(const point of cornerMap.values()){
-            if(point.vertical.length === 0 || point.horizontal.length === 0) continue;
-            const vSeg = point.vertical[0];
-            const hSeg = point.horizontal[0];
-            const ox = vSeg.inwardDx * inwardOffset;
-            const oy = hSeg.inwardDy * inwardOffset;
-            const fillX = vSeg.x + ox - (ox >= 0 ? inwardOffset : innerHalf);
-            const fillY = hSeg.y + oy - (oy >= 0 ? inwardOffset : innerHalf);
-            ctx.fillRect(fillX, fillY, innerW, innerW);
+          for(const bucket of cornerMap.values()){
+            let ox = 0, oy = 0;
+            if(bucket.vertical.length > 0) ox = bucket.vertical[0].inwardDx * inwardOffset;
+            if(bucket.horizontal.length > 0) oy = bucket.horizontal[0].inwardDy * inwardOffset;
+            bucket.cx = bucket.x + ox;
+            bucket.cy = bucket.y + oy;
           }
+
+          // Build adjacency for continuous paths
+          const adj = new Map();
+          for(let i = 0; i < segs.length; i++){
+            const seg = segs[i];
+            const k1 = `${seg.x},${seg.y}`;
+            const k2 = seg.w === 0 ? `${seg.x},${seg.y + seg.h}` : `${seg.x + seg.w},${seg.y}`;
+            if(!adj.has(k1)) adj.set(k1, []);
+            if(!adj.has(k2)) adj.set(k2, []);
+            adj.get(k1).push({id: i, other: k2});
+            adj.get(k2).push({id: i, other: k1});
+          }
+
+          const usedEdges = new Set();
+          for(let i = 0; i < segs.length; i++){
+            if(usedEdges.has(i)) continue;
+            
+            // Walk backwards to find true start of an open path (or arbitrary start for closed loop)
+            const initialEdgeObj = segs[i];
+            const initialKey = `${initialEdgeObj.x},${initialEdgeObj.y}`;
+            let startKey = (() => {
+              let curr = initialKey;
+              let arrivedFromId = i;
+              const seenNodes = new Set();
+              while(true) {
+                seenNodes.add(curr);
+                const edges = adj.get(curr) || [];
+                const prev = edges.find(e => !usedEdges.has(e.id) && e.id !== arrivedFromId);
+                if(!prev) return curr;
+                curr = prev.other;
+                arrivedFromId = prev.id;
+                if(seenNodes.has(curr)) return curr; 
+              }
+            })();
+
+            const pStart = cornerMap.get(startKey);
+            ctx.moveTo(pStart.cx, pStart.cy);
+
+            let currentKey = startKey;
+            while(true) {
+              const edges = adj.get(currentKey) || [];
+              const nextEdge = edges.find(e => !usedEdges.has(e.id));
+              if(!nextEdge) break;
+              usedEdges.add(nextEdge.id);
+              currentKey = nextEdge.other;
+              const pNext = cornerMap.get(currentKey);
+              ctx.lineTo(pNext.cx, pNext.cy);
+            }
+            if(currentKey === startKey) ctx.closePath();
+          }
+          ctx.stroke();
         }
         // Colored split lines (both sides, inward from the split position)
         // r2 side: start AT the split boundary (sl.x / sl.y) so it abuts the r1 bar with no gap
+        ctx.lineCap = 'square';
         for(const sl of splitLines){
+          ctx.beginPath();
           if(sl.w === 0){
-            ctx.fillStyle = getRegionColor(sl.r1);
-            ctx.fillRect(sl.x - inwardOffset - innerHalf, sl.y - innerW, innerW, sl.h + innerW * 2);
-            ctx.fillStyle = getRegionColor(sl.r2);
-            ctx.fillRect(sl.x, sl.y - innerW, innerW, sl.h + innerW * 2);
+            ctx.strokeStyle = getRegionColor(sl.r1);
+            ctx.moveTo(sl.x - inwardOffset - innerHalf + innerW/2, sl.y);
+            ctx.lineTo(sl.x - inwardOffset - innerHalf + innerW/2, sl.y + sl.h);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.strokeStyle = getRegionColor(sl.r2);
+            ctx.moveTo(sl.x + innerW/2, sl.y);
+            ctx.lineTo(sl.x + innerW/2, sl.y + sl.h);
+            ctx.stroke();
           } else {
-            ctx.fillStyle = getRegionColor(sl.r1);
-            ctx.fillRect(sl.x - innerW, sl.y - inwardOffset - innerHalf, sl.w + innerW * 2, innerW);
-            ctx.fillStyle = getRegionColor(sl.r2);
-            ctx.fillRect(sl.x - innerW, sl.y, sl.w + innerW * 2, innerW);
+            ctx.strokeStyle = getRegionColor(sl.r1);
+            ctx.moveTo(sl.x, sl.y - inwardOffset - innerHalf + innerW/2);
+            ctx.lineTo(sl.x + sl.w, sl.y - inwardOffset - innerHalf + innerW/2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.strokeStyle = getRegionColor(sl.r2);
+            ctx.moveTo(sl.x, sl.y + innerW/2);
+            ctx.lineTo(sl.x + sl.w, sl.y + innerW/2);
+            ctx.stroke();
           }
         }
         for(const sl of splitConnectors){
+          ctx.beginPath();
           if(sl.w === 0){
-            ctx.fillStyle = getRegionColor(sl.r1);
-            ctx.fillRect(sl.x - inwardOffset - innerHalf, sl.y - innerW, innerW, sl.h + innerW * 2);
-            ctx.fillStyle = getRegionColor(sl.r2);
-            ctx.fillRect(sl.x, sl.y - innerW, innerW, sl.h + innerW * 2);
+            ctx.strokeStyle = getRegionColor(sl.r1);
+            ctx.moveTo(sl.x - inwardOffset - innerHalf + innerW/2, sl.y);
+            ctx.lineTo(sl.x - inwardOffset - innerHalf + innerW/2, sl.y + sl.h);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.strokeStyle = getRegionColor(sl.r2);
+            ctx.moveTo(sl.x + innerW/2, sl.y);
+            ctx.lineTo(sl.x + innerW/2, sl.y + sl.h);
+            ctx.stroke();
           } else {
-            ctx.fillStyle = getRegionColor(sl.r1);
-            ctx.fillRect(sl.x - innerW, sl.y - inwardOffset - innerHalf, sl.w + innerW * 2, innerW);
-            ctx.fillStyle = getRegionColor(sl.r2);
-            ctx.fillRect(sl.x - innerW, sl.y, sl.w + innerW * 2, innerW);
+            ctx.strokeStyle = getRegionColor(sl.r1);
+            ctx.moveTo(sl.x, sl.y - inwardOffset - innerHalf + innerW/2);
+            ctx.lineTo(sl.x + sl.w, sl.y - inwardOffset - innerHalf + innerW/2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.strokeStyle = getRegionColor(sl.r2);
+            ctx.moveTo(sl.x, sl.y + innerW/2);
+            ctx.lineTo(sl.x + sl.w, sl.y + innerW/2);
+            ctx.stroke();
           }
         }
 
