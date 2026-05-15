@@ -1215,6 +1215,10 @@
 
         // For split chunks: add partial border segments from both regions and record split lines
         const splitLines = []; // {x, y, w, h, r1, r2}
+        const splitConnectors = []; // Bridges mismatched split positions across adjacent chunk seams
+        function sameOrderedSplitPair(a, b, dir) {
+          return !!a && !!b && a.dir === dir && b.dir === dir && a.r1 === b.r1 && a.r2 === b.r2;
+        }
         if(window.CHUNK_MULTI_REGION){
           for(const [ck, regions] of window.CHUNK_MULTI_REGION){
             const [r, c] = ck.split(',').map(Number);
@@ -1252,6 +1256,22 @@
                 const b2 = getNbrRegion(r+1, c, 'top',    r2);
                 if(b2 !== r2) pushWithOpposing(segs2, {x: sx, y: Math.round(bottom), w: Math.round(right) - sx, h: 0, inwardDx: 0, inwardDy: -1}, b2);
                 splitLines.push({x: sx, y: Math.round(top), w: 0, h: Math.round(h), r1, r2});
+
+                const belowSplit = splitData[`${r + 1},${c}`];
+                if(sameOrderedSplitPair(split, belowSplit, 'v')){
+                  const belowBounds = chunkBounds(r + 1, c);
+                  const belowSx = Math.round(belowBounds.left + belowBounds.w * belowSplit.pos);
+                  if(belowSx !== sx){
+                    splitConnectors.push({
+                      x: Math.min(sx, belowSx),
+                      y: Math.round(bottom),
+                      w: Math.abs(belowSx - sx),
+                      h: 0,
+                      r1,
+                      r2,
+                    });
+                  }
+                }
               } else { // horizontal split
                 const sy = Math.round(top + h * split.pos);
                 // r1 occupies top part (top → sy)
@@ -1269,6 +1289,22 @@
                 const rr2 = getNbrRegion(r, c+1, 'left',   r2);
                 if(rr2 !== r2) pushWithOpposing(segs2, {x: Math.round(right), y: sy, w: 0, h: Math.round(bottom) - sy, inwardDx: -1, inwardDy: 0}, rr2);
                 splitLines.push({x: Math.round(left), y: sy, w: Math.round(w), h: 0, r1, r2});
+
+                const rightSplit = splitData[`${r},${c + 1}`];
+                if(sameOrderedSplitPair(split, rightSplit, 'h')){
+                  const rightBounds = chunkBounds(r, c + 1);
+                  const rightSy = Math.round(rightBounds.top + rightBounds.h * rightSplit.pos);
+                  if(rightSy !== sy){
+                    splitConnectors.push({
+                      x: Math.round(right),
+                      y: Math.min(sy, rightSy),
+                      w: 0,
+                      h: Math.abs(rightSy - sy),
+                      r1,
+                      r2,
+                    });
+                  }
+                }
               }
               } else if(split.dir === 'both'){
                 // 4-quadrant (H+V) split
@@ -1304,30 +1340,49 @@
         const inwardOffset = 3;
 
         // Pass 1: region-specific colored lines — offset INWARD so overlapping boundaries both show
+        // For bars whose inward direction is positive (+x or +y), the bar must start AT the chunk
+        // boundary (not 1px inside) so that perpendicular bars share the corner pixel and the border
+        // line closes properly at every junction/corner.
         for(const [regionName, segs] of regionSegments){
           ctx.fillStyle = getRegionColor(regionName);
           for(const seg of segs){
             if(seg.w === 0){
               const ox = seg.inwardDx * inwardOffset;
-              ctx.fillRect(seg.x + ox - innerHalf, seg.y, innerW, seg.h);
+              // ox>=0 → bar starts at seg.x (boundary); ox<0 → bar starts innerHalf inside
+              ctx.fillRect(seg.x + ox - (ox >= 0 ? inwardOffset : innerHalf), seg.y, innerW, seg.h);
             } else {
               const oy = seg.inwardDy * inwardOffset;
-              ctx.fillRect(seg.x, seg.y + oy - innerHalf, seg.w, innerW);
+              // oy>=0 → bar starts at seg.y (boundary); oy<0 → bar starts innerHalf inside
+              ctx.fillRect(seg.x, seg.y + oy - (oy >= 0 ? inwardOffset : innerHalf), seg.w, innerW);
             }
           }
         }
         // Colored split lines (both sides, inward from the split position)
+        // r2 side: start AT the split boundary (sl.x / sl.y) so it abuts the r1 bar with no gap
         for(const sl of splitLines){
           if(sl.w === 0){
             ctx.fillStyle = getRegionColor(sl.r1);
-            ctx.fillRect(sl.x - inwardOffset - innerHalf, sl.y, innerW, sl.h);
+            ctx.fillRect(sl.x - inwardOffset - innerHalf, sl.y - innerW, innerW, sl.h + innerW * 2);
             ctx.fillStyle = getRegionColor(sl.r2);
-            ctx.fillRect(sl.x + inwardOffset - innerHalf, sl.y, innerW, sl.h);
+            ctx.fillRect(sl.x, sl.y - innerW, innerW, sl.h + innerW * 2);
           } else {
             ctx.fillStyle = getRegionColor(sl.r1);
-            ctx.fillRect(sl.x, sl.y - inwardOffset - innerHalf, sl.w, innerW);
+            ctx.fillRect(sl.x - innerW, sl.y - inwardOffset - innerHalf, sl.w + innerW * 2, innerW);
             ctx.fillStyle = getRegionColor(sl.r2);
-            ctx.fillRect(sl.x, sl.y + inwardOffset - innerHalf, sl.w, innerW);
+            ctx.fillRect(sl.x - innerW, sl.y, sl.w + innerW * 2, innerW);
+          }
+        }
+        for(const sl of splitConnectors){
+          if(sl.w === 0){
+            ctx.fillStyle = getRegionColor(sl.r1);
+            ctx.fillRect(sl.x - inwardOffset - innerHalf, sl.y - innerW, innerW, sl.h + innerW * 2);
+            ctx.fillStyle = getRegionColor(sl.r2);
+            ctx.fillRect(sl.x, sl.y - innerW, innerW, sl.h + innerW * 2);
+          } else {
+            ctx.fillStyle = getRegionColor(sl.r1);
+            ctx.fillRect(sl.x - innerW, sl.y - inwardOffset - innerHalf, sl.w + innerW * 2, innerW);
+            ctx.fillStyle = getRegionColor(sl.r2);
+            ctx.fillRect(sl.x - innerW, sl.y, sl.w + innerW * 2, innerW);
           }
         }
 
@@ -2391,6 +2446,82 @@
       // ---- Split-line editor ----
       let _splitEditorChunkKey = null;
       let _splitEditorRegions = [];
+      let _splitLineDrag = { active:false, moved:false, chunkKey:null, axis:null, row:null, col:null };
+      let _suppressSplitContextMenu = false;
+
+      function clampSplitPosition(pos) {
+        return Math.max(0.05, Math.min(0.95, pos));
+      }
+
+      function getChunkBoundsForCell(row, col) {
+        const gi = window._gridInfo;
+        if(gi && gi.colLefts[col] !== undefined && gi.rowTops[row] !== undefined){
+          return { left: gi.colLefts[col], top: gi.rowTops[row], w: gi.colWidths[col], h: gi.rowHeights[row] };
+        }
+        const first = manifest.chunks[0];
+        const tileW = first.bbox[2] - first.bbox[0];
+        const tileH = first.bbox[3] - first.bbox[1];
+        return { left: col * tileW, top: row * tileH, w: tileW, h: tileH };
+      }
+
+      function getSplitLineTargetAtNaturalPoint(xNat, yNat) {
+        if(!window.CHUNK_MULTI_REGION) return null;
+        const col = getColAtX(xNat);
+        const row = getRowAtY(yNat);
+        if(row === null || col === null) return null;
+        const chunkKey = `${row},${col}`;
+        if(!window.CHUNK_MULTI_REGION.has(chunkKey)) return null;
+        const split = loadChunkSplits()[chunkKey];
+        if(!split) return null;
+
+        const bounds = getChunkBoundsForCell(row, col);
+        const threshold = Math.max(8, Math.round(Math.min(bounds.w, bounds.h) * 0.05));
+        const withinY = yNat >= bounds.top - threshold && yNat <= bounds.top + bounds.h + threshold;
+        const withinX = xNat >= bounds.left - threshold && xNat <= bounds.left + bounds.w + threshold;
+
+        if(split.dir === 'v'){
+          const lineX = bounds.left + bounds.w * split.pos;
+          if(withinY && Math.abs(xNat - lineX) <= threshold) return { chunkKey, row, col, axis:'v', bounds };
+          return null;
+        }
+        if(split.dir === 'h'){
+          const lineY = bounds.top + bounds.h * split.pos;
+          if(withinX && Math.abs(yNat - lineY) <= threshold) return { chunkKey, row, col, axis:'h', bounds };
+          return null;
+        }
+        if(split.dir === 'both'){
+          const lineX = bounds.left + bounds.w * split.vpos;
+          const lineY = bounds.top + bounds.h * split.hpos;
+          const dx = Math.abs(xNat - lineX);
+          const dy = Math.abs(yNat - lineY);
+          const hitV = withinY && dx <= threshold;
+          const hitH = withinX && dy <= threshold;
+          if(hitV && hitH) return { chunkKey, row, col, axis: dx <= dy ? 'v' : 'h', bounds };
+          if(hitV) return { chunkKey, row, col, axis:'v', bounds };
+          if(hitH) return { chunkKey, row, col, axis:'h', bounds };
+        }
+        return null;
+      }
+
+      function applySplitLineDrag(xNat, yNat) {
+        if(!_splitLineDrag.active || !_splitLineDrag.chunkKey) return;
+        const splits = loadChunkSplits();
+        const split = splits[_splitLineDrag.chunkKey];
+        if(!split) return;
+        const bounds = getChunkBoundsForCell(_splitLineDrag.row, _splitLineDrag.col);
+        if(_splitLineDrag.axis === 'v'){
+          const pos = clampSplitPosition((xNat - bounds.left) / bounds.w);
+          if(split.dir === 'both') split.vpos = pos;
+          else split.pos = pos;
+        } else {
+          const pos = clampSplitPosition((yNat - bounds.top) / bounds.h);
+          if(split.dir === 'both') split.hpos = pos;
+          else split.pos = pos;
+        }
+        saveChunkSplits(splits);
+        drawGrid();
+        drawSelectionsAndUnlocked();
+      }
 
       function populateSplitQuadSelects(regions) {
         ['splitQuadTL','splitQuadTR','splitQuadBL','splitQuadBR'].forEach(id => {
@@ -2519,7 +2650,7 @@
         splitEditBtn.addEventListener('click', ()=>{
           // Show how many split chunks exist
           const count = window.CHUNK_MULTI_REGION ? window.CHUNK_MULTI_REGION.size : 0;
-          alert(`There are ${count} chunk(s) that belong to multiple regions (shown with yellow dashed borders).\nRight-click any yellow-dashed chunk to define its split line.`);
+          alert(`There are ${count} chunk(s) that belong to multiple regions (shown with yellow dashed borders).\nRight-click and drag an existing split line to move it, or right-click a yellow-dashed chunk to define its split line.`);
         });
       }
 
@@ -2754,6 +2885,7 @@
       // Right-click or double-click on a selected (potential/purple) chunk to deselect it
       function handleDeselectChunk(ev){
         ev.preventDefault();
+        if(_suppressSplitContextMenu){ _suppressSplitContextMenu = false; return; }
         if(dragState.moved) return;
         if(isPicking) return;
         if(infoMode || specialMode) return;
@@ -2790,6 +2922,27 @@
       // dragging to pan the map: keep the natural point under the cursor fixed while dragging
       function handleMapMouseDown(ev){
         if(DEBUG) console.log('handleMapMouseDown', ev.clientX, ev.clientY);
+        if(ev.button === 2){
+          if(isPicking || infoMode || specialMode) return;
+          refreshCachedRects(); recalcCachedBounds();
+          const nat = eventToNatural(ev);
+          const splitTarget = getSplitLineTargetAtNaturalPoint(nat.xNat, nat.yNat);
+          if(splitTarget){
+            _splitLineDrag = {
+              active: true,
+              moved: false,
+              chunkKey: splitTarget.chunkKey,
+              axis: splitTarget.axis,
+              row: splitTarget.row,
+              col: splitTarget.col,
+            };
+            stitchedWrap.style.cursor = splitTarget.axis === 'v' ? 'ew-resize' : 'ns-resize';
+            ev.preventDefault();
+            return;
+          }
+          return;
+        }
+        if(ev.button !== 0) return;
         dragState.dragging = true; dragState.moved = false;
         dragState.startX = ev.clientX; dragState.startY = ev.clientY;
         const nat = eventToNatural(ev);
@@ -2803,6 +2956,13 @@
       fullMap.addEventListener('mousedown', handleMapMouseDown);
       let lastMouseMoveTime = 0;
       window.addEventListener('mousemove', (ev)=>{
+        if(_splitLineDrag.active){
+          const nat = eventToNatural(ev);
+          applySplitLineDrag(nat.xNat, nat.yNat);
+          _splitLineDrag.moved = true;
+          ev.preventDefault();
+          return;
+        }
         if(!dragState.dragging) return;
         // check movement threshold immediately to ensure click-suppression works even if throttled
         const dx = ev.clientX - dragState.startX; const dy = ev.clientY - dragState.startY;
@@ -2821,7 +2981,15 @@
         const newTY = mouseInContainerY - (dragState.startNatY * sy);
         currentTX = newTX; currentTY = newTY; if(!scheduledTransform){ scheduledTransform = true; requestAnimationFrame(()=>{ scheduledTransform = false; applyTransform(); }); }
       });
-      window.addEventListener('mouseup', ()=>{ dragState.dragging = false; stitchedWrap.style.cursor = ''; });
+      window.addEventListener('mouseup', ()=>{
+        if(_splitLineDrag.active){
+          _suppressSplitContextMenu = _splitLineDrag.moved;
+          _splitLineDrag = { active:false, moved:false, chunkKey:null, axis:null, row:null, col:null };
+          stitchedWrap.style.cursor = '';
+          return;
+        }
+        dragState.dragging = false; stitchedWrap.style.cursor = '';
+      });
 
       // wheel zoom (centered on cursor) using translate + scale
       const minScale = 0.2, maxScale = 8;
