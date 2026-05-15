@@ -1032,9 +1032,13 @@
         white: new Image(),
         red: new Image()
       };
+      const regionLockImage = new Image();
       specialImages.gold.src = 'static/markers/goldcrown.png';
       specialImages.white.src = 'static/markers/whiteskull.png';
       specialImages.red.src = 'static/markers/redskull.png';
+      regionLockImage.onload = () => { try{ drawGrid(); drawSelectionsAndUnlocked(); }catch(e){} };
+      regionLockImage.onerror = () => { try{ console.warn('Failed to load lock icon'); }catch(e){} };
+      regionLockImage.src = 'static/lock.png';
 
       // persistence key and helpers - dynamic based on tier mode
       function getStorageKey(){
@@ -1127,7 +1131,7 @@
         'rgba(255, 235, 120, 0.96)',
       ];
       const REGION_LABEL_OFFSETS = Object.freeze({
-        Fremennik: { x: 0.08, y: -0.12 },
+        Fremennik: { x: 0.02, y: -0.02 },
       });
 
       function getRegionBorderMetrics() {
@@ -1579,14 +1583,113 @@
             ctx.font = `bold ${Math.round(fontSize)}px system-ui, sans-serif`;
           }
           const color = getRegionColor(regionName);
+          const isUnlockedRegion = unlockedRegions.has(regionName);
+          const hasLockIcon = !isUnlockedRegion && regionLockImage.complete && regionLockImage.naturalWidth > 0;
+          const lockSize = hasLockIcon ? Math.max(84, Math.min(Math.round(fontSize * 4.05), 168)) : 0;
+          const sidePad = Math.max(Math.round(fontSize * 0.4), 12);
+          const verticalPad = Math.max(Math.round(fontSize * 0.45), 12);
+          const textHalfW = Math.max(ctx.measureText(regionName).width / 2, fontSize * 0.8);
+          const textHalfH = Math.max(fontSize * 0.52, 10);
+          const titleLockGap = hasLockIcon ? Math.max(4, Math.min(Math.round(fontSize * 0.12), 10)) : 0;
+          labelX = Math.max(minX + sidePad + textHalfW, Math.min(maxX - sidePad - textHalfW, labelX));
+          const lockedStackHeight = hasLockIcon ? ((textHalfH * 2) + titleLockGap + lockSize) : 0;
+          let textY = hasLockIcon ? (labelY - (lockedStackHeight / 2) + textHalfH) : labelY;
+          let iconY = hasLockIcon ? (textY + textHalfH + titleLockGap + (lockSize / 2)) : textY;
+          const stackTop = Math.min(textY - textHalfH, hasLockIcon ? (iconY - lockSize / 2) : Infinity);
+          const stackBottom = Math.max(textY + textHalfH, hasLockIcon ? (iconY + lockSize / 2) : -Infinity);
+          if(stackTop < minY + verticalPad){
+            const shiftDown = (minY + verticalPad) - stackTop;
+            textY += shiftDown;
+            iconY += shiftDown;
+          }
+          if(stackBottom > maxY - verticalPad){
+            const shiftUp = stackBottom - (maxY - verticalPad);
+            textY -= shiftUp;
+            iconY -= shiftUp;
+          }
+          if(isUnlockedRegion){
+            ctx.shadowColor = 'rgba(80,255,120,0.95)';
+            ctx.shadowBlur = Math.max(Math.round(fontSize * 0.45), 10);
+          } else {
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+          }
           ctx.lineWidth = Math.max(Math.round(fontSize) * 0.18, 2);
           ctx.strokeStyle = 'rgba(0,0,0,0.80)';
           ctx.lineJoin = 'round';
-          ctx.strokeText(regionName, labelX, labelY);
+          ctx.strokeText(regionName, labelX, textY);
           ctx.fillStyle = color;
-          ctx.fillText(regionName, labelX, labelY);
+          ctx.fillText(regionName, labelX, textY);
+          if(isUnlockedRegion){
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+          }
+          if(hasLockIcon){
+            ctx.save();
+            ctx.fillStyle = 'rgba(0,0,0,0.52)';
+            ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+            ctx.lineWidth = Math.max(2, Math.round(lockSize * 0.06));
+            ctx.beginPath();
+            ctx.arc(Math.round(labelX), Math.round(iconY), Math.round(lockSize * 0.44), 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.drawImage(regionLockImage, Math.round(labelX - lockSize / 2), Math.round(iconY - lockSize / 2), lockSize, lockSize);
+            ctx.restore();
+          }
         }
         ctx.restore();
+      }
+
+      function getOverlayBoundsForCell(row, col, gi, tileW, tileH, chunkW, chunkH) {
+        if(gi && gi.colLefts[col] !== undefined && gi.rowTops[row] !== undefined){
+          const leftTile = gi.colLefts[col]; const topTile = gi.rowTops[row]; const tileWc = gi.colWidths[col]; const tileHr = gi.rowHeights[row];
+          const extra = OVERLAY_EXTRA_W; const sideInset = OVERLAY_SIDE_INSET; const vert = OVERLAY_VERT_OVERHANG;
+          return {
+            x: Math.round(leftTile - (extra/2) + 2 - seamPad + sideInset),
+            y: Math.round(topTile + 2 - seamPad - vert),
+            w: Math.round((tileWc - 4) + seamPad * 2 + extra - sideInset * 2),
+            h: Math.round((tileHr - 4) + seamPad * 2 + vert * 2),
+          };
+        }
+        const leftTile = col * tileW; const topTile = row * tileH; const offsetX = Math.round((tileW - chunkW) / 2); const offsetY = Math.round((tileH - chunkH) / 2);
+        const sideInset = OVERLAY_SIDE_INSET; const vert = OVERLAY_VERT_OVERHANG;
+        return {
+          x: Math.round(leftTile + offsetX + 2 - seamPad + sideInset),
+          y: Math.round(topTile + offsetY + 2 - seamPad - vert),
+          w: Math.round((chunkW - 4) + seamPad * 2 - sideInset * 2),
+          h: Math.round((chunkH - 4) + seamPad * 2 + vert * 2),
+        };
+      }
+
+      function getSplitOverlayRects(split, bounds, activeRegions) {
+        if(!split || !activeRegions || activeRegions.size === 0) return [bounds];
+        const right = bounds.x + bounds.w;
+        const bottom = bounds.y + bounds.h;
+        if(split.dir === 'v'){
+          const sx = Math.round(bounds.x + bounds.w * split.pos);
+          const rects = [];
+          if(activeRegions.has(split.r1) && sx > bounds.x) rects.push({ x: bounds.x, y: bounds.y, w: sx - bounds.x, h: bounds.h });
+          if(activeRegions.has(split.r2) && right > sx) rects.push({ x: sx, y: bounds.y, w: right - sx, h: bounds.h });
+          return rects;
+        }
+        if(split.dir === 'h'){
+          const sy = Math.round(bounds.y + bounds.h * split.pos);
+          const rects = [];
+          if(activeRegions.has(split.r1) && sy > bounds.y) rects.push({ x: bounds.x, y: bounds.y, w: bounds.w, h: sy - bounds.y });
+          if(activeRegions.has(split.r2) && bottom > sy) rects.push({ x: bounds.x, y: sy, w: bounds.w, h: bottom - sy });
+          return rects;
+        }
+        if(split.dir === 'both'){
+          const sx = Math.round(bounds.x + bounds.w * split.vpos);
+          const sy = Math.round(bounds.y + bounds.h * split.hpos);
+          const rects = [];
+          if(activeRegions.has(split.tl) && sx > bounds.x && sy > bounds.y) rects.push({ x: bounds.x, y: bounds.y, w: sx - bounds.x, h: sy - bounds.y });
+          if(activeRegions.has(split.tr) && right > sx && sy > bounds.y) rects.push({ x: sx, y: bounds.y, w: right - sx, h: sy - bounds.y });
+          if(activeRegions.has(split.bl) && sx > bounds.x && bottom > sy) rects.push({ x: bounds.x, y: sy, w: sx - bounds.x, h: bottom - sy });
+          if(activeRegions.has(split.br) && right > sx && bottom > sy) rects.push({ x: sx, y: sy, w: right - sx, h: bottom - sy });
+          return rects;
+        }
+        return [bounds];
       }
 
       function drawSelectionsAndUnlocked(){
@@ -1596,6 +1699,7 @@
         const chunkW = enforceSquare ? Math.min(tileW, tileH) : tileW;
         const chunkH = enforceSquare ? Math.min(tileW, tileH) : tileH;
         const gi = window._gridInfo;
+        const splitData = loadChunkSplits();
 
         if(selected.size===0 && unlocked.size===0 && newlyUnlocked.size===0) {
            drawRegionBorders(ctx);
@@ -1617,100 +1721,24 @@
             const key = `${sr},${sc}`;
             if(unlocked.has(key) || newlyUnlocked.has(key)) continue;
             ctx.fillStyle='rgba(110,30,180,0.5)'; ctx.strokeStyle='rgba(160,64,255,0.95)'; ctx.lineWidth=3;
-            if(gi && gi.colLefts[sc] !== undefined && gi.rowTops[sr] !== undefined){
-              const leftTile = gi.colLefts[sc]; const topTile = gi.rowTops[sr]; const tileWc = gi.colWidths[sc]; const tileHr = gi.rowHeights[sr];
-              const extra = OVERLAY_EXTRA_W; const sideInset = OVERLAY_SIDE_INSET; const vert = OVERLAY_VERT_OVERHANG;
-              const drawX = Math.round(leftTile - (extra/2) + 2 - seamPad + sideInset);
-              const drawY = Math.round(topTile + 2 - seamPad - vert);
-              const drawW = Math.round((tileWc - 4) + seamPad * 2 + extra - sideInset * 2);
-              const drawH = Math.round((tileHr - 4) + seamPad * 2 + vert * 2);
-              ctx.fillRect(drawX, drawY, drawW, drawH); strokeInside(ctx, drawX, drawY, drawW, drawH);
-            } else {
-              const leftTile = sc * tileW; const topTile = sr * tileH; const offsetX = Math.round((tileW - chunkW) / 2); const offsetY = Math.round((tileH - chunkH) / 2);
-              const sideInset = OVERLAY_SIDE_INSET; const vert = OVERLAY_VERT_OVERHANG;
-              const drawWfb = Math.round((chunkW - 4) + seamPad * 2 - sideInset * 2);
-              const drawHfb = Math.round((chunkH - 4) + seamPad * 2 + vert * 2);
-              const drawXfb = Math.round(leftTile + offsetX + 2 - seamPad + sideInset);
-              const drawYfb = Math.round(topTile + offsetY + 2 - seamPad - vert);
-              ctx.fillRect(drawXfb, drawYfb, drawWfb, drawHfb); strokeInside(ctx, drawXfb, drawYfb, drawWfb, drawHfb);
-            }
-          }
-          // unlocked: green outline on top — draw per-cell border segments so the outline
-          // follows the actual connected shape and doesn't include non-unlocked tiles inside a bounding box.
-          const unlockedComponents = getConnectedComponents(unlocked, manifest.rows, manifest.cols);
-          ctx.fillStyle='rgba(0,200,0,0.95)';
-          const lineW = 8; const halfLine = Math.floor(lineW / 2);
-          for(const component of unlockedComponents){
-            for(const [r,c] of component){
-              // per-cell rectangle bounds
-              const leftTile = (gi && gi.colLefts[c] !== undefined) ? gi.colLefts[c] : (c * tileW);
-              const topTile = (gi && gi.rowTops[r] !== undefined) ? gi.rowTops[r] : (r * tileH);
-              const tileWc = (gi && gi.colWidths[c] !== undefined) ? gi.colWidths[c] : tileW;
-              const tileHr = (gi && gi.rowHeights[r] !== undefined) ? gi.rowHeights[r] : tileH;
-              const rightTile = leftTile + tileWc; const bottomTile = topTile + tileHr;
-              // draw side if neighbor is not unlocked
-              const leftNeighbour = `${r},${c-1}`;
-              if(!unlocked.has(leftNeighbour)){
-                ctx.fillRect(Math.round(leftTile - halfLine), Math.round(topTile), lineW, Math.round(tileHr));
-              }
-              const rightNeighbour = `${r},${c+1}`;
-              if(!unlocked.has(rightNeighbour)){
-                ctx.fillRect(Math.round(rightTile - halfLine), Math.round(topTile), lineW, Math.round(tileHr));
-              }
-              const topNeighbour = `${r-1},${c}`;
-              if(!unlocked.has(topNeighbour)){
-                ctx.fillRect(Math.round(leftTile), Math.round(topTile - halfLine), Math.round(tileWc), lineW);
-              }
-              const bottomNeighbour = `${r+1},${c}`;
-              if(!unlocked.has(bottomNeighbour)){
-                ctx.fillRect(Math.round(leftTile), Math.round(bottomTile - halfLine), Math.round(tileWc), lineW);
+            const overlayBounds = getOverlayBoundsForCell(sr, sc, gi, tileW, tileH, chunkW, chunkH);
+            const selectedChunkRegions = new Set();
+            if(window.CHUNK_MULTI_REGION && window.CHUNK_MULTI_REGION.has(key)){
+              const regions = window.CHUNK_MULTI_REGION.get(key);
+              for(const regionName of regions){
+                if(selectedRegions.has(regionName) && !unlockedRegions.has(regionName)) selectedChunkRegions.add(regionName);
               }
             }
-          }
-          
-          // Draw dotted lines between adjacent unlocked chunks (inside the unlocked area)
-          ctx.fillStyle='rgba(0,200,0,0.7)'; // Slightly more transparent green
-          const dottedLineW = 2; const dottedHalfLine = Math.floor(dottedLineW / 2);
-          const dotLength = 8; const gapLength = 6; const totalDotPattern = dotLength + gapLength;
-          
-          for(const component of unlockedComponents){
-            for(const [r,c] of component){
-              const leftTile = (gi && gi.colLefts[c] !== undefined) ? gi.colLefts[c] : (c * tileW);
-              const topTile = (gi && gi.rowTops[r] !== undefined) ? gi.rowTops[r] : (r * tileH);
-              const tileWc = (gi && gi.colWidths[c] !== undefined) ? gi.colWidths[c] : tileW;
-              const tileHr = (gi && gi.rowHeights[r] !== undefined) ? gi.rowHeights[r] : tileH;
-              const rightTile = leftTile + tileWc; const bottomTile = topTile + tileHr;
-              
-              // Draw dotted line to right neighbor if it's also unlocked
-              const rightNeighbour = `${r},${c+1}`;
-              if(unlocked.has(rightNeighbour)){
-                const lineX = Math.round(rightTile - dottedHalfLine);
-                const lineY = Math.round(topTile);
-                const lineHeight = Math.round(tileHr);
-                
-                // Draw dotted pattern vertically
-                for(let y = 0; y < lineHeight; y += totalDotPattern){
-                  const dotEndY = Math.min(y + dotLength, lineHeight);
-                  ctx.fillRect(lineX, lineY + y, dottedLineW, dotEndY - y);
-                }
-              }
-              
-              // Draw dotted line to bottom neighbor if it's also unlocked
-              const bottomNeighbour = `${r+1},${c}`;
-              if(unlocked.has(bottomNeighbour)){
-                const lineX = Math.round(leftTile);
-                const lineY = Math.round(bottomTile - dottedHalfLine);
-                const lineWidth = Math.round(tileWc);
-                
-                // Draw dotted pattern horizontally
-                for(let x = 0; x < lineWidth; x += totalDotPattern){
-                  const dotEndX = Math.min(x + dotLength, lineWidth);
-                  ctx.fillRect(lineX + x, lineY, dotEndX - x, dottedLineW);
-                }
-              }
+            const split = splitData[key];
+            const rects = (split && selectedChunkRegions.size > 0)
+              ? getSplitOverlayRects(split, overlayBounds, selectedChunkRegions)
+              : [overlayBounds];
+            for(const rect of rects){
+              if(rect.w <= 0 || rect.h <= 0) continue;
+              ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+              strokeInside(ctx, rect.x, rect.y, rect.w, rect.h);
             }
           }
-          
           ctx.restore();
           
           // Draw markers at the end so they appear on top of selections
@@ -1936,89 +1964,7 @@
 
       // Draw a one-off green outline for freshly unlocked chunk so user sees immediate feedback
       function forceUnlockedVisual(row, col){
-        try{
-          if(!manifest || !manifest.chunks || manifest.chunks.length === 0) return;
-          const ctx = canvas.getContext('2d');
-          const first = manifest.chunks[0]; const tileW = first.bbox[2]-first.bbox[0]; const tileH = first.bbox[3]-first.bbox[1];
-          const chunkW = enforceSquare ? Math.min(tileW, tileH) : tileW; const chunkH = enforceSquare ? Math.min(tileW, tileH) : tileH;
-          const gi = window._gridInfo;
-          ctx.save(); ctx.fillStyle='rgba(0,200,0,0.95)'; const lineW = 8; const halfL = Math.floor(lineW/2);
-          if(gi && gi.colLefts[col] !== undefined && gi.rowTops[row] !== undefined){
-            const leftTile = gi.colLefts[col]; const topTile = gi.rowTops[row]; const tileWc = gi.colWidths[col]; const tileHr = gi.rowHeights[row];
-            const rightTile = leftTile + tileWc; const bottomTile = topTile + tileHr;
-            // draw per-side borders
-            if(!unlocked.has(`${row},${col-1}`)) ctx.fillRect(Math.round(leftTile - halfL), Math.round(topTile), lineW, Math.round(tileHr));
-            if(!unlocked.has(`${row},${col+1}`)) ctx.fillRect(Math.round(rightTile - halfL), Math.round(topTile), lineW, Math.round(tileHr));
-            if(!unlocked.has(`${row-1},${col}`)) ctx.fillRect(Math.round(leftTile), Math.round(topTile - halfL), Math.round(tileWc), lineW);
-            if(!unlocked.has(`${row+1},${col}`)) ctx.fillRect(Math.round(leftTile), Math.round(bottomTile - halfL), Math.round(tileWc), lineW);
-          } else {
-            const leftTile = col * tileW; const topTile = row * tileH; const rightTile = leftTile + chunkW; const bottomTile = topTile + chunkH;
-            if(!unlocked.has(`${row},${col-1}`)) ctx.fillRect(Math.round(leftTile - halfL), Math.round(topTile), lineW, Math.round(chunkH));
-            if(!unlocked.has(`${row},${col+1}`)) ctx.fillRect(Math.round(rightTile - halfL), Math.round(topTile), lineW, Math.round(chunkH));
-            if(!unlocked.has(`${row-1},${col}`)) ctx.fillRect(Math.round(leftTile), Math.round(topTile - halfL), Math.round(chunkW), lineW);
-            if(!unlocked.has(`${row+1},${col}`)) ctx.fillRect(Math.round(leftTile), Math.round(bottomTile - halfL), Math.round(chunkW), lineW);
-          }
-          
-          // Add dotted lines to adjacent unlocked chunks for immediate feedback
-          ctx.fillStyle='rgba(0,200,0,0.7)'; // Slightly more transparent green
-          const dottedLineW = 2; const dottedHalfLine = Math.floor(dottedLineW / 2);
-          const dotLength = 8; const gapLength = 6; const totalDotPattern = dotLength + gapLength;
-          
-          if(gi && gi.colLefts[col] !== undefined && gi.rowTops[row] !== undefined){
-            const leftTile = gi.colLefts[col]; const topTile = gi.rowTops[row]; const tileWc = gi.colWidths[col]; const tileHr = gi.rowHeights[row];
-            const rightTile = leftTile + tileWc; const bottomTile = topTile + tileHr;
-            
-            // Draw dotted line to right neighbor if it's unlocked
-            if(unlocked.has(`${row},${col+1}`)){
-              const lineX = Math.round(rightTile - dottedHalfLine);
-              const lineY = Math.round(topTile);
-              const lineHeight = Math.round(tileHr);
-              for(let y = 0; y < lineHeight; y += totalDotPattern){
-                const dotEndY = Math.min(y + dotLength, lineHeight);
-                ctx.fillRect(lineX, lineY + y, dottedLineW, dotEndY - y);
-              }
-            }
-            
-            // Draw dotted line to bottom neighbor if it's unlocked  
-            if(unlocked.has(`${row+1},${col}`)){
-              const lineX = Math.round(leftTile);
-              const lineY = Math.round(bottomTile - dottedHalfLine);
-              const lineWidth = Math.round(tileWc);
-              for(let x = 0; x < lineWidth; x += totalDotPattern){
-                const dotEndX = Math.min(x + dotLength, lineWidth);
-                ctx.fillRect(lineX + x, lineY, dotEndX - x, dottedLineW);
-              }
-            }
-          } else {
-            const leftTile = col * tileW; const topTile = row * tileH; const rightTile = leftTile + chunkW; const bottomTile = topTile + chunkH;
-            
-            // Draw dotted line to right neighbor if it's unlocked
-            if(unlocked.has(`${row},${col+1}`)){
-              const lineX = Math.round(rightTile - dottedHalfLine);
-              const lineY = Math.round(topTile);
-              const lineHeight = Math.round(chunkH);
-              for(let y = 0; y < lineHeight; y += totalDotPattern){
-                const dotEndY = Math.min(y + dotLength, lineHeight);
-                ctx.fillRect(lineX, lineY + y, dottedLineW, dotEndY - y);
-              }
-            }
-            
-            // Draw dotted line to bottom neighbor if it's unlocked
-            if(unlocked.has(`${row+1},${col}`)){
-              const lineX = Math.round(leftTile);
-              const lineY = Math.round(bottomTile - dottedHalfLine);
-              const lineWidth = Math.round(chunkW);
-              for(let x = 0; x < lineWidth; x += totalDotPattern){
-                const dotEndX = Math.min(x + dotLength, lineWidth);
-                ctx.fillRect(lineX + x, lineY, dotEndX - x, dottedLineW);
-              }
-            }
-          }
-          
-          ctx.restore();
-          // clear after short time and re-draw full grid and overlays (ensures new unlocked set is shown)
-          setTimeout(()=>{ try{ drawGrid(); drawSelectionsAndUnlocked(); }catch(e){} }, 700);
-        }catch(e){ if(DEBUG) console.warn('forceUnlockedVisual failed', e); }
+        return;
       }
 
       // Full map is always shown; initialize on load instead of show/hide functions
