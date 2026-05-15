@@ -1585,7 +1585,7 @@
           const color = getRegionColor(regionName);
           const isUnlockedRegion = unlockedRegions.has(regionName);
           const hasLockIcon = !isUnlockedRegion && regionLockImage.complete && regionLockImage.naturalWidth > 0;
-          const lockSize = hasLockIcon ? Math.max(84, Math.min(Math.round(fontSize * 4.05), 168)) : 0;
+          const lockSize = hasLockIcon ? Math.max(168, Math.min(Math.round(fontSize * 8.1), 336)) : 0;
           const sidePad = Math.max(Math.round(fontSize * 0.4), 12);
           const verticalPad = Math.max(Math.round(fontSize * 0.45), 12);
           const textHalfW = Math.max(ctx.measureText(regionName).width / 2, fontSize * 0.8);
