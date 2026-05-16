@@ -1132,7 +1132,7 @@
         'rgba(255, 235, 120, 0.96)',
       ];
       const REGION_LABEL_OFFSETS = Object.freeze({
-        Fremennik: { x: 0.02, y: -0.02 },
+        Fremennik: { x: 0.02, y: -0.06 },
       });
 
       function getRegionBorderMetrics() {
@@ -1625,8 +1625,7 @@
             const textHalfH = Math.max(fontSize * 0.52, 10);
             const titleLockGap = hasLockIcon ? Math.max(4, Math.min(Math.round(fontSize * 0.12), 10)) : 0;
             labelX = Math.max(minX + sidePad + textHalfW, Math.min(maxX - sidePad - textHalfW, labelX));
-            const lockedStackHeight = hasLockIcon ? ((textHalfH * 2) + titleLockGap + lockSize) : 0;
-            let textY = hasLockIcon ? (labelY - (lockedStackHeight / 2) + textHalfH) : labelY;
+            let textY = labelY;
             let iconY = hasLockIcon ? (textY + textHalfH + titleLockGap + (lockSize / 2)) : textY;
             const stackTop = Math.min(textY - textHalfH, hasLockIcon ? (iconY - lockSize / 2) : Infinity);
             const stackBottom = Math.max(textY + textHalfH, hasLockIcon ? (iconY + lockSize / 2) : -Infinity);

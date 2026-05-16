@@ -18,6 +18,7 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
     },
     'Dagannoth Rex': {
         fileName: 'Dagannoth_Rex.png',
+      displayFileName: 'Dagannoth_Kings.png',
         chunkIds: ['chunk_6_23']
     },
     'Brutus': {
@@ -854,7 +855,7 @@ async function loadCombatAchievementsFromCSV() {
                     // Completed bosses only show in unlocked chunks
                     if(isCompleted && !isAllowed && !unlockedChunks.has(k)) continue;
                     if(!chunkBosses.has(k)) chunkBosses.set(k, []);
-                    chunkBosses.get(k).push({ bossKey: key, fileName: cfg.fileName });
+                    chunkBosses.get(k).push({ bossKey: key, fileName: cfg.displayFileName || cfg.fileName });
                 }
             }
         }
@@ -875,7 +876,7 @@ async function loadCombatAchievementsFromCSV() {
       if(typeof chunkIdOrObj === 'string' || typeof chunkIdOrObj === 'number') rc = resolveChunkId(this.manifest, chunkIdOrObj);
       else if(typeof chunkIdOrObj === 'object') rc = { row: chunkIdOrObj.row, col: chunkIdOrObj.col };
       if(!rc) return false;
-      placeBossImage(this.manifest, this.stitchedWrap, rc.row, rc.col, cfg.fileName, 0, 1, key);
+      placeBossImage(this.manifest, this.stitchedWrap, rc.row, rc.col, cfg.displayFileName || cfg.fileName, 0, 1, key);
       return true;
     },
     clear(){ if(this.stitchedWrap) clearBossMarkers(this.stitchedWrap); },
