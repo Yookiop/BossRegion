@@ -1157,6 +1157,9 @@
           const scale = getSpecialMarkerScreenScale();
           const nextLeft = specialMarkerDragState.startLeft + ((ev.clientX - specialMarkerDragState.startX) / scale.x);
           const nextTop = specialMarkerDragState.startTop + ((ev.clientY - specialMarkerDragState.startY) / scale.y);
+          if(Math.abs(ev.clientX - specialMarkerDragState.startX) > 3 || Math.abs(ev.clientY - specialMarkerDragState.startY) > 3){
+            specialMarkerDragState.moved = true;
+          }
           const constrained = clampSpecialMarkerPosition(nextLeft, nextTop, specialMarkerDragState.size);
           specialMarkerDragState.img.style.left = constrained.left + 'px';
           specialMarkerDragState.img.style.top = constrained.top + 'px';
@@ -1219,9 +1222,34 @@
               startY: ev.clientY,
               startLeft: parseFloat(el.style.left) || position.left,
               startTop: parseFloat(el.style.top) || position.top,
-              size
+              size,
+              moved: false
             };
             el.style.cursor = 'grabbing';
+            ev.preventDefault();
+            ev.stopPropagation();
+          });
+          el.addEventListener('click', (ev) => {
+            if(!specialMode) return;
+            const markerRecord = getSpecialMarkerRecord(cellKey);
+            if(!markerRecord || (specialMarkerDragState && specialMarkerDragState.moved)) {
+              ev.preventDefault();
+              ev.stopPropagation();
+              return;
+            }
+            let nextType = null;
+            if(markerRecord.type === 'gold') nextType = 'white';
+            else if(markerRecord.type === 'white') nextType = 'red';
+            else if(markerRecord.type === 'red') nextType = null;
+            if(nextType){
+              setSpecialMarkerRecord(cellKey, { ...markerRecord, type: nextType });
+            } else {
+              specialMarkers.delete(cellKey);
+            }
+            saveState();
+            renderSpecialMarkers();
+            drawGrid();
+            drawSelectionsAndUnlocked();
             ev.preventDefault();
             ev.stopPropagation();
           });
