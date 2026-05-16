@@ -400,7 +400,208 @@ async function loadCombatAchievementsFromCSV() {
     const c = stitchedWrap.querySelector('.boss-markers'); if(c) c.innerHTML='';
   }
 
-  function placeBossImage(manifest, stitchedWrap, row, col, fileName, positionIndex = 0, totalCount = 1){
+  const BOSS_MARKER_LAYOUT_STORAGE_KEY = 'boss_marker_layout_v1';
+  let bossMarkerLayoutCache = null;
+  let bossMarkerDragState = null;
+  let bossMarkerListenersAttached = false;
+
+  function loadBossMarkerLayout(){
+    if(bossMarkerLayoutCache) return bossMarkerLayoutCache;
+    try{
+      const raw = localStorage.getItem(BOSS_MARKER_LAYOUT_STORAGE_KEY);
+      bossMarkerLayoutCache = raw ? JSON.parse(raw) : {};
+    }catch(e){
+      console.warn('Failed to load boss marker layout', e);
+      bossMarkerLayoutCache = {};
+    }
+    return bossMarkerLayoutCache;
+  }
+
+  function saveBossMarkerLayout(){
+    try{
+      localStorage.setItem(BOSS_MARKER_LAYOUT_STORAGE_KEY, JSON.stringify(loadBossMarkerLayout()));
+    }catch(e){
+      console.warn('Failed to save boss marker layout', e);
+    }
+  }
+
+  function getBossMarkerLayout(markerKey){
+    return loadBossMarkerLayout()[markerKey] || null;
+  }
+
+  function setBossMarkerLayout(markerKey, layout){
+    const allLayouts = loadBossMarkerLayout();
+    allLayouts[markerKey] = layout;
+    saveBossMarkerLayout();
+  }
+
+  function clamp(value, min, max){
+    if(Number.isNaN(value)) return min;
+    if(max < min) return (min + max) / 2;
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function getChunkRect(manifest, row, col){
+    const gi = window._gridInfo;
+    if(gi && gi.colLefts[col] !== undefined && gi.rowTops[row] !== undefined){
+      return {
+        left: gi.colLefts[col],
+        top: gi.rowTops[row],
+        width: gi.colWidths[col],
+        height: gi.rowHeights[row]
+      };
+    }
+    const chunk = manifest.chunks.find(ch => ch.row === row && ch.col === col);
+    if(!chunk) return null;
+    return {
+      left: chunk.bbox[0],
+      top: chunk.bbox[1],
+      width: chunk.bbox[2] - chunk.bbox[0],
+      height: chunk.bbox[3] - chunk.bbox[1]
+    };
+  }
+
+  function getRegionDragArea(manifest, regionName){
+    if(!regionName || !window.REGION_CHUNKS || !window.REGION_CHUNKS.has(regionName)) return null;
+    const rects = [];
+    let minLeft = Infinity;
+    let minTop = Infinity;
+    let maxRight = -Infinity;
+    let maxBottom = -Infinity;
+    for(const key of window.REGION_CHUNKS.get(regionName)){
+      const [row, col] = String(key).split(',').map(Number);
+      const rect = getChunkRect(manifest, row, col);
+      if(!rect) continue;
+      rects.push(rect);
+      minLeft = Math.min(minLeft, rect.left);
+      minTop = Math.min(minTop, rect.top);
+      maxRight = Math.max(maxRight, rect.left + rect.width);
+      maxBottom = Math.max(maxBottom, rect.top + rect.height);
+    }
+    if(rects.length === 0) return null;
+    return {
+      rects,
+      left: minLeft,
+      top: minTop,
+      right: maxRight,
+      bottom: maxBottom,
+      width: maxRight - minLeft,
+      height: maxBottom - minTop
+    };
+  }
+
+  function clampBossMarkerToArea(area, left, top, size){
+    if(!area) return { left, top };
+    const requestedCenterX = left + size / 2;
+    const requestedCenterY = top + size / 2;
+    let best = null;
+
+    for(const rect of area.rects){
+      const centerX = clamp(requestedCenterX, rect.left + 1, rect.left + rect.width - 1);
+      const centerY = clamp(requestedCenterY, rect.top + 1, rect.top + rect.height - 1);
+      const candidateLeft = clamp(centerX - size / 2, area.left, area.right - size);
+      const candidateTop = clamp(centerY - size / 2, area.top, area.bottom - size);
+      const distance = Math.hypot(centerX - requestedCenterX, centerY - requestedCenterY);
+      if(!best || distance < best.distance){
+        best = { left: candidateLeft, top: candidateTop, distance };
+      }
+    }
+
+    return best ? { left: best.left, top: best.top } : { left, top };
+  }
+
+  function getMarkerScreenScale(stitchedWrap){
+    const rect = stitchedWrap.getBoundingClientRect();
+    const naturalWidth = stitchedWrap.offsetWidth || 1;
+    const naturalHeight = stitchedWrap.offsetHeight || 1;
+    return {
+      x: rect.width / naturalWidth || 1,
+      y: rect.height / naturalHeight || 1
+    };
+  }
+
+  function attachBossMarkerListeners(){
+    if(bossMarkerListenersAttached) return;
+    bossMarkerListenersAttached = true;
+
+    window.addEventListener('mousemove', (ev) => {
+      if(!bossMarkerDragState) return;
+      const scale = getMarkerScreenScale(bossMarkerDragState.stitchedWrap);
+      const nextLeft = bossMarkerDragState.startLeft + ((ev.clientX - bossMarkerDragState.startX) / scale.x);
+      const nextTop = bossMarkerDragState.startTop + ((ev.clientY - bossMarkerDragState.startY) / scale.y);
+      const constrained = clampBossMarkerToArea(
+        bossMarkerDragState.regionArea,
+        nextLeft,
+        nextTop,
+        bossMarkerDragState.size
+      );
+      bossMarkerDragState.img.style.left = constrained.left + 'px';
+      bossMarkerDragState.img.style.top = constrained.top + 'px';
+      ev.preventDefault();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if(!bossMarkerDragState) return;
+      setBossMarkerLayout(bossMarkerDragState.markerKey, {
+        left: parseFloat(bossMarkerDragState.img.style.left) || bossMarkerDragState.startLeft,
+        top: parseFloat(bossMarkerDragState.img.style.top) || bossMarkerDragState.startTop,
+        size: bossMarkerDragState.size
+      });
+      bossMarkerDragState.img.style.cursor = 'grab';
+      bossMarkerDragState = null;
+    });
+  }
+
+  function enableBossMarkerInteraction(img, interaction){
+    attachBossMarkerListeners();
+    img.draggable = false;
+    img.title = 'Drag to move, scroll to resize';
+    img.style.pointerEvents = 'auto';
+    img.style.cursor = 'grab';
+    img.addEventListener('dragstart', (ev) => ev.preventDefault());
+    img.addEventListener('mousedown', (ev) => {
+      if(ev.button !== 0) return;
+      bossMarkerDragState = {
+        ...interaction,
+        img,
+        startX: ev.clientX,
+        startY: ev.clientY,
+        startLeft: parseFloat(img.style.left) || 0,
+        startTop: parseFloat(img.style.top) || 0,
+        size: parseFloat(img.style.width) || interaction.defaultSize
+      };
+      img.style.cursor = 'grabbing';
+      ev.preventDefault();
+      ev.stopPropagation();
+    });
+    img.addEventListener('wheel', (ev) => {
+      const currentSize = parseFloat(img.style.width) || interaction.defaultSize;
+      const nextSize = clamp(currentSize + (ev.deltaY < 0 ? 16 : -16), interaction.minSize, interaction.maxSize);
+      const currentLeft = parseFloat(img.style.left) || 0;
+      const currentTop = parseFloat(img.style.top) || 0;
+      const centerX = currentLeft + currentSize / 2;
+      const centerY = currentTop + currentSize / 2;
+      const constrained = clampBossMarkerToArea(
+        interaction.regionArea,
+        centerX - nextSize / 2,
+        centerY - nextSize / 2,
+        nextSize
+      );
+      img.style.left = constrained.left + 'px';
+      img.style.top = constrained.top + 'px';
+      img.style.width = nextSize + 'px';
+      img.style.height = nextSize + 'px';
+      setBossMarkerLayout(interaction.markerKey, {
+        left: constrained.left,
+        top: constrained.top,
+        size: nextSize
+      });
+      ev.preventDefault();
+      ev.stopPropagation();
+    }, { passive: false });
+  }
+
+  function placeBossImage(manifest, stitchedWrap, row, col, fileName, positionIndex = 0, totalCount = 1, bossKey = ''){
     // Try to use the grid info from the main window if available, to account for nudges/scaling
     const gi = window._gridInfo;
     let chunkX, chunkY, chunkW, chunkH;
@@ -425,8 +626,10 @@ async function loadCombatAchievementsFromCSV() {
     img.src = 'static/boss_images/' + fileName;
     img.className = 'boss-marker';
     img.style.position = 'absolute';
+  const defaultMarkerKey = bossKey || fileName.replace(/\.png$/i, '');
+  const markerKey = `${defaultMarkerKey}@${row},${col}:${positionIndex}`;
     
-    let size, offsetX, offsetY;
+  let size, offsetX, offsetY;
 
     if(totalCount > 6) {
         // 7-8 bosses: 3 rows layout - 3 top, 2 middle (offset), 2 bottom (offset)
@@ -514,15 +717,41 @@ async function loadCombatAchievementsFromCSV() {
         }
     }
 
-    img.style.left = offsetX + 'px';
-    img.style.top = offsetY + 'px';
-    img.style.width = size + 'px';
-    img.style.height = size + 'px';
+    const regionName = (window.CHUNK_TO_REGION && window.CHUNK_TO_REGION.get(`${row},${col}`)) || '';
+    const regionArea = getRegionDragArea(manifest, regionName) || {
+      rects: [{ left: chunkX, top: chunkY, width: chunkW, height: chunkH }],
+      left: chunkX,
+      top: chunkY,
+      right: chunkX + chunkW,
+      bottom: chunkY + chunkH,
+      width: chunkW,
+      height: chunkH
+    };
+    const storedLayout = getBossMarkerLayout(markerKey);
+    const finalSize = storedLayout && Number.isFinite(storedLayout.size) ? storedLayout.size : size;
+    const constrained = clampBossMarkerToArea(
+      regionArea,
+      storedLayout && Number.isFinite(storedLayout.left) ? storedLayout.left : offsetX,
+      storedLayout && Number.isFinite(storedLayout.top) ? storedLayout.top : offsetY,
+      finalSize
+    );
+
+    img.style.left = constrained.left + 'px';
+    img.style.top = constrained.top + 'px';
+    img.style.width = finalSize + 'px';
+    img.style.height = finalSize + 'px';
     img.style.objectFit = 'contain';
-    img.style.pointerEvents = 'none';
     // keep markers below UI panel (panel z-index is high), but above map
     img.style.zIndex = 1200;
     img.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))';
+    enableBossMarkerInteraction(img, {
+      markerKey,
+      stitchedWrap,
+      regionArea,
+      defaultSize: size,
+      minSize: Math.max(48, Math.min(chunkW, chunkH) * 0.45),
+      maxSize: Math.max(size * 2, Math.min(regionArea.width, regionArea.height) * 0.9)
+    });
     markers.appendChild(img);
     return img;
   }
@@ -609,7 +838,7 @@ async function loadCombatAchievementsFromCSV() {
         const unlockedChunks = window.unlocked || new Set();
         
         // Collect bosses per chunk
-        const chunkBosses = new Map(); // key: "row,col", value: [fileName, fileName...]
+        const chunkBosses = new Map(); // key: "row,col", value: [{ bossKey, fileName }, ...]
 
         for(const key of Object.keys(CODE_CONFIGURED_BOSS_IMAGES)){
             const isAllowed = allowedBossKeys.has(key);
@@ -625,16 +854,16 @@ async function loadCombatAchievementsFromCSV() {
                     // Completed bosses only show in unlocked chunks
                     if(isCompleted && !isAllowed && !unlockedChunks.has(k)) continue;
                     if(!chunkBosses.has(k)) chunkBosses.set(k, []);
-                    chunkBosses.get(k).push(cfg.fileName);
+                    chunkBosses.get(k).push({ bossKey: key, fileName: cfg.fileName });
                 }
             }
         }
 
         // Plot them
-        for(const [key, fileNames] of chunkBosses.entries()){
+              for(const [key, fileEntries] of chunkBosses.entries()){
             const [r, c] = key.split(',').map(Number);
-            fileNames.forEach((fileName, index) => {
-                placeBossImage(this.manifest, this.stitchedWrap, r, c, fileName, index, fileNames.length);
+                fileEntries.forEach((entry, index) => {
+                  placeBossImage(this.manifest, this.stitchedWrap, r, c, entry.fileName, index, fileEntries.length, entry.bossKey);
             });
         }
     },
@@ -646,7 +875,7 @@ async function loadCombatAchievementsFromCSV() {
       if(typeof chunkIdOrObj === 'string' || typeof chunkIdOrObj === 'number') rc = resolveChunkId(this.manifest, chunkIdOrObj);
       else if(typeof chunkIdOrObj === 'object') rc = { row: chunkIdOrObj.row, col: chunkIdOrObj.col };
       if(!rc) return false;
-      placeBossImage(this.manifest, this.stitchedWrap, rc.row, rc.col, cfg.fileName);
+      placeBossImage(this.manifest, this.stitchedWrap, rc.row, rc.col, cfg.fileName, 0, 1, key);
       return true;
     },
     clear(){ if(this.stitchedWrap) clearBossMarkers(this.stitchedWrap); },
@@ -1023,7 +1252,7 @@ async function loadCombatAchievementsFromCSV() {
   const style = document.createElement('style');
   style.textContent = `
     .boss-markers{ z-index: 1190; }
-    .boss-markers img.boss-marker{ z-index: 1200; image-rendering: -webkit-optimize-contrast; will-change: transform, opacity, filter; transition: transform 220ms cubic-bezier(.21,.88,.35,1), opacity 200ms ease; }
+    .boss-markers img.boss-marker{ z-index: 1200; image-rendering: -webkit-optimize-contrast; will-change: transform, opacity, filter; transition: transform 220ms cubic-bezier(.21,.88,.35,1), opacity 200ms ease; user-select:none; }
     /* Rolling cloud overlays for selected purple chunks */
     .rolling-cloud{ position:absolute; pointer-events:none; z-index:1185; transform-origin:center; will-change: transform, opacity, filter; }
     .rolling-cloud::after{ content:''; display:block; width:100%; height:100%; border-radius:50%; background: radial-gradient(circle at 40% 40%, rgba(160,64,255,0.24) 0%, rgba(160,64,255,0.12) 40%, rgba(160,64,255,0.02) 75%, rgba(160,64,255,0) 100%); filter: blur(16px); }
