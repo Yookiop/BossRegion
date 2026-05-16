@@ -1962,10 +1962,10 @@
           // apply grid nudges
           try{ let nudgeX = DEFAULT_GRID_NUDGE.x; let nudgeY = DEFAULT_GRID_NUDGE.y; if(nudgeX !== 0){ for(let i=0;i<gi.colLefts.length;i++) gi.colLefts[i] = gi.colLefts[i] + nudgeX; } if(nudgeY !== 0){ for(let i=0;i<gi.rowTops.length;i++) gi.rowTops[i] = gi.rowTops[i] + nudgeY; } if(gi.colLefts.length > 0 && gi.colLefts[0] < 0){ const corr = -Math.round(gi.colLefts[0]); for(let i=0;i<gi.colLefts.length;i++) gi.colLefts[i] += corr; } if(gi.rowTops.length > 0 && gi.rowTops[0] < 0){ const corr = -Math.round(gi.rowTops[0]); for(let i=0;i<gi.rowTops.length;i++) gi.rowTops[i] += corr; } }catch(e){ }
         }catch(e){ window._gridInfo = null; }
+        
+        // Only run cache update after canvas loads
+        try{ refreshCachedRects(); recalcCachedBounds(); applyTransform(); }catch(e){}
         try{ console.log('setupCanvas: manifest entries', manifest.chunks.length, 'baseTile', baseTileW, baseTileH, 'canvas', canvas.width, canvas.height); }catch(e){}
-        try{ const dbg = document.getElementById('mapDebug'); if(dbg){ dbg.textContent = `img:${stitched.complete?'ok':'not-loaded'} ${stitched.naturalWidth}x${stitched.naturalHeight} canvas:${canvas.width}x${canvas.height}`; } }catch(e){}
-        // ensure a sensible center and bounds
-        try{ refreshCachedRects(); recalcCachedBounds(); if(typeof ensureChunkVisible === 'function') ensureChunkVisible(DEFAULT_CENTER_ROW, DEFAULT_CENTER_COL, true); }catch(e){}
         try{ const dbg = document.getElementById('mapDebug'); if(dbg){ dbg.textContent = `img:${stitched.complete?'ok':'not-loaded'} ${stitched.naturalWidth}x${stitched.naturalHeight} canvas:${canvas.width}x${canvas.height}`; } }catch(e){}
         // check if the stitched image appears blank/white; if so, attempt to compose background from individual chunk tiles
         try{ composeFromChunksIfBlank(); }catch(e){}
@@ -3226,9 +3226,8 @@
         if(selectedRegions.has(region)){
           // Click potential region → unlock it
           unlockRegion(region);
-          // Center on region centroid
-          const rc = window.REGION_CHUNKS ? window.REGION_CHUNKS.get(region) : null;
-          if(rc && rc.size > 0){ let tR=0,tC=0; for(const ck of rc){ const [rr,cc]=ck.split(',').map(Number); tR+=rr; tC+=cc; } try{ currentScale=Math.max(currentScale,1); ensureChunkVisible(Math.round(tR/rc.size),Math.round(tC/rc.size),true); }catch(e){} }
+          // Fit visually on the whole region
+          try{ fitRegionVisible(region); }catch(e){}
           drawGrid(); drawSelectionsAndUnlocked();
           try{ if(window.BossPickerAPI && window.BossPickerAPI.updateCombatAchievements) window.BossPickerAPI.updateCombatAchievements(); }catch(e){}
         } else if(unlockedRegions.has(region)){
