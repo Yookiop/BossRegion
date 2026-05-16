@@ -402,15 +402,25 @@ async function loadCombatAchievementsFromCSV() {
   }
 
   const BOSS_MARKER_LAYOUT_STORAGE_KEY = 'boss_marker_layout_v1';
+  const BOSS_VISIBILITY_STORAGE_KEY = 'boss_visibility_v1';
   let bossMarkerLayoutCache = null;
   let bossMarkerDragState = null;
   let bossMarkerListenersAttached = false;
+  let bossVisibilityCache = null;
 
   function loadBossMarkerLayout(){
     if(bossMarkerLayoutCache) return bossMarkerLayoutCache;
     try{
       const raw = localStorage.getItem(BOSS_MARKER_LAYOUT_STORAGE_KEY);
       bossMarkerLayoutCache = raw ? JSON.parse(raw) : {};
+      let migrated = false;
+      Object.values(bossMarkerLayoutCache).forEach((layout) => {
+        if(layout && Object.prototype.hasOwnProperty.call(layout, 'hidden')){
+          delete layout.hidden;
+          migrated = true;
+        }
+      });
+      if(migrated) saveBossMarkerLayout();
     }catch(e){
       console.warn('Failed to load boss marker layout', e);
       bossMarkerLayoutCache = {};
@@ -430,10 +440,55 @@ async function loadCombatAchievementsFromCSV() {
     return loadBossMarkerLayout()[markerKey] || null;
   }
 
+  function loadBossVisibility(){
+    if(bossVisibilityCache) return bossVisibilityCache;
+    try{
+      const raw = localStorage.getItem(BOSS_VISIBILITY_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      const knownBosses = new Set(Object.keys(CODE_CONFIGURED_BOSS_IMAGES));
+      bossVisibilityCache = new Set((Array.isArray(parsed) ? parsed : []).filter((bossKey) => knownBosses.has(bossKey)));
+    }catch(e){
+      console.warn('Failed to load boss visibility', e);
+      bossVisibilityCache = new Set();
+    }
+    return bossVisibilityCache;
+  }
+
+  function saveBossVisibility(){
+    try{
+      localStorage.setItem(BOSS_VISIBILITY_STORAGE_KEY, JSON.stringify(Array.from(loadBossVisibility()).sort()));
+    }catch(e){
+      console.warn('Failed to save boss visibility', e);
+    }
+  }
+
+  function isBossHidden(bossKey){
+    return loadBossVisibility().has(bossKey);
+  }
+
+  function setBossHidden(bossKey, hidden){
+    const hiddenBosses = loadBossVisibility();
+    if(hidden) hiddenBosses.add(bossKey);
+    else hiddenBosses.delete(bossKey);
+    saveBossVisibility();
+  }
+
   function setBossMarkerLayout(markerKey, layout){
     const allLayouts = loadBossMarkerLayout();
     allLayouts[markerKey] = layout;
     saveBossMarkerLayout();
+  }
+
+  function persistBossMarkerLayout(markerKey, img, fallbackLeft, fallbackTop, fallbackSize, overrides = {}){
+    setBossMarkerLayout(markerKey, {
+      left: parseFloat(img.style.left),
+      top: parseFloat(img.style.top),
+      size: parseFloat(img.style.width),
+      ...overrides,
+      left: overrides.left ?? (parseFloat(img.style.left) || fallbackLeft),
+      top: overrides.top ?? (parseFloat(img.style.top) || fallbackTop),
+      size: overrides.size ?? (parseFloat(img.style.width) || fallbackSize)
+    });
   }
 
   function clamp(value, min, max){
@@ -543,11 +598,13 @@ async function loadCombatAchievementsFromCSV() {
 
     window.addEventListener('mouseup', () => {
       if(!bossMarkerDragState) return;
-      setBossMarkerLayout(bossMarkerDragState.markerKey, {
-        left: parseFloat(bossMarkerDragState.img.style.left) || bossMarkerDragState.startLeft,
-        top: parseFloat(bossMarkerDragState.img.style.top) || bossMarkerDragState.startTop,
-        size: bossMarkerDragState.size
-      });
+      persistBossMarkerLayout(
+        bossMarkerDragState.markerKey,
+        bossMarkerDragState.img,
+        bossMarkerDragState.startLeft,
+        bossMarkerDragState.startTop,
+        bossMarkerDragState.size
+      );
       bossMarkerDragState.img.style.cursor = 'grab';
       bossMarkerDragState = null;
     });
@@ -592,11 +649,14 @@ async function loadCombatAchievementsFromCSV() {
       img.style.top = constrained.top + 'px';
       img.style.width = nextSize + 'px';
       img.style.height = nextSize + 'px';
-      setBossMarkerLayout(interaction.markerKey, {
-        left: constrained.left,
-        top: constrained.top,
-        size: nextSize
-      });
+      persistBossMarkerLayout(
+        interaction.markerKey,
+        img,
+        constrained.left,
+        constrained.top,
+        nextSize,
+        { left: constrained.left, top: constrained.top, size: nextSize }
+      );
       ev.preventDefault();
       ev.stopPropagation();
     }, { passive: false });
@@ -769,6 +829,12 @@ async function loadCombatAchievementsFromCSV() {
       
       // Automatically plot configured bosses
       this.plotConfiguredBosses();
+      this.renderMonsterVisibilityPanel();
+    },
+    refreshBossMarkers(){
+      this.clear();
+      this.plotConfiguredBosses();
+      this.updateMonsterVisibilityPanel();
     },
     plotConfiguredBosses(){
         if(!this.manifest || !this.stitchedWrap) return;
@@ -842,6 +908,7 @@ async function loadCombatAchievementsFromCSV() {
         const chunkBosses = new Map(); // key: "row,col", value: [{ bossKey, fileName }, ...]
 
         for(const key of Object.keys(CODE_CONFIGURED_BOSS_IMAGES)){
+          if(isBossHidden(key)) continue;
             const isAllowed = allowedBossKeys.has(key);
             const isCompleted = completedBossKeys.has(key);
             // Skip bosses that are neither allowed nor completed
@@ -860,11 +927,18 @@ async function loadCombatAchievementsFromCSV() {
             }
         }
 
+        const hiddenBosses = loadBossVisibility();
+        if(chunkBosses.size === 0 && hiddenBosses.size === Object.keys(CODE_CONFIGURED_BOSS_IMAGES).length){
+          hiddenBosses.clear();
+          saveBossVisibility();
+          return this.plotConfiguredBosses();
+        }
+
         // Plot them
-              for(const [key, fileEntries] of chunkBosses.entries()){
+        for(const [key, fileEntries] of chunkBosses.entries()){
             const [r, c] = key.split(',').map(Number);
-                fileEntries.forEach((entry, index) => {
-                  placeBossImage(this.manifest, this.stitchedWrap, r, c, entry.fileName, index, fileEntries.length, entry.bossKey);
+            fileEntries.forEach((entry, index) => {
+              placeBossImage(this.manifest, this.stitchedWrap, r, c, entry.fileName, index, fileEntries.length, entry.bossKey);
             });
         }
     },
@@ -872,12 +946,80 @@ async function loadCombatAchievementsFromCSV() {
     plotByKeyAndChunk(key, chunkIdOrObj){
       if(!this.manifest || !this.stitchedWrap) return;
       const cfg = CODE_CONFIGURED_BOSS_IMAGES[key]; if(!cfg) return false;
+      if(isBossHidden(key)) return false;
       let rc = null;
       if(typeof chunkIdOrObj === 'string' || typeof chunkIdOrObj === 'number') rc = resolveChunkId(this.manifest, chunkIdOrObj);
       else if(typeof chunkIdOrObj === 'object') rc = { row: chunkIdOrObj.row, col: chunkIdOrObj.col };
       if(!rc) return false;
       placeBossImage(this.manifest, this.stitchedWrap, rc.row, rc.col, cfg.displayFileName || cfg.fileName, 0, 1, key);
       return true;
+    },
+    getMonsterVisibilityEntries(){
+      return Object.keys(CODE_CONFIGURED_BOSS_IMAGES)
+        .sort((a, b) => a.localeCompare(b))
+        .map((bossKey) => ({ bossKey, hidden: isBossHidden(bossKey) }));
+    },
+    renderMonsterVisibilityPanel(){
+      const host = document.getElementById('monsterVisibilityPanel');
+      const modal = document.getElementById('monsterVisibilityModal');
+      const closeBtn = document.getElementById('monsterVisibilityModalClose');
+      if(!host) return;
+      host.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <div style="font-size:0.95rem; font-weight:bold; color:#fff;">Monsters</div>
+          <button id="showAllMonstersBtn" style="padding:4px 8px; font-size:0.75rem; background:#222; color:#ddd; border:1px solid #444; border-radius:4px; cursor:pointer;">Show all</button>
+        </div>
+        <div id="monsterVisibilityList" style="display:flex; flex-direction:column; gap:6px;"></div>
+      `;
+      const showAllBtn = host.querySelector('#showAllMonstersBtn');
+      if(showAllBtn){
+        showAllBtn.addEventListener('click', () => {
+          loadBossVisibility().clear();
+          saveBossVisibility();
+          this.refreshBossMarkers();
+        });
+      }
+      if(closeBtn && !closeBtn.dataset.boundMonsterVisibility){
+        closeBtn.dataset.boundMonsterVisibility = 'true';
+        closeBtn.addEventListener('click', () => this.closeMonsterVisibilityPanel());
+      }
+      if(modal && !modal.dataset.boundMonsterVisibility){
+        modal.dataset.boundMonsterVisibility = 'true';
+        modal.addEventListener('click', (ev) => {
+          if(ev.target === modal) this.closeMonsterVisibilityPanel();
+        });
+      }
+      this.updateMonsterVisibilityPanel();
+    },
+    updateMonsterVisibilityPanel(){
+      const list = document.getElementById('monsterVisibilityList');
+      if(!list) return;
+      const entries = this.getMonsterVisibilityEntries();
+      list.innerHTML = entries.map((entry) => `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; border-top:1px solid rgba(255,255,255,0.05);">
+          <span style="color:${entry.hidden ? '#888' : '#ddd'}; font-size:0.85rem; line-height:1.2;">${entry.bossKey}</span>
+          <button class="monster-visibility-toggle" data-boss-key="${entry.bossKey}" style="padding:4px 8px; min-width:82px; font-size:0.75rem; background:${entry.hidden ? '#3a1f1f' : '#1f3a24'}; color:${entry.hidden ? '#ffb3b3' : '#b9f5c7'}; border:1px solid ${entry.hidden ? '#7a3b3b' : '#2f6d3e'}; border-radius:4px; cursor:pointer;">${entry.hidden ? 'Show' : 'Complete'}</button>
+        </div>
+      `).join('');
+      list.querySelectorAll('.monster-visibility-toggle').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const bossKey = btn.dataset.bossKey;
+          const nextHidden = !isBossHidden(bossKey);
+          setBossHidden(bossKey, nextHidden);
+          this.refreshBossMarkers();
+        });
+      });
+    },
+    toggleMonsterVisibilityPanel(){
+      const modal = document.getElementById('monsterVisibilityModal');
+      if(!modal) return;
+      const willShow = modal.style.display === 'none' || !modal.style.display;
+      modal.style.display = willShow ? 'flex' : 'none';
+      if(willShow) this.updateMonsterVisibilityPanel();
+    },
+    closeMonsterVisibilityPanel(){
+      const modal = document.getElementById('monsterVisibilityModal');
+      if(modal) modal.style.display = 'none';
     },
     clear(){ if(this.stitchedWrap) clearBossMarkers(this.stitchedWrap); },
     
@@ -1211,16 +1353,14 @@ async function loadCombatAchievementsFromCSV() {
       this.updateCombatAchievements();
       
       // Re-plot boss images (completed bosses get hidden)
-      this.clear();
-      this.plotConfiguredBosses();
+      this.refreshBossMarkers();
     },
     
     clearCompletedAchievements(){
       this.completedAchievements = new Set();
       try{ localStorage.removeItem('combat_achievements_completed'); } catch(e){}
       this.updateCombatAchievements();
-      this.clear();
-      this.plotConfiguredBosses();
+      this.refreshBossMarkers();
     },
 
     saveCompletedAchievements(){

@@ -248,10 +248,10 @@
       </div>
       <button id="resetAllBtn" style="padding:8px 10px; text-align:left; display:none;">Reset</button>
       <div style="display:flex; gap:8px; align-items:center;">
-        <button id="numberBtn" title="Auto-number chunks" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:bold;">123</button>
+        <button id="monsterVisibilityBtn" title="Show or hide monsters" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold;">👁</button>
         <button id="iMenuBtn" style="width:60px; height:2px; padding:0; background:#000; border:1px solid #000; color:#000; font-size:0; overflow:hidden;">≡</button>
-        <button id="infoBtn" title="Inspect chunk" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer;">🔍 Identify</button>
-        <button id="splitEditBtn" title="Edit split lines for overlapping chunks (right-click a yellow chunk)" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer; background:transparent; border:1px solid #444; border-radius:4px; color:#888;">✂ Splits</button>
+        <button id="infoBtn" title="Inspect chunk" style="width:70px; padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0; cursor:pointer; background:#000; color:#000; border:1px solid #000; overflow:hidden;"></button>
+        <button id="splitEditBtn" title="Edit split lines for overlapping chunks (right-click a yellow chunk)" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer; background:#000; border:1px solid #000; border-radius:4px; color:#000;">✂ Splits</button>
       </div>
     </div>
     <div id="iMenuDropdown" style="display:none; background:#101010; padding:8px; margin-top:8px; border-radius:6px; color:#ddd;">
@@ -275,7 +275,7 @@
           <img src="static/markers/whiteskull.png" style="width:36px; height:36px;"> <span>Awful</span>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
-          <img src="static/markers/redskull.png" style="width:36px; height:36px;"> <span>Death chunk</span>
+          <img src="static/markers/redskull.png" style="width:36px; height:36px;"> <span>Death region</span>
         </div>
       </div>
     </div>
@@ -283,13 +283,6 @@
     <div id="infoLine" style="color:#ddd; margin-top:10px; font-size:0.9rem;"></div>
 
 
-    
-    <!-- Change Mode Button -->
-    <div style="margin-top:12px; border-top:1px solid #333; padding-top:8px;">
-      <button id="changeModeBtn" style="padding:8px 12px; width:100%; text-align:center; font-size:1rem; background:#222; color:#aaa; border:1px solid #444; border-radius:4px; cursor:pointer;">
-        🔄 Change Mode
-      </button>
-    </div>
   </div>
 
   <div style="flex:1;">
@@ -320,6 +313,16 @@
         <button id="resetCancelBtn" style="background:#333;color:#fff;padding:8px 12px;border-radius:6px;">No</button>
         <button id="resetConfirmBtn" style="background:#b22222;color:#fff;padding:8px 12px;border-radius:6px;">Yes</button>
       </div>
+    </div>
+  </div>
+
+  <div id="monsterVisibilityModal" style="display:none; position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:210000;">
+    <div style="background:#111; border:1px solid #444; border-radius:10px; width:420px; max-width:calc(100% - 32px); max-height:calc(100% - 32px); box-shadow:0 0 20px #000; display:flex; flex-direction:column; overflow:hidden;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid #333;">
+        <div style="font-size:1.05rem; font-weight:bold; color:#fff;">Monster visibility</div>
+        <button id="monsterVisibilityModalClose" style="padding:6px 10px; background:#222; color:#ddd; border:1px solid #444; border-radius:4px; cursor:pointer;">Close</button>
+      </div>
+      <div id="monsterVisibilityPanel" style="padding:12px 16px; overflow-y:auto; color:#ddd;"></div>
     </div>
   </div>
 
@@ -1027,6 +1030,8 @@
       // Special markers state
       let specialMode = false;
       const specialMarkers = new Map(); // "row,col" -> "gold"|"white"|"red"
+      let specialMarkerDragState = null;
+      let specialMarkerListenersAttached = false;
       const specialImages = {
         gold: new Image(),
         white: new Image(),
@@ -1036,6 +1041,9 @@
       specialImages.gold.src = 'static/markers/goldcrown.png';
       specialImages.white.src = 'static/markers/whiteskull.png';
       specialImages.red.src = 'static/markers/redskull.png';
+      Object.values(specialImages).forEach((img) => {
+        img.onload = () => { try{ renderSpecialMarkers(); }catch(e){} };
+      });
       regionLockImage.onload = () => { try{ drawGrid(); drawSelectionsAndUnlocked(); }catch(e){} };
       regionLockImage.onerror = () => { try{ console.warn('Failed to load lock icon'); }catch(e){} };
       regionLockImage.src = 'static/lock.png';
@@ -1072,38 +1080,156 @@
           }
           if(obj && Array.isArray(obj.specialMarkers)){
             specialMarkers.clear();
-            for(const [k,v] of obj.specialMarkers) specialMarkers.set(k,v);
+            for(const [k,v] of obj.specialMarkers){
+              if(typeof v === 'string') specialMarkers.set(k, { type: v });
+              else if(v && typeof v === 'object' && typeof v.type === 'string') specialMarkers.set(k, v);
+            }
           }
           try{ window._boss_selected = Array.from(selected); }catch(e){}
         }catch(e){ console.warn('loadState failed', e); }
       }
-      function drawSpecialMarkers(ctx, gi, tileW, tileH, chunkW, chunkH){
-        if(specialMarkers.size === 0) return;
-        const iconSize = 64; // px
-        for(const [key, type] of specialMarkers){
-          const [r, c] = key.split(',').map(Number);
-          const img = specialImages[type];
-          if(!img || !img.complete) continue;
-          
-          let drawX, drawY;
-          if(gi && gi.colLefts[c] !== undefined && gi.rowTops[r] !== undefined){
-             const leftTile = gi.colLefts[c]; 
-             const topTile = gi.rowTops[r]; 
-             const tileHr = gi.rowHeights[r];
-             // Bottom-Left
-             drawX = Math.round(leftTile + 2);
-             drawY = Math.round(topTile + tileHr - iconSize - 2);
-          } else {
-             const leftTile = c * tileW; 
-             const topTile = r * tileH; 
-             const offsetX = Math.round((tileW - chunkW) / 2); 
-             const offsetY = Math.round((tileH - chunkH) / 2);
-             // Bottom-Left of the chunk content
-             drawX = Math.round(leftTile + offsetX + 2);
-             drawY = Math.round(topTile + offsetY + chunkH - iconSize - 2);
-          }
-          try{ ctx.drawImage(img, drawX, drawY, iconSize, iconSize); }catch(e){}
+      function getNaturalChunkRect(row, col){
+        const gi = window._gridInfo;
+        if(gi && gi.colLefts[col] !== undefined && gi.rowTops[row] !== undefined){
+          return {
+            left: gi.colLefts[col],
+            top: gi.rowTops[row],
+            width: gi.colWidths[col],
+            height: gi.rowHeights[row]
+          };
         }
+        const chunk = chunkMap.get(`${row},${col}`);
+        if(!chunk) return null;
+        return {
+          left: chunk.bbox[0],
+          top: chunk.bbox[1],
+          width: chunk.bbox[2] - chunk.bbox[0],
+          height: chunk.bbox[3] - chunk.bbox[1]
+        };
+      }
+      function ensureSpecialMarkersLayer(){
+        let layer = stitchedWrap.querySelector('.special-markers');
+        if(!layer){
+          layer = document.createElement('div');
+          layer.className = 'special-markers';
+          layer.style.position = 'absolute';
+          layer.style.left = '0';
+          layer.style.top = '0';
+          layer.style.width = '100%';
+          layer.style.height = '100%';
+          layer.style.pointerEvents = 'none';
+          layer.style.zIndex = '1600';
+          stitchedWrap.appendChild(layer);
+        }
+        return layer;
+      }
+      function getSpecialMarkerRecord(cellKey){
+        const marker = specialMarkers.get(cellKey);
+        if(!marker) return null;
+        if(typeof marker === 'string') return { type: marker };
+        return marker;
+      }
+      function getSpecialMarkerScreenScale(){
+        const rect = stitchedWrap.getBoundingClientRect();
+        const naturalWidth = stitchedWrap.offsetWidth || 1;
+        const naturalHeight = stitchedWrap.offsetHeight || 1;
+        return {
+          x: rect.width / naturalWidth || 1,
+          y: rect.height / naturalHeight || 1
+        };
+      }
+      function clampSpecialMarkerPosition(left, top, size){
+        const maxLeft = Math.max(0, stitched.naturalWidth - size);
+        const maxTop = Math.max(0, stitched.naturalHeight - size);
+        return {
+          left: Math.max(0, Math.min(maxLeft, left)),
+          top: Math.max(0, Math.min(maxTop, top))
+        };
+      }
+      function setSpecialMarkerRecord(cellKey, marker){
+        specialMarkers.set(cellKey, marker);
+      }
+      function attachSpecialMarkerListeners(){
+        if(specialMarkerListenersAttached) return;
+        specialMarkerListenersAttached = true;
+        window.addEventListener('mousemove', (ev) => {
+          if(!specialMarkerDragState) return;
+          const scale = getSpecialMarkerScreenScale();
+          const nextLeft = specialMarkerDragState.startLeft + ((ev.clientX - specialMarkerDragState.startX) / scale.x);
+          const nextTop = specialMarkerDragState.startTop + ((ev.clientY - specialMarkerDragState.startY) / scale.y);
+          const constrained = clampSpecialMarkerPosition(nextLeft, nextTop, specialMarkerDragState.size);
+          specialMarkerDragState.img.style.left = constrained.left + 'px';
+          specialMarkerDragState.img.style.top = constrained.top + 'px';
+          ev.preventDefault();
+        });
+        window.addEventListener('mouseup', () => {
+          if(!specialMarkerDragState) return;
+          const marker = getSpecialMarkerRecord(specialMarkerDragState.cellKey);
+          if(marker){
+            setSpecialMarkerRecord(specialMarkerDragState.cellKey, {
+              ...marker,
+              left: parseFloat(specialMarkerDragState.img.style.left) || specialMarkerDragState.startLeft,
+              top: parseFloat(specialMarkerDragState.img.style.top) || specialMarkerDragState.startTop,
+              size: specialMarkerDragState.size
+            });
+            saveState();
+          }
+          specialMarkerDragState.img.style.cursor = 'grab';
+          specialMarkerDragState = null;
+        });
+      }
+      function renderSpecialMarkers(){
+        const layer = ensureSpecialMarkersLayer();
+        layer.innerHTML = '';
+        if(specialMarkers.size === 0) return;
+        attachSpecialMarkerListeners();
+        for(const [cellKey, markerValue] of specialMarkers){
+          const marker = getSpecialMarkerRecord(cellKey);
+          if(!marker || !marker.type) continue;
+          const [row, col] = cellKey.split(',').map(Number);
+          const rect = getNaturalChunkRect(row, col);
+          const img = specialImages[marker.type];
+          if(!rect || !img || !img.complete) continue;
+          const size = Number.isFinite(marker.size) ? marker.size : Math.min(rect.width, rect.height);
+          const position = clampSpecialMarkerPosition(
+            Number.isFinite(marker.left) ? marker.left : rect.left,
+            Number.isFinite(marker.top) ? marker.top : rect.top,
+            size
+          );
+          const el = document.createElement('img');
+          el.src = img.src;
+          el.className = 'special-marker';
+          el.draggable = false;
+          el.style.position = 'absolute';
+          el.style.left = position.left + 'px';
+          el.style.top = position.top + 'px';
+          el.style.width = size + 'px';
+          el.style.height = size + 'px';
+          el.style.objectFit = 'contain';
+          el.style.pointerEvents = 'auto';
+          el.style.cursor = 'grab';
+          el.style.filter = 'drop-shadow(0 3px 5px rgba(0,0,0,0.55))';
+          el.addEventListener('dragstart', (ev) => ev.preventDefault());
+          el.addEventListener('mousedown', (ev) => {
+            if(ev.button !== 0) return;
+            specialMarkerDragState = {
+              cellKey,
+              img: el,
+              startX: ev.clientX,
+              startY: ev.clientY,
+              startLeft: parseFloat(el.style.left) || position.left,
+              startTop: parseFloat(el.style.top) || position.top,
+              size
+            };
+            el.style.cursor = 'grabbing';
+            ev.preventDefault();
+            ev.stopPropagation();
+          });
+          layer.appendChild(el);
+        }
+      }
+      function drawSpecialMarkers(ctx, gi, tileW, tileH, chunkW, chunkH){
+        renderSpecialMarkers();
       }
 
       // Explicit region colors first, then fallback palette for anything not listed.
@@ -1995,6 +2121,89 @@
         setTimeout(()=> stitchedWrap.style.transition = '', 560);
       }
 
+      function fitRegionVisible(regionName){
+        if(!manifest || !window.REGION_CHUNKS || !window.REGION_CHUNKS.has(regionName)) return;
+        const regionChunks = window.REGION_CHUNKS.get(regionName);
+        if(!regionChunks || regionChunks.size === 0) return;
+
+        const first = manifest.chunks[0];
+        const tileW = first.bbox[2] - first.bbox[0];
+        const tileH = first.bbox[3] - first.bbox[1];
+        const chunkW = enforceSquare ? Math.min(tileW, tileH) : tileW;
+        const chunkH = enforceSquare ? Math.min(tileW, tileH) : tileH;
+        const gi = window._gridInfo;
+
+        let minLeft = Infinity;
+        let minTop = Infinity;
+        let maxRight = -Infinity;
+        let maxBottom = -Infinity;
+
+        for(const ck of regionChunks){
+          const [row, col] = ck.split(',').map(Number);
+          let left, top, cw, ch;
+          if(gi && gi.colLefts[col] !== undefined && gi.rowTops[row] !== undefined){
+            const leftTilePos = gi.colLefts[col];
+            const topTilePos = gi.rowTops[row];
+            const tileWc = gi.colWidths[col];
+            const tileHr = gi.rowHeights[row];
+            cw = enforceSquare ? Math.min(tileWc, tileHr) : tileWc;
+            ch = enforceSquare ? Math.min(tileWc, tileHr) : tileHr;
+            const offsetX = Math.round((tileWc - cw) / 2);
+            const offsetY = Math.round((tileHr - ch) / 2);
+            left = leftTilePos + offsetX;
+            top = topTilePos + offsetY;
+          } else {
+            const leftTilePos = col * tileW;
+            const topTilePos = row * tileH;
+            const offsetX = Math.round((tileW - chunkW) / 2);
+            const offsetY = Math.round((tileH - chunkH) / 2);
+            left = leftTilePos + offsetX;
+            top = topTilePos + offsetY;
+            cw = chunkW;
+            ch = chunkH;
+          }
+          minLeft = Math.min(minLeft, left);
+          minTop = Math.min(minTop, top);
+          maxRight = Math.max(maxRight, left + cw);
+          maxBottom = Math.max(maxBottom, top + ch);
+        }
+
+        if(!Number.isFinite(minLeft) || !Number.isFinite(minTop) || !Number.isFinite(maxRight) || !Number.isFinite(maxBottom)) return;
+
+        refreshCachedRects();
+        const containerRect = cachedContainerRect || fullMap.getBoundingClientRect();
+        const panelEl = document.querySelector('.panel');
+        const panelRect = cachedPanelRect || (panelEl ? panelEl.getBoundingClientRect() : null);
+        const rightPanelEl = document.querySelector('.combat-achievements-panel');
+        const rightPanelRect = rightPanelEl ? rightPanelEl.getBoundingClientRect() : null;
+        const visibleLeftOffset = panelRect ? (Math.max(containerRect.left, panelRect.right) - containerRect.left) : 0;
+        const visibleRightOffset = (rightPanelRect && rightPanelRect.left < containerRect.right) ? (rightPanelRect.left - containerRect.left) : (containerRect.right - containerRect.left);
+        const visibleTopOffset = panelRect ? (Math.max(containerRect.top, panelRect.bottom) - containerRect.top) : 0;
+        const visibleBottomOffset = containerRect.bottom - containerRect.top;
+        const visibleWidth = Math.max(visibleRightOffset - visibleLeftOffset, 1);
+        const visibleHeight = Math.max(visibleBottomOffset - visibleTopOffset, 1);
+
+        const regionWidth = Math.max(maxRight - minLeft, 1);
+        const regionHeight = Math.max(maxBottom - minTop, 1);
+        const framePaddingFactor = 0.78;
+        const horizontalScale = (visibleWidth * framePaddingFactor) / regionWidth;
+        const verticalScale = (visibleHeight * framePaddingFactor) / (regionHeight * (baseTileW / baseTileH));
+        currentScale = Math.max(0.2, Math.min(horizontalScale, verticalScale, 2.25));
+
+        const sx = currentScale;
+        const sy = currentScale * (baseTileW / baseTileH);
+        const visibleCenterX = (visibleLeftOffset + visibleRightOffset) / 2;
+        const visibleCenterY = (visibleTopOffset + visibleBottomOffset) / 2;
+        const regionCenterX = (minLeft + maxRight) / 2;
+        const regionCenterY = (minTop + maxBottom) / 2;
+
+        stitchedWrap.style.transition = 'transform 620ms cubic-bezier(.21,.88,.35,1)';
+        currentTX = Math.round(visibleCenterX - regionCenterX * sx);
+        currentTY = Math.round(visibleCenterY - regionCenterY * sy);
+        applyTransform();
+        setTimeout(()=> stitchedWrap.style.transition = '', 660);
+      }
+
       // Draw a one-off green outline for freshly unlocked chunk so user sees immediate feedback
       function forceUnlockedVisual(row, col){
         return;
@@ -2054,8 +2263,7 @@
         // Reduced-motion shortcut
         if(PREFERS_REDUCED_MOTION){
           unlockRegion(finalPickRegion);
-          const rc = window.REGION_CHUNKS.get(finalPickRegion);
-          if(rc && rc.size > 0){ let tR=0,tC=0; for(const ck of rc){ const [r,c]=ck.split(',').map(Number); tR+=r; tC+=c; } try{ currentScale=Math.max(currentScale,1); ensureChunkVisible(Math.round(tR/rc.size),Math.round(tC/rc.size),true); }catch(e){} }
+          try{ fitRegionVisible(finalPickRegion); }catch(e){}
           drawGrid(); drawSelectionsAndUnlocked();
           if(controlPickBtn) controlPickBtn.disabled = false; isPicking = false;
           try{ if(window.BossPickerAPI && window.BossPickerAPI.updateCombatAchievements) window.BossPickerAPI.updateCombatAchievements(); }catch(e){}
@@ -2169,13 +2377,7 @@
         unlockRegion(finalPickRegion);
         try{ if(window.BossPickerAPI && window.BossPickerAPI.updateCombatAchievements) window.BossPickerAPI.updateCombatAchievements(); }catch(e){}
 
-        // Center on region centroid
-        const finalRegionChunks = window.REGION_CHUNKS.get(finalPickRegion);
-        if(finalRegionChunks && finalRegionChunks.size > 0){
-          let totalR=0,totalC=0;
-          for(const ck of finalRegionChunks){ const [r,c]=ck.split(',').map(Number); totalR+=r; totalC+=c; }
-          try{ currentScale=Math.max(currentScale,1); ensureChunkVisible(Math.round(totalR/finalRegionChunks.size),Math.round(totalC/finalRegionChunks.size),true); }catch(e){}
-        }
+        try{ fitRegionVisible(finalPickRegion); }catch(e){}
         if(!stitched.complete) await new Promise(r2 => stitched.addEventListener('load',r2));
         try{ document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden'; }catch(e){}
         setupCanvas();
@@ -2364,9 +2566,7 @@
 
           setTimeout(()=>{
             unlockRegion(finalPickRegion);
-            // Center on region centroid
-            const rc = window.REGION_CHUNKS.get(finalPickRegion);
-            if(rc && rc.size > 0){ let tR=0,tC=0; for(const ck of rc){ const [r,c]=ck.split(',').map(Number); tR+=r; tC+=c; } try{ currentScale=Math.max(currentScale,1); ensureChunkVisible(Math.round(tR/rc.size),Math.round(tC/rc.size),true); }catch(e){} }
+            try{ fitRegionVisible(finalPickRegion); }catch(e){}
             drawGrid(); drawSelectionsAndUnlocked();
             try{ if(window.BossPickerAPI && window.BossPickerAPI.updateCombatAchievements) window.BossPickerAPI.updateCombatAchievements(); }catch(e){}
 
@@ -2420,20 +2620,6 @@
           confirmResetModal.style.display = 'none';
         }); }
         
-        // Change Mode button - returns to initial mode selection
-        const changeModeBtn = document.getElementById('changeModeBtn');
-        if(changeModeBtn){
-          changeModeBtn.addEventListener('click', () => {
-            localStorage.removeItem('chunkmaster_view_mode');
-            localStorage.removeItem('chunkmaster_current_tier');
-            localStorage.removeItem('chunkmaster_current_tiers');
-            localStorage.removeItem('chunkmaster_current_levels');
-            localStorage.removeItem('chunkmaster_current_active_level');
-            localStorage.removeItem('chunkmaster_level_completion_mode');
-            window.location.reload();
-          });
-        }
-
       // Grid positioning and vertical size are now fixed defaults (removed interactive controls)
       const DEFAULT_GRID_NUDGE = { x: 0, y: -120 }; // permanent nudge (pixels)
       const DEFAULT_ROW_SCALE_PERCENT = 97; // permanent vertical scale in percent
@@ -2442,7 +2628,7 @@
       // INFO mode: toggle when clicking the info button; when active, clicking a chunk shows the chunk file in the info line
       let infoMode = false;
       const infoBtn = document.getElementById('infoBtn');
-      const numberBtn = document.getElementById('numberBtn');
+      const monsterVisibilityBtn = document.getElementById('monsterVisibilityBtn');
       const infoLine = document.getElementById('infoLine');
       // selected potential chunks (string keys "r,c")
       const selected = new Set();
@@ -2498,14 +2684,16 @@
       if(infoBtn) infoBtn.addEventListener('click', ()=>{
         infoMode = !infoMode;
         if(infoMode) {
-          if(numberBtn) { numberBtn.style.background = ''; numberBtn.style.color = '#ddd'; }
-          infoBtn.style.background = '#007acc';
-          infoBtn.style.color = '#fff';
-          infoBtn.style.border = '1px solid #007acc';
+          const monsterVisibilityModal = document.getElementById('monsterVisibilityModal');
+          if(monsterVisibilityModal) monsterVisibilityModal.style.display = 'none';
+          if(monsterVisibilityBtn) { monsterVisibilityBtn.style.background = ''; monsterVisibilityBtn.style.color = '#ddd'; monsterVisibilityBtn.style.border = ''; }
+          infoBtn.style.background = '#000';
+          infoBtn.style.color = '#000';
+          infoBtn.style.border = '1px solid #000';
         } else {
-          infoBtn.style.background = '';
-          infoBtn.style.color = '';
-          infoBtn.style.border = '';
+          infoBtn.style.background = '#000';
+          infoBtn.style.color = '#000';
+          infoBtn.style.border = '1px solid #000';
         }
         // toggle cursor on stitchedWrap
         stitchedWrap.classList.toggle('info-cursor', infoMode);
@@ -2546,9 +2734,30 @@
         updateNumberMarkers();
       }
 
-      if(numberBtn) numberBtn.addEventListener('click', ()=>{
-        autoAssignNumbers();
+      if(monsterVisibilityBtn) monsterVisibilityBtn.addEventListener('click', ()=>{
+        const modal = document.getElementById('monsterVisibilityModal');
+        const willShow = !modal || modal.style.display === 'none' || !modal.style.display;
+        if(window.BossPickerAPI && window.BossPickerAPI.toggleMonsterVisibilityPanel){
+          window.BossPickerAPI.toggleMonsterVisibilityPanel();
+        }
+        monsterVisibilityBtn.style.background = willShow ? '#007acc' : '';
+        monsterVisibilityBtn.style.color = willShow ? '#fff' : '#ddd';
+        monsterVisibilityBtn.style.border = willShow ? '1px solid #007acc' : '';
       });
+
+      const monsterVisibilityModal = document.getElementById('monsterVisibilityModal');
+      if(monsterVisibilityModal){
+        monsterVisibilityModal.addEventListener('click', (ev) => {
+          if(ev.target !== monsterVisibilityModal) return;
+          if(monsterVisibilityBtn) { monsterVisibilityBtn.style.background = ''; monsterVisibilityBtn.style.color = '#ddd'; monsterVisibilityBtn.style.border = ''; }
+        });
+      }
+      const monsterVisibilityModalClose = document.getElementById('monsterVisibilityModalClose');
+      if(monsterVisibilityModalClose){
+        monsterVisibilityModalClose.addEventListener('click', () => {
+          if(monsterVisibilityBtn) { monsterVisibilityBtn.style.background = ''; monsterVisibilityBtn.style.color = '#ddd'; monsterVisibilityBtn.style.border = ''; }
+        });
+      }
 
       const specialPinBtn = document.getElementById('specialPinBtn');
       if(specialPinBtn){
@@ -2937,14 +3146,26 @@
         
         // Special Marker Mode
         if(specialMode){
-           const current = specialMarkers.get(key);
+           const currentMarker = getSpecialMarkerRecord(key);
+           const current = currentMarker && currentMarker.type;
            let next = null;
            if(!current) next = 'gold';
            else if(current === 'gold') next = 'white';
            else if(current === 'white') next = 'red';
            else if(current === 'red') next = null;
            
-           if(next) specialMarkers.set(key, next);
+           if(next) {
+             const chunkRect = getNaturalChunkRect(row, col);
+             const defaultSize = chunkRect ? Math.min(chunkRect.width, chunkRect.height) : 128;
+             setSpecialMarkerRecord(key, {
+               ...(currentMarker || {}),
+               type: next,
+               regionName: (window.CHUNK_TO_REGION && window.CHUNK_TO_REGION.get(key)) || (currentMarker && currentMarker.regionName) || '',
+               size: Number.isFinite(currentMarker && currentMarker.size) ? currentMarker.size : defaultSize,
+               left: Number.isFinite(currentMarker && currentMarker.left) ? currentMarker.left : (chunkRect ? chunkRect.left : 0),
+               top: Number.isFinite(currentMarker && currentMarker.top) ? currentMarker.top : (chunkRect ? chunkRect.top : 0)
+             });
+           }
            else specialMarkers.delete(key);
            
            saveState();
