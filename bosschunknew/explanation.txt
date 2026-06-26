@@ -1,0 +1,11 @@
+
+cd c:\administratie\git\BossRegion\bosschunknew; python -m http.server 8080
+
+
+python -m http.server 8080 draaien, dan index.html openen via integrated browser en niet met five server
+This will open http://localhost:8080/index.html in the integrated browser. The agent will be able to read and interact with its contents.
+
+Als je in de toekomst weer Five Server wilt gebruiken, moet je ofwel:
+
+Het bosschunknew mapje als aparte workspace openen (zonder de andere folders), of
+De Five Server root instellen op bosschunknew in de extensie-instellingen.
