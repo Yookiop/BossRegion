@@ -8,4 +8,4 @@ This will open http://localhost:8080/index.html in the integrated browser. The a
 Als je in de toekomst weer Five Server wilt gebruiken, moet je ofwel:
 
 Het bosschunknew mapje als aparte workspace openen (zonder de andere folders), of
-De Five Server root instellen op bosschunknew in de extensie-instellingen.
+De Five Server root instellen op bosschunknew in de extensie-instellingen
