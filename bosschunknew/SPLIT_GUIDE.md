@@ -2,7 +2,7 @@
 
 ## When to use splits?
 
-When two or more regions claim the same chunk(s) (e.g. Kandarin and Fremennik), overlapping areas occur. These chunks are shown on the map with **yellow dashed borders**. The split mechanism lets you divide these chunks between regions, giving each region a clean boundary.
+When two or more regions claim the same chunk(s) (e.g. Kandarin and Fremennik), overlapping areas occur. These chunks are shown on the map with **yellow dashed borders**. The split mechanism lets you divide these chunks between regions, giving each region a clean boundary. 
 
 ## ⚠️ Important: How to make a chunk splittable
 

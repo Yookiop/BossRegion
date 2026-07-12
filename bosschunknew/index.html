@@ -1291,6 +1291,8 @@
         Fremennik: { x: 0.02, y: -0.06 },
         Kandarin: { x: 0.06, y: -0.06 },
         Asgarnia: { x: 0.08, y: -0.08 },
+        Morytania: { x: -0.0, y: -0.28 },
+        Misthalin: { x: -0.01, y: -0.02 },
       });
 
       function getRegionBorderMetrics() {
@@ -1323,6 +1325,12 @@
         "10,28": { dir: "both", vpos: 0.42, hpos: 0.38, tl: "Asgarnia", tr: "Asgarnia", bl: "Kandarin", br: "Asgarnia" },
         "8,27":  { dir: "both", vpos: 0.31, hpos: 0.86, tl: "Fremennik", tr: "Fremennik", bl: "Kandarin", br: "Fremennik" },
         "18,20": { dir: "both", vpos: 0.50, hpos: 0.50, tl: "Dummy", tr: "Dummy", bl: "Misthalin", br: "Dummy" },
+        "19,44": { dir: "both", vpos: 0.50, hpos: 0.50, tl: "Morytania", tr: "Dummy", bl: "Dummy", br: "Dummy" },
+        "3,25":  { dir: "both", vpos: 0.25, hpos: 0.50, tl: "Dummy", tr: "Dummy", bl: "Fremennik", br: "Dummy" },
+        "14,42": { dir: "both", vpos: 0.35, hpos: 0.20, tl: "Morytania", tr: "Morytania", bl: "Morytania", br: "Dummy" },
+        "19,40": { dir: "both", vpos: 0.70, hpos: 0.45, tl: "Dummy", tr: "Morytania", bl: "Dummy", br: "Dummy" },
+        "8,40":  { dir: "both", vpos: 0.35, hpos: 0.75, tl: "Dummy", tr: "Dummy", bl: "Morytania", br: "Dummy" },
+        "21,30": { dir: "both", vpos: 0.85, hpos: 0.10, tl: "Dummy", tr: "Desert", bl: "Dummy", br: "Dummy" },
       };
 
       function loadChunkSplits() {
@@ -1589,6 +1597,12 @@
         ctx.lineWidth = innerW;
         for(const [regionName, segs] of regionSegments){
           ctx.strokeStyle = getRegionColor(regionName);
+          // Unlocked regions get dashed border
+          if(unlockedRegions.has(regionName)){
+            ctx.setLineDash([Math.round(innerW * 1.5), Math.round(innerW * 0.8)]);
+          } else {
+            ctx.setLineDash([]);
+          }
           ctx.beginPath();
           
           // Build adjacency for continuous paths
@@ -1695,6 +1709,7 @@
           }
           ctx.stroke();
         }
+        ctx.setLineDash([]); // reset dash for Pass 2
 
 
         // Pass 2: pending-split indicator — yellow dashed box for unsplit multi-region chunks
@@ -2325,29 +2340,18 @@
         const controlPickBtn = document.getElementById('pick'); if(controlPickBtn) controlPickBtn.disabled = true;
         isPicking = true;
 
-        // Must have potential regions selected first
-        if(!window.REGION_CHUNKS || selectedRegions.size === 0){
-          if(controlPickBtn) controlPickBtn.disabled = false; isPicking = false;
-          const warn = document.createElement('div');
-          warn.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;pointer-events:all;';
-          const box = document.createElement('div');
-          box.style.cssText = 'background:#1a1a2e;border:2px solid #f44;border-radius:12px;padding:28px 40px;text-align:center;box-shadow:0 0 30px rgba(255,60,60,0.3);';
-          const msg = document.createElement('div');
-          msg.style.cssText = 'font-size:1.4rem;color:#fff;font-weight:bold;margin-bottom:16px;';
-          msg.textContent = 'Select potential regions to unlock first';
-          box.appendChild(msg);
-          const okBtn = document.createElement('button');
-          okBtn.textContent = 'OK';
-          okBtn.style.cssText = 'padding:8px 32px;font-size:1.1rem;border-radius:6px;cursor:pointer;background:#333;color:#fff;border:1px solid #666;';
-          okBtn.addEventListener('click', ()=>{ if(warn.parentNode) warn.parentNode.removeChild(warn); });
-          box.appendChild(okBtn);
-          warn.appendChild(box);
-          warn.addEventListener('click', (e)=>{ if(e.target === warn && warn.parentNode) warn.parentNode.removeChild(warn); });
-          document.body.appendChild(warn);
-          return;
+        // If no potential regions selected, use ALL locked regions (except Dummy)
+        if(!window.REGION_CHUNKS || window.REGION_CHUNKS.size === 0){ return; }
+        let regionCandidates;
+        if(selectedRegions.size === 0){
+          regionCandidates = Array.from(window.REGION_CHUNKS.keys()).filter(r => r !== 'Dummy' && !unlockedRegions.has(r));
+          if(regionCandidates.length === 0){
+            if(controlPickBtn) controlPickBtn.disabled = false; isPicking = false;
+            return;
+          }
+        } else {
+          regionCandidates = Array.from(selectedRegions);
         }
-
-        const regionCandidates = Array.from(selectedRegions);
         const finalPickRegion = regionCandidates[Math.floor(Math.random() * regionCandidates.length)];
 
         // Reduced-motion shortcut
@@ -2515,6 +2519,7 @@
 
       // Region-level helpers
       function selectRegion(regionName){
+        if(regionName === 'Dummy') return; // Dummy is not a playable region
         if(selectedRegions.has(regionName) || unlockedRegions.has(regionName)) return;
         selectedRegions.add(regionName);
         const regionChunks = window.REGION_CHUNKS ? window.REGION_CHUNKS.get(regionName) : null;
@@ -2556,8 +2561,8 @@
         const controlPickBtn = document.getElementById('pick'); if(controlPickBtn) controlPickBtn.disabled = true;
         isPicking = true;
 
-        // Pre-pick the final region
-        const allRegions = Array.from(window.REGION_CHUNKS.keys());
+        // Pre-pick the final region (exclude Dummy)
+        const allRegions = Array.from(window.REGION_CHUNKS.keys()).filter(r => r !== 'Dummy');
         const finalPickRegion = allRegions[Math.floor(Math.random() * allRegions.length)];
 
         // --- Create fullscreen overlay for region animation ---
@@ -3539,9 +3544,13 @@
       loadState();
       // Derive region-level sets from restored chunk sets
       if(window.CHUNK_TO_REGION){
+        // Clean up orphaned chunks (no longer mapped to any region)
+        for(const ck of unlocked){ if(!window.CHUNK_TO_REGION.has(ck)) unlocked.delete(ck); }
+        for(const ck of selected){ if(!window.CHUNK_TO_REGION.has(ck)) selected.delete(ck); }
         selectedRegions.clear(); unlockedRegions.clear();
         for(const ck of selected){ const r = window.CHUNK_TO_REGION.get(ck); if(r) selectedRegions.add(r); }
         for(const ck of unlocked){ const r = window.CHUNK_TO_REGION.get(ck); if(r) unlockedRegions.add(r); }
+        saveState(); // persist cleaned state
       }
       updateStartingChunkBtnVisibility();
       // initialize full map (always shown)
