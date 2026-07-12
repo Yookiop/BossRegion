@@ -249,7 +249,7 @@
       <button id="resetAllBtn" style="padding:8px 10px; text-align:left; display:none;">Reset</button>
       <div style="display:flex; gap:8px; align-items:center;">
         <button id="monsterVisibilityBtn" title="Show or hide monsters" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold;">👁</button>
-        <button id="pickModeBtn" title="Toggle region pick mode — click regions to mark them as potential" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold;">👆</button>
+        <button id="pickModeBtn" title="Toggle region pick mode — click regions to mark them as potential" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold;"><span style="filter:brightness(0) invert(1);">👆</span></button>
         <button id="iMenuBtn" style="width:60px; height:2px; padding:0; background:#000; border:1px solid #000; color:#000; font-size:0; overflow:hidden;">≡</button>
         <button id="infoBtn" title="Inspect chunk" style="width:70px; padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0; cursor:pointer; background:#000; color:#000; border:1px solid #000; overflow:hidden;"></button>
         <button id="splitEditBtn" title="Edit split lines for overlapping chunks (right-click a yellow chunk)" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer; background:#000; border:1px solid #000; border-radius:4px; color:#000;">✂ Splits</button>
@@ -1265,14 +1265,14 @@
       const REGION_COLOR_OVERRIDES = Object.freeze({
         Asgarnia: 'rgba(236, 102, 170, 0.96)',
         Desert: 'rgba(247, 210, 66, 0.96)',
-        Fremennik: 'rgba(220, 220, 220, 0.96)',
-        Karamja: 'rgba(104, 68, 42, 0.96)',
+        Fremennik: 'rgba(70, 224, 224, 0.96)',
+        Karamja: 'rgba(104, 68, 42, 1.0)',
         Kandarin: 'rgba(214, 50, 50, 0.96)',
         Kourend: 'rgba(148, 96, 214, 0.96)',
         Zeah: 'rgba(148, 96, 214, 0.96)',
         Misthalin: 'rgba(88, 174, 255, 0.96)',
         Morytania: 'rgba(82, 168, 98, 0.96)',
-        Tirannwn: 'rgba(70, 224, 224, 0.96)',
+        Tirannwn: 'rgba(50, 75, 170, 0.96)',
         Varlamore: 'rgba(244, 150, 54, 0.96)',
         Wilderness: 'rgba(150, 156, 166, 0.96)',
         Dummy: 'rgba(0,0,0,0)',
@@ -1290,7 +1290,7 @@
       const REGION_LABEL_OFFSETS = Object.freeze({
         Fremennik: { x: 0.02, y: -0.06 },
         Kandarin: { x: 0.06, y: -0.06 },
-        Asgarnia: { x: 0.08, y: -0.08 },
+        Asgarnia: { x: 0.0, y: -0.09 },
         Morytania: { x: -0.0, y: -0.28 },
         Misthalin: { x: -0.01, y: -0.02 },
       });
@@ -1855,15 +1855,24 @@
             if(!count) continue;
             let labelX = sumX / count, labelY = sumY / count;
             const regionW = maxX - minX, regionH = maxY - minY;
-            const labelOffset = REGION_LABEL_OFFSETS[regionName];
+            let labelOffset = REGION_LABEL_OFFSETS[regionName];
+            // Conditional offsets based on chunk count for specific regions
+            if(regionName === 'Asgarnia'){
+              labelOffset = count === 2 ? { x: 0.0, y: -0.14 } : { x: 0.08, y: -0.09 };
+            }
+            if(regionName === 'Kandarin'){
+              if(count === 4) labelOffset = { x: 0, y: 0 };
+              else if(count === 1) labelOffset = { x: 0.02, y: labelOffset ? labelOffset.y : -0.06 };
+            }
             if(labelOffset){
               labelX += regionW * labelOffset.x;
               labelY += regionH * labelOffset.y;
             }
             // Scale font to fit within the component bounding box
-            const isSmallRegion = regionW < baseTileW * 2.5 && regionH < baseTileH * 2.5;
+            const isSingleChunk = count === 1;
+            const isTinyRegion = count <= 2; // also treat 2-chunk regions like singles
             let fontSize = Math.min(regionH * 0.20, regionW * 0.12, baseTileW * 2.0);
-            if(isSmallRegion) fontSize = Math.min(regionH, regionW) * 0.20;
+            if(isTinyRegion) fontSize = Math.min(regionH, regionW) * 0.20;
             fontSize = Math.max(fontSize, 10);
             ctx.font = `bold ${Math.round(fontSize)}px system-ui, sans-serif`;
             const measured = ctx.measureText(regionName).width;
@@ -1879,8 +1888,10 @@
             const regionMinDim = Math.min(regionH, regionW);
             let lockSize = 0;
             if(hasLockIcon){
-              if(isSmallRegion){
+              if(isSingleChunk){
                 lockSize = Math.round(regionMinDim * 0.65);
+              } else if(isTinyRegion){
+                lockSize = Math.round(regionMinDim * 0.40);
               } else {
                 lockSize = Math.round(fontSize * 6);
               }
@@ -1892,8 +1903,8 @@
             const textHalfW = Math.max(ctx.measureText(regionName).width / 2, fontSize * 0.8);
             const textHalfH = Math.max(fontSize * 0.52, 10);
             const titleLockGap = hasLockIcon ? Math.max(4, Math.min(Math.round(fontSize * 0.12), 10)) : 0;
-            // For small regions, bias towards top-left
-            if(isSmallRegion){
+            // For single-chunk regions, bias towards top-left
+            if(isSingleChunk){
               labelX = minX + sidePad + textHalfW;
               labelY = minY + verticalPad + textHalfH;
             } else {
@@ -2009,12 +2020,12 @@
         }
         const splitData = loadChunkSplits();
         ctx.save();
-        ctx.globalAlpha = 0.50;
         for(const [regionName, chunks] of window.REGION_CHUNKS){
           if(unlockedRegions.has(regionName)) continue;
           if(!chunks || chunks.size === 0) continue;
           const color = getRegionColor(regionName);
           ctx.fillStyle = color;
+          ctx.globalAlpha = (regionName === 'Karamja') ? 0.70 : 0.55;
           for(const ck of chunks){
             const [r, c] = ck.split(',').map(Number);
             const b = chunkBounds(r, c);
