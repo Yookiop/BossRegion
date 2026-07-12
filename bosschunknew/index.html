@@ -1032,6 +1032,7 @@
       let specialMode = false;
       const specialMarkers = new Map(); // "row,col" -> "gold"|"white"|"red"
       let specialMarkerDragState = null;
+      let specialMarkerJustDragged = false;
       let specialMarkerListenersAttached = false;
       const specialImages = {
         gold: new Image(),
@@ -1178,6 +1179,7 @@
             });
             saveState();
           }
+          specialMarkerJustDragged = !!(specialMarkerDragState && specialMarkerDragState.moved);
           specialMarkerDragState.img.style.cursor = 'grab';
           specialMarkerDragState = null;
         });
@@ -1215,6 +1217,7 @@
           el.style.filter = 'drop-shadow(0 3px 5px rgba(0,0,0,0.55))';
           el.addEventListener('dragstart', (ev) => ev.preventDefault());
           el.addEventListener('mousedown', (ev) => {
+            if(!specialMode) return;
             if(ev.button !== 0) return;
             specialMarkerDragState = {
               cellKey,
@@ -1233,17 +1236,45 @@
           el.addEventListener('click', (ev) => {
             if(!specialMode) return;
             const markerRecord = getSpecialMarkerRecord(cellKey);
-            if(!markerRecord || (specialMarkerDragState && specialMarkerDragState.moved)) {
+            if(!markerRecord || specialMarkerJustDragged) {
+              specialMarkerJustDragged = false;
               ev.preventDefault();
               ev.stopPropagation();
               return;
             }
+            specialMarkerJustDragged = false;
             let nextType = null;
             if(markerRecord.type === 'gold') nextType = 'white';
             else if(markerRecord.type === 'white') nextType = 'red';
             else if(markerRecord.type === 'red') nextType = null;
             if(nextType){
               setSpecialMarkerRecord(cellKey, { ...markerRecord, type: nextType });
+            } else {
+              specialMarkers.delete(cellKey);
+            }
+            saveState();
+            renderSpecialMarkers();
+            drawGrid();
+            drawSelectionsAndUnlocked();
+            ev.preventDefault();
+            ev.stopPropagation();
+          });
+          el.addEventListener('contextmenu', (ev) => {
+            if(!specialMode) return;
+            const markerRecord = getSpecialMarkerRecord(cellKey);
+            if(!markerRecord || specialMarkerJustDragged) {
+              specialMarkerJustDragged = false;
+              ev.preventDefault();
+              ev.stopPropagation();
+              return;
+            }
+            specialMarkerJustDragged = false;
+            let prevType = null;
+            if(markerRecord.type === 'red') prevType = 'white';
+            else if(markerRecord.type === 'white') prevType = 'gold';
+            else if(markerRecord.type === 'gold') prevType = null;
+            if(prevType){
+              setSpecialMarkerRecord(cellKey, { ...markerRecord, type: prevType });
             } else {
               specialMarkers.delete(cellKey);
             }
