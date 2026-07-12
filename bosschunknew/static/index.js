@@ -473,6 +473,32 @@ async function loadCombatAchievementsFromCSV() {
     saveBossVisibility();
   }
 
+  // Boss lock state — prevents accidental drag/resize. Default: locked.
+  const BOSS_LOCK_STORAGE_KEY = '_bossLocks';
+  let bossLockCache = null;
+  function loadBossLocks(){
+    if(bossLockCache) return bossLockCache;
+    try{
+      const raw = localStorage.getItem(BOSS_LOCK_STORAGE_KEY);
+      bossLockCache = new Set(raw ? JSON.parse(raw) : []);
+    }catch(e){ bossLockCache = new Set(); }
+    return bossLockCache;
+  }
+  function saveBossLocks(){
+    try{ localStorage.setItem(BOSS_LOCK_STORAGE_KEY, JSON.stringify(Array.from(loadBossLocks()))); }catch(e){}
+  }
+  function isBossLocked(bossKey){
+    const locks = loadBossLocks();
+    // Default locked: only unlocked if explicitly in the set
+    return !locks.has(bossKey);
+  }
+  function setBossLocked(bossKey, locked){
+    const locks = loadBossLocks();
+    if(locked) locks.delete(bossKey);  // locked = not in the "unlocked" set
+    else locks.add(bossKey);           // unlocked = in the set
+    saveBossLocks();
+  }
+
   function setBossMarkerLayout(markerKey, layout){
     const allLayouts = loadBossMarkerLayout();
     allLayouts[markerKey] = layout;
@@ -612,13 +638,15 @@ async function loadCombatAchievementsFromCSV() {
 
   function enableBossMarkerInteraction(img, interaction){
     attachBossMarkerListeners();
+    const locked = isBossLocked(interaction.bossKey || interaction.markerKey);
     img.draggable = false;
-    img.title = 'Drag to move, scroll to resize';
+    img.title = locked ? '🔒 Locked — unlock in Monster visibility panel' : 'Drag to move, scroll to resize';
     img.style.pointerEvents = 'auto';
-    img.style.cursor = 'grab';
+    img.style.cursor = locked ? 'default' : 'grab';
     img.addEventListener('dragstart', (ev) => ev.preventDefault());
     img.addEventListener('mousedown', (ev) => {
       if(ev.button !== 0) return;
+      if(isBossLocked(interaction.bossKey || interaction.markerKey)) return;
       bossMarkerDragState = {
         ...interaction,
         img,
@@ -633,6 +661,7 @@ async function loadCombatAchievementsFromCSV() {
       ev.stopPropagation();
     });
     img.addEventListener('wheel', (ev) => {
+      if(isBossLocked(interaction.bossKey || interaction.markerKey)) return;
       const currentSize = parseFloat(img.style.width) || interaction.defaultSize;
       const nextSize = clamp(currentSize + (ev.deltaY < 0 ? 16 : -16), interaction.minSize, interaction.maxSize);
       const currentLeft = parseFloat(img.style.left) || 0;
@@ -807,6 +836,7 @@ async function loadCombatAchievementsFromCSV() {
     img.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))';
     enableBossMarkerInteraction(img, {
       markerKey,
+      bossKey,
       stitchedWrap,
       regionArea,
       defaultSize: size,
@@ -995,12 +1025,24 @@ async function loadCombatAchievementsFromCSV() {
       const list = document.getElementById('monsterVisibilityList');
       if(!list) return;
       const entries = this.getMonsterVisibilityEntries();
-      list.innerHTML = entries.map((entry) => `
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; border-top:1px solid rgba(255,255,255,0.05);">
-          <span style="color:${entry.hidden ? '#888' : '#ddd'}; font-size:0.85rem; line-height:1.2;">${entry.bossKey}</span>
+      list.innerHTML = entries.map((entry) => {
+        const isLocked = isBossLocked(entry.bossKey);
+        return `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; padding:6px 0; border-top:1px solid rgba(255,255,255,0.05);">
+          <button class="boss-lock-toggle" data-boss-key="${entry.bossKey}" title="${isLocked ? 'Unlock position & size' : 'Lock position & size'}" style="padding:2px 4px; font-size:0.85rem; background:transparent; border:none; cursor:pointer; line-height:1;">${isLocked ? '🔒' : '🔓'}</button>
+          <span style="color:${entry.hidden ? '#888' : '#ddd'}; font-size:0.85rem; line-height:1.2; flex:1;">${entry.bossKey}</span>
           <button class="monster-visibility-toggle" data-boss-key="${entry.bossKey}" style="padding:4px 8px; min-width:82px; font-size:0.75rem; background:${entry.hidden ? '#3a1f1f' : '#1f3a24'}; color:${entry.hidden ? '#ffb3b3' : '#b9f5c7'}; border:1px solid ${entry.hidden ? '#7a3b3b' : '#2f6d3e'}; border-radius:4px; cursor:pointer;">${entry.hidden ? 'Show' : 'Complete'}</button>
         </div>
-      `).join('');
+      `}).join('');
+      // Lock toggle handlers
+      list.querySelectorAll('.boss-lock-toggle').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const bossKey = btn.dataset.bossKey;
+          const nextLocked = !isBossLocked(bossKey);
+          setBossLocked(bossKey, nextLocked);
+          this.refreshBossMarkers();
+        });
+      });
       list.querySelectorAll('.monster-visibility-toggle').forEach((btn) => {
         btn.addEventListener('click', () => {
           const bossKey = btn.dataset.bossKey;

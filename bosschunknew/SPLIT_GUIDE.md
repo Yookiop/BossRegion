@@ -26,6 +26,7 @@ A chunk only becomes splittable (yellow dashed) when it is **added to BOTH regio
 ### 4. Assign regions to sides/quadrants
 - For Vertical/Horizontal splits: two regions are shown with `⇄ Swap` to flip sides
 - For "Both": assign a region to each quadrant (↖ TL, ↗ TR, ↙ BL, ↘ BR) via dropdowns
+- In the quadrants you can also hold the right mouse button on the lines to move
 
 ### 5. Save or remove
 - Click **✓ Save** to save the split
