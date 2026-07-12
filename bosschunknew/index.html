@@ -1319,6 +1319,7 @@
       // Default chunk splits — loaded on first run or when localStorage is empty.
       // These persist across browsers. Add new entries as you configure splits.
       const DEFAULT_CHUNK_SPLITS = {
+        // --- Both (H+V) splits ---
         "10,27": { dir: "both", vpos: 0.50, hpos: 0.40, tl: "Kandarin", tr: "Asgarnia", bl: "Kandarin", br: "Kandarin" },
         "16,30": { dir: "both", vpos: 0.50, hpos: 0.50, tl: "Karamja", tr: "Asgarnia", bl: "Karamja", br: "Karamja" },
         "15,30": { dir: "both", vpos: 0.50, hpos: 0.50, tl: "Asgarnia", tr: "Asgarnia", bl: "Karamja", br: "Asgarnia" },
@@ -1330,8 +1331,10 @@
         "14,42": { dir: "both", vpos: 0.35, hpos: 0.20, tl: "Morytania", tr: "Morytania", bl: "Morytania", br: "Dummy" },
         "19,40": { dir: "both", vpos: 0.70, hpos: 0.45, tl: "Dummy", tr: "Morytania", bl: "Dummy", br: "Dummy" },
         "8,40":  { dir: "both", vpos: 0.35, hpos: 0.75, tl: "Dummy", tr: "Dummy", bl: "Morytania", br: "Dummy" },
-        "21,30": { dir: "both", vpos: 0.85, hpos: 0.10, tl: "Dummy", tr: "Desert", bl: "Dummy", br: "Dummy" },
         "2,37":  { dir: "both", vpos: 0.25, hpos: 0.75, tl: "Dummy", tr: "Dummy", bl: "Wilderness", br: "Dummy" },
+        "11,6":  { dir: "both", vpos: 0.45, hpos: 0.70, tl: "Dummy", tr: "Dummy", bl: "Varlamore", br: "Dummy" },
+        "6,22":  { dir: "both", vpos: 0.63, hpos: 0.20, tl: "Fremennik", tr: "Fremennik", bl: "Dummy", br: "Fremennik" },
+        "11,5":  { dir: "both", vpos: 0.67, hpos: 0.38, tl: "Varlamore", tr: "Dummy", bl: "Varlamore", br: "Varlamore" },
         // --- Simple V/H splits ---
         "10,37": { dir: "v", pos: 0.50, r1: "Misthalin", r2: "Morytania" },
         "13,37": { dir: "v", pos: 0.34, r1: "Desert", r2: "Morytania" },
@@ -1348,8 +1351,8 @@
         "8,25":  { dir: "h", pos: 0.70, r1: "Fremennik", r2: "Kandarin" },
         "15,29": { dir: "h", pos: 0.18, r1: "Asgarnia", r2: "Karamja" },
         "20,30": { dir: "v", pos: 0.85, r1: "Dummy", r2: "Desert" },
-        "19,31": { dir: "h", pos: 0.90, r1: "Dummy", r2: "Desert" },
-        "19,32": { dir: "h", pos: 0.90, r1: "Dummy", r2: "Desert" },
+        "19,31": { dir: "h", pos: 0.85, r1: "Dummy", r2: "Desert" },
+        "19,32": { dir: "h", pos: 0.85, r1: "Dummy", r2: "Desert" },
         "21,31": { dir: "h", pos: 0.10, r1: "Desert", r2: "Dummy" },
         "21,32": { dir: "h", pos: 0.10, r1: "Desert", r2: "Dummy" },
         "18,39": { dir: "v", pos: 0.50, r1: "Desert", r2: "Dummy" },
@@ -1361,7 +1364,6 @@
         "20,20": { dir: "v", pos: 0.65, r1: "Misthalin", r2: "Dummy" },
         "6,20":  { dir: "h", pos: 0.20, r1: "Fremennik", r2: "Dummy" },
         "6,21":  { dir: "h", pos: 0.20, r1: "Fremennik", r2: "Dummy" },
-        "11,6":  { dir: "both", vpos: 0.45, hpos: 0.70, tl: "Dummy", tr: "Dummy", bl: "Varlamore", br: "Dummy" },
         "16,13": { dir: "v", pos: 0.50, r1: "Varlamore", r2: "Dummy" },
         "7,22":  { dir: "v", pos: 0.63, r1: "Dummy", r2: "Fremennik" },
         "8,22":  { dir: "v", pos: 0.63, r1: "Dummy", r2: "Fremennik" },
@@ -1391,6 +1393,8 @@
         "3,37":  { dir: "v", pos: 0.25, r1: "Wilderness", r2: "Dummy" },
         "12,7":  { dir: "h", pos: 0.50, r1: "Dummy", r2: "Varlamore" },
         "12,8":  { dir: "h", pos: 0.50, r1: "Dummy", r2: "Varlamore" },
+        "19,30": { dir: "v", pos: 0.70, r1: "Karamja", r2: "Dummy" },
+        "21,30": { dir: "h", pos: 0.50, r1: "Desert", r2: "Dummy" },
       };
 
       function loadChunkSplits() {

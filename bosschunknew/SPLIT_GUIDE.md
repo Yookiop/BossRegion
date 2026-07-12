@@ -4,6 +4,24 @@
 
 When two or more regions claim the same chunk(s) (e.g. Kandarin and Fremennik), overlapping areas occur. These chunks are shown on the map with **yellow dashed borders**. The split mechanism lets you divide these chunks between regions, giving each region a clean boundary. 
 
+
+#single en double split configs ophalen
+const splits = JSON.parse(localStorage.getItem("_chunkSplits") || "{}");
+const output = [];
+for(const [key, val] of Object.entries(splits)){
+  if(val.dir === "both"){
+    output.push(`  "${key}": { dir: "both", vpos: ${val.vpos.toFixed(2)}, hpos: ${val.hpos.toFixed(2)}, tl: "${val.tl}", tr: "${val.tr}", bl: "${val.bl}", br: "${val.br}" },`);
+  } else {
+    output.push(`  "${key}": { dir: "${val.dir}", pos: ${val.pos.toFixed(2)}, r1: "${val.r1}", r2: "${val.r2}" },`);
+  }
+}
+copy(output.join("\n"));
+console.log(output.length + " splits gekopieerd naar klembord!");
+
+F12 → Console → plakken → Enter → plak hier de output!
+
+
+
 ## ⚠️ Important: How to make a chunk splittable
 
 A chunk only becomes splittable (yellow dashed) when it is **added to BOTH regions** in `static/Map1.csv`. For example, if the border between Kandarin and Fremennik runs through `chunk_8_23`, that chunk must appear in **both** the Kandarin row AND a Fremennik row in the CSV.
