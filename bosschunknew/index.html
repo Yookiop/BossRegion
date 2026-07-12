@@ -1274,6 +1274,7 @@
         Tirannwn: 'rgba(70, 224, 224, 0.96)',
         Varlamore: 'rgba(244, 150, 54, 0.96)',
         Wilderness: 'rgba(150, 156, 166, 0.96)',
+        Dummy: 'rgba(0,0,0,0)',
       });
       const REGION_COLOR_PALETTE = [
         'rgba(255, 105, 105, 0.96)',
@@ -1287,6 +1288,8 @@
       ];
       const REGION_LABEL_OFFSETS = Object.freeze({
         Fremennik: { x: 0.02, y: -0.06 },
+        Kandarin: { x: 0.06, y: -0.06 },
+        Asgarnia: { x: 0.08, y: -0.08 },
       });
 
       function getRegionBorderMetrics() {
@@ -1310,8 +1313,23 @@
         return window._regionColorMap.get(regionName) || 'rgba(255,210,0,0.95)';
       }
 
+      // Default chunk splits — loaded on first run or when localStorage is empty.
+      // These persist across browsers. Add new entries as you configure splits.
+      const DEFAULT_CHUNK_SPLITS = {
+        "10,27": { dir: "both", vpos: 0.50, hpos: 0.40, tl: "Kandarin", tr: "Asgarnia", bl: "Kandarin", br: "Kandarin" },
+        "16,30": { dir: "both", vpos: 0.50, hpos: 0.50, tl: "Karamja", tr: "Asgarnia", bl: "Karamja", br: "Karamja" },
+        "15,30": { dir: "both", vpos: 0.50, hpos: 0.50, tl: "Asgarnia", tr: "Asgarnia", bl: "Karamja", br: "Asgarnia" },
+        "10,28": { dir: "both", vpos: 0.42, hpos: 0.38, tl: "Asgarnia", tr: "Asgarnia", bl: "Kandarin", br: "Asgarnia" },
+        "8,27":  { dir: "both", vpos: 0.31, hpos: 0.86, tl: "Fremennik", tr: "Fremennik", bl: "Kandarin", br: "Fremennik" },
+        "18,20": { dir: "both", vpos: 0.50, hpos: 0.50, tl: "Dummy", tr: "Dummy", bl: "Misthalin", br: "Dummy" },
+      };
+
       function loadChunkSplits() {
-        try { return JSON.parse(localStorage.getItem('_chunkSplits') || '{}'); } catch(e) { return {}; }
+        try {
+          const stored = JSON.parse(localStorage.getItem('_chunkSplits') || '{}');
+          // Merge: defaults first, then stored overrides
+          return Object.assign({}, DEFAULT_CHUNK_SPLITS, stored);
+        } catch(e) { return Object.assign({}, DEFAULT_CHUNK_SPLITS); }
       }
       function saveChunkSplits(splits) {
         try { localStorage.setItem('_chunkSplits', JSON.stringify(splits)); } catch(e) {}
@@ -1737,6 +1755,9 @@
         ctx.textBaseline = 'middle';
         for(const [regionName, chunks] of window.REGION_CHUNKS){
           if(!chunks || chunks.size === 0) continue;
+          const color = getRegionColor(regionName);
+          // Skip dummy/transparent regions — no label or lock icon
+          if(color === 'rgba(0,0,0,0)') continue;
           for(const chunkGroup of getRegionChunkComponents(chunks)){
             let sumX = 0, sumY = 0, count = 0;
             let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
