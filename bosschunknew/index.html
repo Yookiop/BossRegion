@@ -249,6 +249,7 @@
       <button id="resetAllBtn" style="padding:8px 10px; text-align:left; display:none;">Reset</button>
       <div style="display:flex; gap:8px; align-items:center;">
         <button id="monsterVisibilityBtn" title="Show or hide monsters" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold;">👁</button>
+        <button id="pickModeBtn" title="Toggle region pick mode — click regions to mark them as potential" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold;">👆</button>
         <button id="iMenuBtn" style="width:60px; height:2px; padding:0; background:#000; border:1px solid #000; color:#000; font-size:0; overflow:hidden;">≡</button>
         <button id="infoBtn" title="Inspect chunk" style="width:70px; padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0; cursor:pointer; background:#000; color:#000; border:1px solid #000; overflow:hidden;"></button>
         <button id="splitEditBtn" title="Edit split lines for overlapping chunks (right-click a yellow chunk)" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer; background:#000; border:1px solid #000; border-radius:4px; color:#000;">✂ Splits</button>
@@ -1264,7 +1265,7 @@
       const REGION_COLOR_OVERRIDES = Object.freeze({
         Asgarnia: 'rgba(236, 102, 170, 0.96)',
         Desert: 'rgba(247, 210, 66, 0.96)',
-        Fremennik: 'rgba(45, 45, 45, 0.96)',
+        Fremennik: 'rgba(220, 220, 220, 0.96)',
         Karamja: 'rgba(104, 68, 42, 0.96)',
         Kandarin: 'rgba(214, 50, 50, 0.96)',
         Kourend: 'rgba(148, 96, 214, 0.96)',
@@ -2769,6 +2770,19 @@
       }
 
       let isPicking = false;
+      let pickMode = false; // When true, clicking a region marks it as potential (purple)
+      const pickModeBtn = document.getElementById('pickModeBtn');
+      if(pickModeBtn){
+        pickModeBtn.addEventListener('click', ()=>{
+          pickMode = !pickMode;
+          pickModeBtn.style.background = pickMode ? '#007acc' : '';
+          pickModeBtn.style.color = pickMode ? '#fff' : '#ddd';
+          pickModeBtn.style.border = pickMode ? '1px solid #007acc' : '';
+          // Exit other modes
+          if(pickMode && infoMode){ infoBtn.click(); }
+          if(pickMode && specialMode){ specialPinBtn.click(); }
+        });
+      }
       let dragState = { dragging:false, startX:0, startY:0, startTX:0, startTY:0, moved:false };
       if(infoBtn) infoBtn.addEventListener('click', ()=>{
         infoMode = !infoMode;
@@ -3299,8 +3313,8 @@
           try{ window._boss_selected = Array.from(selected); }catch(e){}
           saveState(); updateStartingChunkBtnVisibility(); drawGrid(); drawSelectionsAndUnlocked();
           try{ if(window.BossPickerAPI && window.BossPickerAPI.updateCombatAchievements) window.BossPickerAPI.updateCombatAchievements(); }catch(e){}
-        } else {
-          // Click unselected region → select it
+        } else if(pickMode){
+          // In pick mode: click unselected region → mark as potential
           selectRegion(region);
           try{ if(window.BossPickerAPI && window.BossPickerAPI.updateCombatAchievements) window.BossPickerAPI.updateCombatAchievements(); }catch(e){}
         }
