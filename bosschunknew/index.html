@@ -297,7 +297,7 @@
       <!-- Tier banner (populated by JS if in tier mode) -->
       <div id="tierBanner" class="tier-banner" style="display:none;"></div>
       <!-- Zoom controls -->
-      <div id="zoomControls" style="position:absolute; top:10px; left:50%; transform:translateX(-380px); display:flex; flex-direction:row; gap:0; z-index:100000;">
+      <div id="zoomControls" style="position:absolute; top:10px; left:50%; transform:translateX(-50%); display:flex; flex-direction:row; gap:0; z-index:100000;">
         <button id="zoomOutBtn" title="Zoom out" style="width:48px; height:48px; font-size:26px; font-weight:bold; border:none; border-radius:8px 0 0 8px; background:rgba(30,30,30,0.85); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); transition:background 0.15s;">&minus;</button>
         <button id="zoomInBtn" title="Zoom in" style="width:48px; height:48px; font-size:26px; font-weight:bold; border:none; border-radius:0 8px 8px 0; background:rgba(30,30,30,0.85); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); border-left:1px solid rgba(255,255,255,0.1); transition:background 0.15s;">+</button>
       </div>
@@ -1264,9 +1264,9 @@
       const REGION_COLOR_OVERRIDES = Object.freeze({
         Asgarnia: 'rgba(236, 102, 170, 0.96)',
         Desert: 'rgba(247, 210, 66, 0.96)',
-        Fremennik: 'rgba(214, 66, 66, 0.96)',
-        'Fossil island': 'rgba(189, 154, 92, 0.96)',
+        Fremennik: 'rgba(45, 45, 45, 0.96)',
         Karamja: 'rgba(104, 68, 42, 0.96)',
+        Kandarin: 'rgba(214, 50, 50, 0.96)',
         Kourend: 'rgba(148, 96, 214, 0.96)',
         Zeah: 'rgba(148, 96, 214, 0.96)',
         Misthalin: 'rgba(88, 174, 255, 0.96)',
@@ -1550,11 +1550,11 @@
                   addBorderFaceSegments(segbr, r, c, 'right', hpos, 1, br, -1, 0);
                   addBorderFaceSegments(segbr, r, c, 'bottom', vpos, 1, br, 0, -1);
                 }
-                // Internal cross seams
-                if(tl && tr) { segtl.push({x:vx,y:Math.round(top),w:0,h:hy-Math.round(top),inwardDx:-1,inwardDy:0}); segtr.push({x:vx,y:Math.round(top),w:0,h:hy-Math.round(top),inwardDx:1,inwardDy:0}); }
-                if(bl && br) { segbl.push({x:vx,y:hy,w:0,h:Math.round(bottom)-hy,inwardDx:-1,inwardDy:0}); segbr.push({x:vx,y:hy,w:0,h:Math.round(bottom)-hy,inwardDx:1,inwardDy:0}); }
-                if(tl && bl) { segtl.push({x:Math.round(left),y:hy,w:vx-Math.round(left),h:0,inwardDx:0,inwardDy:-1}); segbl.push({x:Math.round(left),y:hy,w:vx-Math.round(left),h:0,inwardDx:0,inwardDy:1}); }
-                if(tr && br) { segtr.push({x:vx,y:hy,w:Math.round(right)-vx,h:0,inwardDx:0,inwardDy:-1}); segbr.push({x:vx,y:hy,w:Math.round(right)-vx,h:0,inwardDx:0,inwardDy:1}); }
+                // Internal cross seams — only draw when regions differ
+                if(tl && tr && tl !== tr) { segtl.push({x:vx,y:Math.round(top),w:0,h:hy-Math.round(top),inwardDx:-1,inwardDy:0}); segtr.push({x:vx,y:Math.round(top),w:0,h:hy-Math.round(top),inwardDx:1,inwardDy:0}); }
+                if(bl && br && bl !== br) { segbl.push({x:vx,y:hy,w:0,h:Math.round(bottom)-hy,inwardDx:-1,inwardDy:0}); segbr.push({x:vx,y:hy,w:0,h:Math.round(bottom)-hy,inwardDx:1,inwardDy:0}); }
+                if(tl && bl && tl !== bl) { segtl.push({x:Math.round(left),y:hy,w:vx-Math.round(left),h:0,inwardDx:0,inwardDy:-1}); segbl.push({x:Math.round(left),y:hy,w:vx-Math.round(left),h:0,inwardDx:0,inwardDy:1}); }
+                if(tr && br && tr !== br) { segtr.push({x:vx,y:hy,w:Math.round(right)-vx,h:0,inwardDx:0,inwardDy:-1}); segbr.push({x:vx,y:hy,w:Math.round(right)-vx,h:0,inwardDx:0,inwardDy:1}); }
               }
             }
           }
@@ -1879,6 +1879,44 @@
         return [bounds];
       }
 
+      function drawLockedRegionHatching(ctx, gi, tileW, tileH) {
+        if(!window.REGION_CHUNKS || !window.REGION_CHUNKS.size) return;
+        function chunkBounds(r, c) {
+          if(gi && gi.colLefts[c] !== undefined && gi.rowTops[r] !== undefined){
+            return { left: gi.colLefts[c], top: gi.rowTops[r], w: gi.colWidths[c], h: gi.rowHeights[r] };
+          }
+          return { left: c * tileW, top: r * tileH, w: tileW, h: tileH };
+        }
+        const splitData = loadChunkSplits();
+        ctx.save();
+        ctx.globalAlpha = 0.50;
+        for(const [regionName, chunks] of window.REGION_CHUNKS){
+          if(unlockedRegions.has(regionName)) continue;
+          if(!chunks || chunks.size === 0) continue;
+          const color = getRegionColor(regionName);
+          ctx.fillStyle = color;
+          for(const ck of chunks){
+            const [r, c] = ck.split(',').map(Number);
+            const b = chunkBounds(r, c);
+            const key = `${r},${c}`;
+            if(window.CHUNK_MULTI_REGION && window.CHUNK_MULTI_REGION.has(key)){
+              const split = splitData[key];
+              if(split){
+                const activeRegions = new Set([regionName]);
+                const rects = getSplitOverlayRects(split, { x: b.left, y: b.top, w: b.w, h: b.h }, activeRegions);
+                for(const rect of rects){
+                  if(rect.w <= 0 || rect.h <= 0) continue;
+                  ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+                }
+                continue;
+              }
+            }
+            ctx.fillRect(b.left, b.top, b.w, b.h);
+          }
+        }
+        ctx.restore();
+      }
+
       function drawSelectionsAndUnlocked(){
         // Always draw special markers even if no selection/unlocked
         const ctx = canvas.getContext('2d');
@@ -1890,6 +1928,7 @@
 
         if(selected.size===0 && unlocked.size===0 && newlyUnlocked.size===0) {
            drawRegionBorders(ctx);
+           drawLockedRegionHatching(ctx, gi, tileW, tileH);
            drawSpecialMarkers(ctx, gi, tileW, tileH, chunkW, chunkH);
            drawRegionLabels(ctx);
            return;
@@ -1901,6 +1940,7 @@
           try{ for(const u of unlocked){ if(selected.has(u)){ if(DEBUG) console.log('auto-remove selected for unlocked', u); selected.delete(u); } } }catch(e){}
           try{ for(const nu of newlyUnlocked){ if(selected.has(nu)){ if(DEBUG) console.log('auto-remove selected for newlyUnlocked', nu); selected.delete(nu); } } }catch(e){}
           drawRegionBorders(ctx);
+          drawLockedRegionHatching(ctx, gi, tileW, tileH);
           ctx.save();
           // selected: purple fill
           for(const s of selected){
