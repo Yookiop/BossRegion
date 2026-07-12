@@ -1797,7 +1797,9 @@
               labelY += regionH * labelOffset.y;
             }
             // Scale font to fit within the component bounding box
+            const isSmallRegion = regionW < baseTileW * 2.5 && regionH < baseTileH * 2.5;
             let fontSize = Math.min(regionH * 0.20, regionW * 0.12, baseTileW * 2.0);
+            if(isSmallRegion) fontSize = Math.min(regionH, regionW) * 0.20;
             fontSize = Math.max(fontSize, 10);
             ctx.font = `bold ${Math.round(fontSize)}px system-ui, sans-serif`;
             const measured = ctx.measureText(regionName).width;
@@ -1809,13 +1811,30 @@
             const color = getRegionColor(regionName);
             const isUnlockedRegion = unlockedRegions.has(regionName);
             const hasLockIcon = !isUnlockedRegion && regionLockImage.complete && regionLockImage.naturalWidth > 0;
-            const lockSize = hasLockIcon ? Math.max(168, Math.min(Math.round(fontSize * 8.1), 336)) : 0;
+            // Lock size: for small regions fill a good portion, for large regions scale with font
+            const regionMinDim = Math.min(regionH, regionW);
+            let lockSize = 0;
+            if(hasLockIcon){
+              if(isSmallRegion){
+                lockSize = Math.round(regionMinDim * 0.65);
+              } else {
+                lockSize = Math.round(fontSize * 6);
+              }
+              lockSize = Math.max(lockSize, 48);
+              lockSize = Math.min(lockSize, 336);
+            }
             const sidePad = Math.max(Math.round(fontSize * 0.4), 12);
             const verticalPad = Math.max(Math.round(fontSize * 0.45), 12);
             const textHalfW = Math.max(ctx.measureText(regionName).width / 2, fontSize * 0.8);
             const textHalfH = Math.max(fontSize * 0.52, 10);
             const titleLockGap = hasLockIcon ? Math.max(4, Math.min(Math.round(fontSize * 0.12), 10)) : 0;
-            labelX = Math.max(minX + sidePad + textHalfW, Math.min(maxX - sidePad - textHalfW, labelX));
+            // For small regions, bias towards top-left
+            if(isSmallRegion){
+              labelX = minX + sidePad + textHalfW;
+              labelY = minY + verticalPad + textHalfH;
+            } else {
+              labelX = Math.max(minX + sidePad + textHalfW, Math.min(maxX - sidePad - textHalfW, labelX));
+            }
             let textY = labelY;
             let iconY = hasLockIcon ? (textY + textHalfH + titleLockGap + (lockSize / 2)) : textY;
             const stackTop = Math.min(textY - textHalfH, hasLockIcon ? (iconY - lockSize / 2) : Infinity);
