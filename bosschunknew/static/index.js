@@ -200,6 +200,10 @@ const CODE_CONFIGURED_BOSS_IMAGES = Object.freeze({
     'Vorkath': {
         fileName: 'Vorkath.png',
         chunkIds: ['chunk_7_25']
+    },
+    'Maggot king': {
+        fileName: 'Maggot_King.png',
+        chunkIds: ['chunk_13_40']
     }
 });
 
